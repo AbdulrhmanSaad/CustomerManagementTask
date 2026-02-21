@@ -1,0 +1,48 @@
+@CustomersTask4_HostAddress = https://localhost:7120
+###
+POST {{CustomersTask4_HostAddress}}/api/customer
+Content-Type: application/json
+
+{
+  "name": "string",
+  "phone": "string",
+  "createdAt": "2026-02-19T08:39:21.524Z",
+  "createdBy": "string",
+  "addressType": 0,
+  "homeAddressName": "string",
+  "addressType2": 0,
+  "workAddressName": "string"
+}
+
+###
+
+GET {{CustomersTask4_HostAddress}}/api/customer
+
+###
+
+@id=9
+GET {{CustomersTask4_HostAddress}}/api/customer/{{id}}
+
+###
+
+GET {{CustomersTask4_HostAddress}}/api/customer/{{id}}
+Authorization: bearer {{$bearerToken}}
+
+###
+
+PUT {{CustomersTask4_HostAddress}}/api/customer/{id}
+Authorization: bearer {{$bearerToken}}
+Content-Type: application/json
+
+{
+  //UpdateCustomerCommand
+}
+
+###
+Post {{CustomersTask4_HostAddress}}/login
+Content-Type: application/json
+
+{
+  "email": "abdo@gmail.com",
+  "password": "Test@12"
+}

@@ -1,0 +1,14 @@
+[21-02 17:22:46 WRN]|Microsoft.EntityFrameworkCore.Model.Validation|
+ Sensitive data logging is enabled. Log entries and exception messages may include sensitive application data; this mode should only be enabled during development.
+[21-02 17:24:45 INF]|Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager|
+ User profile is available. Using 'C:\Users\abdul\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+[21-02 17:24:46 INF]|Microsoft.Hosting.Lifetime|
+ Now listening on: https://localhost:7120
+[21-02 17:24:46 INF]|Microsoft.Hosting.Lifetime|
+ Now listening on: http://localhost:5082
+[21-02 17:24:46 INF]|Microsoft.Hosting.Lifetime|
+ Application started. Press Ctrl+C to shut down.
+[21-02 17:24:46 INF]|Microsoft.Hosting.Lifetime|
+ Hosting environment: Development
+[21-02 17:24:46 INF]|Microsoft.Hosting.Lifetime|
+ Content root path: C:\Users\abdul\source\repos\CustomersTask4\CustomersTask4

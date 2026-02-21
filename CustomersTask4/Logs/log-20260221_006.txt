@@ -1,0 +1,555 @@
+[21-02 17:28:28 WRN]|Microsoft.EntityFrameworkCore.Model.Validation|
+ Sensitive data logging is enabled. Log entries and exception messages may include sensitive application data; this mode should only be enabled during development.
+[21-02 17:28:29 INF]|Microsoft.EntityFrameworkCore.Database.Command|
+ Executed DbCommand (12ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1
+[21-02 17:28:29 INF]|Microsoft.EntityFrameworkCore.Migrations|
+ Acquiring an exclusive lock for migration application. See https://aka.ms/efcore-docs-migrations-lock for more information if this takes too long.
+[21-02 17:28:29 INF]|Microsoft.EntityFrameworkCore.Database.Command|
+ Executed DbCommand (13ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+DECLARE @result int;
+EXEC @result = sp_getapplock @Resource = '__EFMigrationsLock', @LockOwner = 'Session', @LockMode = 'Exclusive';
+SELECT @result
+[21-02 17:28:29 INF]|Microsoft.EntityFrameworkCore.Database.Command|
+ Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+IF OBJECT_ID(N'[__EFMigrationsHistory]') IS NULL
+BEGIN
+    CREATE TABLE [__EFMigrationsHistory] (
+        [MigrationId] nvarchar(150) NOT NULL,
+        [ProductVersion] nvarchar(32) NOT NULL,
+        CONSTRAINT [PK___EFMigrationsHistory] PRIMARY KEY ([MigrationId])
+    );
+END;
+[21-02 17:28:29 INF]|Microsoft.EntityFrameworkCore.Database.Command|
+ Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1
+[21-02 17:28:29 INF]|Microsoft.EntityFrameworkCore.Database.Command|
+ Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT OBJECT_ID(N'[__EFMigrationsHistory]');
+[21-02 17:28:29 INF]|Microsoft.EntityFrameworkCore.Database.Command|
+ Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [MigrationId], [ProductVersion]
+FROM [__EFMigrationsHistory]
+ORDER BY [MigrationId];
+[21-02 17:28:29 INF]|Microsoft.EntityFrameworkCore.Migrations|
+ Applying migration '20260221152804_updateRelationToBeNoActionOnCustomerHistory'.
+[21-02 17:28:29 INF]|Microsoft.EntityFrameworkCore.Database.Command|
+ Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+ALTER TABLE [CustomerHistories] DROP CONSTRAINT [FK_CustomerHistories_Customers_CustomerId];
+[21-02 17:28:29 INF]|Microsoft.EntityFrameworkCore.Database.Command|
+ Executed DbCommand (451ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+DECLARE @var sysname;
+SELECT @var = [d].[name]
+FROM [sys].[default_constraints] [d]
+INNER JOIN [sys].[columns] [c] ON [d].[parent_column_id] = [c].[column_id] AND [d].[parent_object_id] = [c].[object_id]
+WHERE ([d].[parent_object_id] = OBJECT_ID(N'[CustomerHistories]') AND [c].[name] = N'CustomerId');
+IF @var IS NOT NULL EXEC(N'ALTER TABLE [CustomerHistories] DROP CONSTRAINT [' + @var + '];');
+ALTER TABLE [CustomerHistories] ALTER COLUMN [CustomerId] int NULL;
+[21-02 17:28:29 INF]|Microsoft.EntityFrameworkCore.Database.Command|
+ Executed DbCommand (8ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+ALTER TABLE [CustomerHistories] ADD CONSTRAINT [FK_CustomerHistories_Customers_CustomerId] FOREIGN KEY ([CustomerId]) REFERENCES [Customers] ([Id]);
+[21-02 17:28:29 INF]|Microsoft.EntityFrameworkCore.Database.Command|
+ Executed DbCommand (18ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+VALUES (N'20260221152804_updateRelationToBeNoActionOnCustomerHistory', N'9.0.13');
+[21-02 17:28:29 INF]|Microsoft.EntityFrameworkCore.Database.Command|
+ Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+DECLARE @result int;
+EXEC @result = sp_releaseapplock @Resource = '__EFMigrationsLock', @LockOwner = 'Session';
+SELECT @result
+[21-02 17:29:16 INF]|Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager|
+ User profile is available. Using 'C:\Users\abdul\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+[21-02 17:29:16 INF]|Microsoft.Hosting.Lifetime|
+ Now listening on: https://localhost:7120
+[21-02 17:29:16 INF]|Microsoft.Hosting.Lifetime|
+ Now listening on: http://localhost:5082
+[21-02 17:29:16 INF]|Microsoft.Hosting.Lifetime|
+ Application started. Press Ctrl+C to shut down.
+[21-02 17:29:16 INF]|Microsoft.Hosting.Lifetime|
+ Hosting environment: Development
+[21-02 17:29:16 INF]|Microsoft.Hosting.Lifetime|
+ Content root path: C:\Users\abdul\source\repos\CustomersTask4\CustomersTask4
+[21-02 17:29:17 INF]|Microsoft.AspNetCore.Hosting.Diagnostics|
+ Request starting HTTP/2 GET https://localhost:7120/_framework/aspnetcore-browser-refresh.js - null null
+[21-02 17:29:17 INF]|Microsoft.AspNetCore.Hosting.Diagnostics|
+ Request finished HTTP/2 GET https://localhost:7120/_framework/aspnetcore-browser-refresh.js - 200 16513 application/javascript; charset=utf-8 22.7803ms
+[21-02 17:29:17 INF]|Microsoft.AspNetCore.Hosting.Diagnostics|
+ Request starting HTTP/2 GET https://localhost:7120/_vs/browserLink - null null
+[21-02 17:29:17 INF]|Microsoft.AspNetCore.Hosting.Diagnostics|
+ Request finished HTTP/2 GET https://localhost:7120/_vs/browserLink - 200 null text/javascript; charset=UTF-8 74.8353ms
+[21-02 17:29:17 INF]|Microsoft.AspNetCore.Hosting.Diagnostics|
+ Request starting HTTP/2 GET https://localhost:7120/openapi/v1.json - null null
+[21-02 17:29:17 INF]||
+ HTTP Request GET Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpRequestStream at "2026-02-21T15:29:17.9658621Z"
+[21-02 17:29:17 INF]||
+ Request Headers: {"Accept":"application/json,*/*","Host":"localhost:7120","User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36 Edg/145.0.0.0","Accept-Encoding":"gzip, deflate, br, zstd","Accept-Language":"en-US,en;q=0.9,ar;q=0.8","Referer":"https://localhost:7120/swagger/index.html","sec-ch-ua-platform":"\"Windows\"","sec-ch-ua":"\"Not:A-Brand\";v=\"99\", \"Microsoft Edge\";v=\"145\", \"Chromium\";v=\"145\"","sec-ch-ua-mobile":"?0","sec-fetch-site":"same-origin","sec-fetch-mode":"cors","sec-fetch-dest":"empty","priority":"u=1, i"}
+[21-02 17:29:17 INF]|Microsoft.AspNetCore.Routing.EndpointMiddleware|
+ Executing endpoint 'HTTP: GET /openapi/{documentName}.json'
+[21-02 17:29:18 INF]|Microsoft.AspNetCore.Routing.EndpointMiddleware|
+ Executed endpoint 'HTTP: GET /openapi/{documentName}.json'
+[21-02 17:29:18 INF]||
+ Response Status Code: 200
+[21-02 17:29:18 INF]|Serilog.AspNetCore.RequestLoggingMiddleware|
+ HTTP GET /openapi/v1.json responded 200 in 166.7152 ms
+[21-02 17:29:18 INF]|Microsoft.AspNetCore.Hosting.Diagnostics|
+ Request finished HTTP/2 GET https://localhost:7120/openapi/v1.json - 200 null application/json;charset=utf-8 225.4305ms
+[21-02 17:29:25 INF]|Microsoft.AspNetCore.Hosting.Diagnostics|
+ Request starting HTTP/1.1 DELETE https://localhost:7120/api/Customer/28 - application/json 276
+[21-02 17:29:25 INF]||
+ HTTP Request DELETE Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpRequestStream at "2026-02-21T15:29:25.3350505Z"
+[21-02 17:29:25 INF]||
+ Request Headers: {"Accept":"*/*","Connection":"keep-alive","Host":"localhost:7120","User-Agent":"PostmanRuntime/7.37.3","Accept-Encoding":"gzip, deflate, br","Authorization":"***MASKED***","Content-Type":"application/json","Content-Length":"276","Postman-Token":"***MASKED***"}
+[21-02 17:29:25 INF]|Microsoft.AspNetCore.Routing.EndpointMiddleware|
+ Executing endpoint 'CustomersTask4.Controllers.CustomerController.DeleteCustomer (CustomersTask4)'
+[21-02 17:29:25 INF]|Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker|
+ Route matched with {action = "DeleteCustomer", controller = "Customer"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult] DeleteCustomer(Int32) on controller CustomersTask4.Controllers.CustomerController (CustomersTask4).
+[21-02 17:29:25 WRN]|LuckyPennySoftware.MediatR.License|
+ You do not have a valid license key for the Lucky Penny software MediatR. This is allowed for development and testing scenarios. If you are running in production you are required to have a licensed version. Please visit https://luckypennysoftware.com to obtain a valid license.
+[21-02 17:29:25 INF]|CustomersTask4.CustomerHandler.Command.DeleteCustomerCommand.DeleteCustomerCommandHandler|
+ Handling DeleteCustomerCommand for Customer Id: 28
+[21-02 17:29:25 WRN]|Microsoft.EntityFrameworkCore.Model.Validation|
+ Sensitive data logging is enabled. Log entries and exception messages may include sensitive application data; this mode should only be enabled during development.
+[21-02 17:29:27 INF]|Microsoft.EntityFrameworkCore.Database.Command|
+ Executed DbCommand (351ms) [Parameters=[@__id_0='28'], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [c].[Id], [c].[CreatedAt], [c].[CreatedBy], [c].[Name], [c].[Phone]
+FROM [Customers] AS [c]
+WHERE [c].[Id] = @__id_0
+[21-02 17:29:27 INF]|Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker|
+ Executed action CustomersTask4.Controllers.CustomerController.DeleteCustomer (CustomersTask4) in 1794.2313ms
+[21-02 17:29:27 INF]|Microsoft.AspNetCore.Routing.EndpointMiddleware|
+ Executed endpoint 'CustomersTask4.Controllers.CustomerController.DeleteCustomer (CustomersTask4)'
+[21-02 17:29:27 WRN]|CustomersTask4.Middleware.ErrorHandelingMiddleware|
+ Customer With Id=28 not found
+[21-02 17:29:27 INF]||
+ Response Status Code: 404
+[21-02 17:29:27 INF]|Serilog.AspNetCore.RequestLoggingMiddleware|
+ HTTP DELETE /api/Customer/28 responded 404 in 1841.8132 ms
+[21-02 17:29:27 INF]|Microsoft.AspNetCore.Hosting.Diagnostics|
+ Request finished HTTP/1.1 DELETE https://localhost:7120/api/Customer/28 - 404 null null 1853.6471ms
+[21-02 17:29:33 INF]|Microsoft.AspNetCore.Hosting.Diagnostics|
+ Request starting HTTP/1.1 DELETE https://localhost:7120/api/Customer/27 - application/json 276
+[21-02 17:29:33 INF]||
+ HTTP Request DELETE Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpRequestStream at "2026-02-21T15:29:33.3113252Z"
+[21-02 17:29:33 INF]||
+ Request Headers: {"Accept":"*/*","Connection":"keep-alive","Host":"localhost:7120","User-Agent":"PostmanRuntime/7.37.3","Accept-Encoding":"gzip, deflate, br","Authorization":"***MASKED***","Content-Type":"application/json","Content-Length":"276","Postman-Token":"***MASKED***"}
+[21-02 17:29:33 INF]|Microsoft.AspNetCore.Routing.EndpointMiddleware|
+ Executing endpoint 'CustomersTask4.Controllers.CustomerController.DeleteCustomer (CustomersTask4)'
+[21-02 17:29:33 INF]|Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker|
+ Route matched with {action = "DeleteCustomer", controller = "Customer"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult] DeleteCustomer(Int32) on controller CustomersTask4.Controllers.CustomerController (CustomersTask4).
+[21-02 17:29:33 INF]|CustomersTask4.CustomerHandler.Command.DeleteCustomerCommand.DeleteCustomerCommandHandler|
+ Handling DeleteCustomerCommand for Customer Id: 27
+[21-02 17:29:33 INF]|Microsoft.EntityFrameworkCore.Database.Command|
+ Executed DbCommand (2ms) [Parameters=[@__id_0='27'], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [c].[Id], [c].[CreatedAt], [c].[CreatedBy], [c].[Name], [c].[Phone]
+FROM [Customers] AS [c]
+WHERE [c].[Id] = @__id_0
+[21-02 17:29:33 INF]|Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker|
+ Executed action CustomersTask4.Controllers.CustomerController.DeleteCustomer (CustomersTask4) in 53.5561ms
+[21-02 17:29:33 INF]|Microsoft.AspNetCore.Routing.EndpointMiddleware|
+ Executed endpoint 'CustomersTask4.Controllers.CustomerController.DeleteCustomer (CustomersTask4)'
+[21-02 17:29:33 WRN]|CustomersTask4.Middleware.ErrorHandelingMiddleware|
+ Customer With Id=27 not found
+[21-02 17:29:33 INF]||
+ Response Status Code: 404
+[21-02 17:29:33 INF]|Serilog.AspNetCore.RequestLoggingMiddleware|
+ HTTP DELETE /api/Customer/27 responded 404 in 70.7873 ms
+[21-02 17:29:33 INF]|Microsoft.AspNetCore.Hosting.Diagnostics|
+ Request finished HTTP/1.1 DELETE https://localhost:7120/api/Customer/27 - 404 null null 109.9273ms
+[21-02 17:29:37 INF]|Microsoft.AspNetCore.Hosting.Diagnostics|
+ Request starting HTTP/1.1 DELETE https://localhost:7120/api/Customer/26 - application/json 276
+[21-02 17:29:37 INF]||
+ HTTP Request DELETE Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpRequestStream at "2026-02-21T15:29:37.8973134Z"
+[21-02 17:29:37 INF]||
+ Request Headers: {"Accept":"*/*","Connection":"keep-alive","Host":"localhost:7120","User-Agent":"PostmanRuntime/7.37.3","Accept-Encoding":"gzip, deflate, br","Authorization":"***MASKED***","Content-Type":"application/json","Content-Length":"276","Postman-Token":"***MASKED***"}
+[21-02 17:29:37 INF]|Microsoft.AspNetCore.Routing.EndpointMiddleware|
+ Executing endpoint 'CustomersTask4.Controllers.CustomerController.DeleteCustomer (CustomersTask4)'
+[21-02 17:29:37 INF]|Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker|
+ Route matched with {action = "DeleteCustomer", controller = "Customer"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult] DeleteCustomer(Int32) on controller CustomersTask4.Controllers.CustomerController (CustomersTask4).
+[21-02 17:29:37 INF]|CustomersTask4.CustomerHandler.Command.DeleteCustomerCommand.DeleteCustomerCommandHandler|
+ Handling DeleteCustomerCommand for Customer Id: 26
+[21-02 17:29:37 INF]|Microsoft.EntityFrameworkCore.Database.Command|
+ Executed DbCommand (2ms) [Parameters=[@__id_0='26'], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [c].[Id], [c].[CreatedAt], [c].[CreatedBy], [c].[Name], [c].[Phone]
+FROM [Customers] AS [c]
+WHERE [c].[Id] = @__id_0
+[21-02 17:29:37 INF]|Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker|
+ Executed action CustomersTask4.Controllers.CustomerController.DeleteCustomer (CustomersTask4) in 21.876ms
+[21-02 17:29:37 INF]|Microsoft.AspNetCore.Routing.EndpointMiddleware|
+ Executed endpoint 'CustomersTask4.Controllers.CustomerController.DeleteCustomer (CustomersTask4)'
+[21-02 17:29:37 WRN]|CustomersTask4.Middleware.ErrorHandelingMiddleware|
+ Customer With Id=26 not found
+[21-02 17:29:37 INF]||
+ Response Status Code: 404
+[21-02 17:29:37 INF]|Serilog.AspNetCore.RequestLoggingMiddleware|
+ HTTP DELETE /api/Customer/26 responded 404 in 44.8276 ms
+[21-02 17:29:37 INF]|Microsoft.AspNetCore.Hosting.Diagnostics|
+ Request finished HTTP/1.1 DELETE https://localhost:7120/api/Customer/26 - 404 null null 50.2754ms
+[21-02 17:29:48 INF]|Microsoft.AspNetCore.Hosting.Diagnostics|
+ Request starting HTTP/1.1 GET https://localhost:7120/api/Customer - application/json 276
+[21-02 17:29:48 INF]||
+ HTTP Request GET Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpRequestStream at "2026-02-21T15:29:48.9458931Z"
+[21-02 17:29:48 INF]||
+ Request Headers: {"Accept":"*/*","Connection":"keep-alive","Host":"localhost:7120","User-Agent":"PostmanRuntime/7.37.3","Accept-Encoding":"gzip, deflate, br","Authorization":"***MASKED***","Content-Type":"application/json","Content-Length":"276","Postman-Token":"***MASKED***"}
+[21-02 17:29:48 INF]|Microsoft.AspNetCore.Routing.EndpointMiddleware|
+ Executing endpoint 'CustomersTask4.Controllers.CustomerController.GetAll (CustomersTask4)'
+[21-02 17:29:48 INF]|Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker|
+ Route matched with {action = "GetAll", controller = "Customer"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[System.Collections.Generic.List`1[CustomersTask4.Domain.Customer]]] GetAll() on controller CustomersTask4.Controllers.CustomerController (CustomersTask4).
+[21-02 17:29:49 WRN]|LuckyPennySoftware.AutoMapper.License|
+ You do not have a valid license key for the Lucky Penny software AutoMapper. This is allowed for development and testing scenarios. If you are running in production you are required to have a licensed version. Please visit https://luckypennysoftware.com to obtain a valid license.
+[21-02 17:29:49 INF]|CustomersTask4.CustomerHandler.Query.GetAllCustomerQueryHandler|
+ Get All Customer
+[21-02 17:29:49 INF]|Microsoft.EntityFrameworkCore.Database.Command|
+ Executed DbCommand (236ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [c].[Id], [c].[CreatedAt], [c].[CreatedBy], [c].[Name], [c].[Phone], [a].[Id], [a].[AddressName], [a].[AddressType], [a].[CustomerId]
+FROM [Customers] AS [c]
+LEFT JOIN [Addresses] AS [a] ON [c].[Id] = [a].[CustomerId]
+ORDER BY [c].[Id]
+[21-02 17:29:49 INF]|Microsoft.AspNetCore.Mvc.Infrastructure.ObjectResultExecutor|
+ Executing OkObjectResult, writing value of type 'System.Collections.Generic.List`1[[CustomersTask4.DTO.CustomerDto, CustomersTask4, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+[21-02 17:29:49 INF]|Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker|
+ Executed action CustomersTask4.Controllers.CustomerController.GetAll (CustomersTask4) in 574.0004ms
+[21-02 17:29:49 INF]|Microsoft.AspNetCore.Routing.EndpointMiddleware|
+ Executed endpoint 'CustomersTask4.Controllers.CustomerController.GetAll (CustomersTask4)'
+[21-02 17:29:49 INF]||
+ Response Status Code: 200
+[21-02 17:29:49 INF]|Serilog.AspNetCore.RequestLoggingMiddleware|
+ HTTP GET /api/Customer responded 200 in 602.9391 ms
+[21-02 17:29:49 INF]|Microsoft.AspNetCore.Hosting.Diagnostics|
+ Request finished HTTP/1.1 GET https://localhost:7120/api/Customer - 200 null application/json; charset=utf-8 611.7211ms
+[21-02 17:30:02 INF]|Microsoft.AspNetCore.Hosting.Diagnostics|
+ Request starting HTTP/1.1 GET https://localhost:7120/api/Customer/20 - application/json 276
+[21-02 17:30:02 INF]||
+ HTTP Request GET Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpRequestStream at "2026-02-21T15:30:02.0343569Z"
+[21-02 17:30:02 INF]||
+ Request Headers: {"Accept":"*/*","Connection":"keep-alive","Host":"localhost:7120","User-Agent":"PostmanRuntime/7.37.3","Accept-Encoding":"gzip, deflate, br","Authorization":"***MASKED***","Content-Type":"application/json","Content-Length":"276","Postman-Token":"***MASKED***"}
+[21-02 17:30:02 INF]|Microsoft.AspNetCore.Routing.EndpointMiddleware|
+ Executing endpoint 'CustomersTask4.Controllers.CustomerController.GetCustomerById (CustomersTask4)'
+[21-02 17:30:02 INF]|Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker|
+ Route matched with {action = "GetCustomerById", controller = "Customer"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[CustomersTask4.Domain.Customer]] GetCustomerById(Int32) on controller CustomersTask4.Controllers.CustomerController (CustomersTask4).
+[21-02 17:30:02 INF]|CustomersTask4.CustomerHandler.Query.GetAllCustomerQueryHandler|
+ Getting customer by id 20
+[21-02 17:30:02 INF]|Microsoft.EntityFrameworkCore.Database.Command|
+ Executed DbCommand (197ms) [Parameters=[@__id_0='20'], CommandType='"Text"', CommandTimeout='30']
+SELECT [c0].[Id], [c0].[CreatedAt], [c0].[CreatedBy], [c0].[Name], [c0].[Phone], [a].[Id], [a].[AddressName], [a].[AddressType], [a].[CustomerId]
+FROM (
+    SELECT TOP(1) [c].[Id], [c].[CreatedAt], [c].[CreatedBy], [c].[Name], [c].[Phone]
+    FROM [Customers] AS [c]
+    WHERE [c].[Id] = @__id_0
+) AS [c0]
+LEFT JOIN [Addresses] AS [a] ON [c0].[Id] = [a].[CustomerId]
+ORDER BY [c0].[Id]
+[21-02 17:30:02 INF]|Microsoft.AspNetCore.Mvc.Infrastructure.ObjectResultExecutor|
+ Executing OkObjectResult, writing value of type 'CustomersTask4.DTO.CustomerDto'.
+[21-02 17:30:02 INF]|Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker|
+ Executed action CustomersTask4.Controllers.CustomerController.GetCustomerById (CustomersTask4) in 241.1727ms
+[21-02 17:30:02 INF]|Microsoft.AspNetCore.Routing.EndpointMiddleware|
+ Executed endpoint 'CustomersTask4.Controllers.CustomerController.GetCustomerById (CustomersTask4)'
+[21-02 17:30:02 INF]||
+ Response Status Code: 200
+[21-02 17:30:02 INF]|Serilog.AspNetCore.RequestLoggingMiddleware|
+ HTTP GET /api/Customer/20 responded 200 in 269.6110 ms
+[21-02 17:30:02 INF]|Microsoft.AspNetCore.Hosting.Diagnostics|
+ Request finished HTTP/1.1 GET https://localhost:7120/api/Customer/20 - 200 null application/json; charset=utf-8 277.516ms
+[21-02 17:30:12 INF]|Microsoft.AspNetCore.Hosting.Diagnostics|
+ Request starting HTTP/1.1 DELETE https://localhost:7120/api/Customer/20 - application/json 276
+[21-02 17:30:12 INF]||
+ HTTP Request DELETE Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpRequestStream at "2026-02-21T15:30:12.9296444Z"
+[21-02 17:30:12 INF]||
+ Request Headers: {"Accept":"*/*","Connection":"keep-alive","Host":"localhost:7120","User-Agent":"PostmanRuntime/7.37.3","Accept-Encoding":"gzip, deflate, br","Authorization":"***MASKED***","Content-Type":"application/json","Content-Length":"276","Postman-Token":"***MASKED***"}
+[21-02 17:30:12 INF]|Microsoft.AspNetCore.Routing.EndpointMiddleware|
+ Executing endpoint 'CustomersTask4.Controllers.CustomerController.DeleteCustomer (CustomersTask4)'
+[21-02 17:30:12 INF]|Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker|
+ Route matched with {action = "DeleteCustomer", controller = "Customer"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult] DeleteCustomer(Int32) on controller CustomersTask4.Controllers.CustomerController (CustomersTask4).
+[21-02 17:30:12 INF]|CustomersTask4.CustomerHandler.Command.DeleteCustomerCommand.DeleteCustomerCommandHandler|
+ Handling DeleteCustomerCommand for Customer Id: 20
+[21-02 17:30:12 INF]|Microsoft.EntityFrameworkCore.Database.Command|
+ Executed DbCommand (2ms) [Parameters=[@__id_0='20'], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [c].[Id], [c].[CreatedAt], [c].[CreatedBy], [c].[Name], [c].[Phone]
+FROM [Customers] AS [c]
+WHERE [c].[Id] = @__id_0
+[21-02 17:30:13 INF]|Microsoft.EntityFrameworkCore.Database.Command|
+ Executed DbCommand (18ms) [Parameters=[@p0='DELETE' (Nullable = false) (Size = 4000), @p1='2026-02-21T15:30:12.9730212Z', @p2='20' (Nullable = true), @p3='{"Id":20,"Name":"testHistory","Phone":"01550830811","CreatedAt":"2026-02-19T12:07:59.659","CreatedBy":"abdo","Addresses":[]}' (Nullable = false) (Size = 4000), @p4='{"Id":20,"Name":"testHistory","Phone":"01550830811","CreatedAt":"2026-02-19T12:07:59.659","CreatedBy":"abdo","Addresses":[]}' (Nullable = false) (Size = 4000), @p5='abdo@gmail.com' (Nullable = false) (Size = 4000), @p6='0c7f85df-7c7d-4600-909d-c686ef6fa62e' (Nullable = false) (Size = 4000), @p7='Admin' (Nullable = false) (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SET IMPLICIT_TRANSACTIONS OFF;
+SET NOCOUNT ON;
+INSERT INTO [CustomerHistories] ([Action], [ChangedAt], [CustomerId], [NewValues], [OldValues], [UserEmail], [UserId], [UserRole])
+OUTPUT INSERTED.[Id]
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7);
+[21-02 17:30:14 INF]|Microsoft.EntityFrameworkCore.Database.Command|
+ Executed DbCommand (1,182ms) [Parameters=[@p1='40', @p0=NULL (DbType = Int32), @p2='20'], CommandType='"Text"', CommandTimeout='30']
+SET NOCOUNT ON;
+UPDATE [CustomerHistories] SET [CustomerId] = @p0
+OUTPUT 1
+WHERE [Id] = @p1;
+DELETE FROM [Customers]
+OUTPUT 1
+WHERE [Id] = @p2;
+[21-02 17:30:14 INF]|Microsoft.AspNetCore.Mvc.Infrastructure.ObjectResultExecutor|
+ Executing OkObjectResult, writing value of type 'System.String'.
+[21-02 17:30:14 INF]|Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker|
+ Executed action CustomersTask4.Controllers.CustomerController.DeleteCustomer (CustomersTask4) in 1431.0695ms
+[21-02 17:30:14 INF]|Microsoft.AspNetCore.Routing.EndpointMiddleware|
+ Executed endpoint 'CustomersTask4.Controllers.CustomerController.DeleteCustomer (CustomersTask4)'
+[21-02 17:30:14 INF]||
+ Response Status Code: 200
+[21-02 17:30:14 INF]|Serilog.AspNetCore.RequestLoggingMiddleware|
+ HTTP DELETE /api/Customer/20 responded 200 in 1462.3951 ms
+[21-02 17:30:14 INF]|Microsoft.AspNetCore.Hosting.Diagnostics|
+ Request finished HTTP/1.1 DELETE https://localhost:7120/api/Customer/20 - 200 null text/plain; charset=utf-8 1485.6976ms
+[21-02 17:44:17 INF]|Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager|
+ User profile is available. Using 'C:\Users\abdul\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+[21-02 17:44:19 INF]|Microsoft.Hosting.Lifetime|
+ Now listening on: https://localhost:7120
+[21-02 17:44:19 INF]|Microsoft.Hosting.Lifetime|
+ Now listening on: http://localhost:5082
+[21-02 17:44:19 INF]|Microsoft.Hosting.Lifetime|
+ Application started. Press Ctrl+C to shut down.
+[21-02 17:44:19 INF]|Microsoft.Hosting.Lifetime|
+ Hosting environment: Development
+[21-02 17:44:19 INF]|Microsoft.Hosting.Lifetime|
+ Content root path: C:\Users\abdul\source\repos\CustomersTask4\CustomersTask4
+[21-02 17:44:21 INF]|Microsoft.AspNetCore.Hosting.Diagnostics|
+ Request starting HTTP/2 GET https://localhost:7120/_framework/aspnetcore-browser-refresh.js - null null
+[21-02 17:44:21 INF]|Microsoft.AspNetCore.Hosting.Diagnostics|
+ Request starting HTTP/2 GET https://localhost:7120/_vs/browserLink - null null
+[21-02 17:44:21 INF]|Microsoft.AspNetCore.Hosting.Diagnostics|
+ Request finished HTTP/2 GET https://localhost:7120/_framework/aspnetcore-browser-refresh.js - 200 16513 application/javascript; charset=utf-8 89.7326ms
+[21-02 17:44:22 INF]|Microsoft.AspNetCore.Hosting.Diagnostics|
+ Request finished HTTP/2 GET https://localhost:7120/_vs/browserLink - 200 null text/javascript; charset=UTF-8 338.358ms
+[21-02 17:44:22 INF]|Microsoft.AspNetCore.Hosting.Diagnostics|
+ Request starting HTTP/2 GET https://localhost:7120/openapi/v1.json - null null
+[21-02 17:44:22 INF]||
+ HTTP Request GET Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpRequestStream at "2026-02-21T15:44:22.2610712Z"
+[21-02 17:44:22 INF]||
+ Request Headers: {"Accept":"application/json,*/*","Host":"localhost:7120","User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36 Edg/145.0.0.0","Accept-Encoding":"gzip, deflate, br, zstd","Accept-Language":"en-US,en;q=0.9,ar;q=0.8","Referer":"https://localhost:7120/swagger/index.html","sec-ch-ua-platform":"\"Windows\"","sec-ch-ua":"\"Not:A-Brand\";v=\"99\", \"Microsoft Edge\";v=\"145\", \"Chromium\";v=\"145\"","sec-ch-ua-mobile":"?0","sec-fetch-site":"same-origin","sec-fetch-mode":"cors","sec-fetch-dest":"empty","priority":"u=1, i"}
+[21-02 17:44:22 INF]|Microsoft.AspNetCore.Routing.EndpointMiddleware|
+ Executing endpoint 'HTTP: GET /openapi/{documentName}.json'
+[21-02 17:44:22 INF]|Microsoft.AspNetCore.Routing.EndpointMiddleware|
+ Executed endpoint 'HTTP: GET /openapi/{documentName}.json'
+[21-02 17:44:22 INF]||
+ Response Status Code: 200
+[21-02 17:44:22 INF]|Serilog.AspNetCore.RequestLoggingMiddleware|
+ HTTP GET /openapi/v1.json responded 200 in 197.4336 ms
+[21-02 17:44:22 INF]|Microsoft.AspNetCore.Hosting.Diagnostics|
+ Request finished HTTP/2 GET https://localhost:7120/openapi/v1.json - 200 null application/json;charset=utf-8 315.7813ms
+[21-02 17:44:31 INF]|Microsoft.AspNetCore.Hosting.Diagnostics|
+ Request starting HTTP/1.1 GET https://localhost:7120/api/Customer/history/25 - application/json 276
+[21-02 17:44:31 INF]||
+ HTTP Request GET Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpRequestStream at "2026-02-21T15:44:31.3068430Z"
+[21-02 17:44:31 INF]||
+ Request Headers: {"Accept":"*/*","Connection":"keep-alive","Host":"localhost:7120","User-Agent":"PostmanRuntime/7.37.3","Accept-Encoding":"gzip, deflate, br","Authorization":"***MASKED***","Content-Type":"application/json","Content-Length":"276","Postman-Token":"***MASKED***"}
+[21-02 17:44:31 INF]|Microsoft.AspNetCore.Routing.EndpointMiddleware|
+ Executing endpoint 'CustomersTask4.Controllers.CustomerController.GetCustomerHistory (CustomersTask4)'
+[21-02 17:44:31 INF]|Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker|
+ Route matched with {action = "GetCustomerHistory", controller = "Customer"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[CustomersTask4.Domain.CustomerHistory]] GetCustomerHistory(Int32) on controller CustomersTask4.Controllers.CustomerController (CustomersTask4).
+[21-02 17:44:31 WRN]|LuckyPennySoftware.MediatR.License|
+ You do not have a valid license key for the Lucky Penny software MediatR. This is allowed for development and testing scenarios. If you are running in production you are required to have a licensed version. Please visit https://luckypennysoftware.com to obtain a valid license.
+[21-02 17:44:38 WRN]|Microsoft.EntityFrameworkCore.Model.Validation|
+ Sensitive data logging is enabled. Log entries and exception messages may include sensitive application data; this mode should only be enabled during development.
+[21-02 17:44:56 INF]|Microsoft.EntityFrameworkCore.Database.Command|
+ Executed DbCommand (52ms) [Parameters=[@__id_0='25'], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [c].[Id], [c].[Action], [c].[ChangedAt], [c].[CustomerId], [c].[NewValues], [c].[OldValues], [c].[UserEmail], [c].[UserId], [c].[UserRole]
+FROM [CustomerHistories] AS [c]
+WHERE [c].[CustomerId] = @__id_0
+[21-02 17:44:56 INF]|Microsoft.AspNetCore.Mvc.Infrastructure.ObjectResultExecutor|
+ Executing OkObjectResult, writing value of type 'CustomersTask4.Domain.CustomerHistory'.
+[21-02 17:44:56 INF]|Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker|
+ Executed action CustomersTask4.Controllers.CustomerController.GetCustomerHistory (CustomersTask4) in 25552.0101ms
+[21-02 17:44:56 INF]|Microsoft.AspNetCore.Routing.EndpointMiddleware|
+ Executed endpoint 'CustomersTask4.Controllers.CustomerController.GetCustomerHistory (CustomersTask4)'
+[21-02 17:44:56 INF]||
+ Response Status Code: 200
+[21-02 17:44:56 INF]|Serilog.AspNetCore.RequestLoggingMiddleware|
+ HTTP GET /api/Customer/history/25 responded 200 in 25616.6318 ms
+[21-02 17:44:56 INF]|Microsoft.AspNetCore.Hosting.Diagnostics|
+ Request finished HTTP/1.1 GET https://localhost:7120/api/Customer/history/25 - 200 null application/json; charset=utf-8 25634.5284ms
+[21-02 19:17:23 INF]|Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager|
+ User profile is available. Using 'C:\Users\abdul\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+[21-02 19:17:24 INF]|Microsoft.Hosting.Lifetime|
+ Now listening on: https://localhost:7120
+[21-02 19:17:24 INF]|Microsoft.Hosting.Lifetime|
+ Now listening on: http://localhost:5082
+[21-02 19:17:24 INF]|Microsoft.Hosting.Lifetime|
+ Application started. Press Ctrl+C to shut down.
+[21-02 19:17:24 INF]|Microsoft.Hosting.Lifetime|
+ Hosting environment: Development
+[21-02 19:17:24 INF]|Microsoft.Hosting.Lifetime|
+ Content root path: C:\Users\abdul\source\repos\CustomersTask4\CustomersTask4
+[21-02 19:17:34 INF]|Microsoft.AspNetCore.Hosting.Diagnostics|
+ Request starting HTTP/2 GET https://localhost:7120/_framework/aspnetcore-browser-refresh.js - null null
+[21-02 19:17:34 INF]|Microsoft.AspNetCore.Hosting.Diagnostics|
+ Request finished HTTP/2 GET https://localhost:7120/_framework/aspnetcore-browser-refresh.js - 200 16513 application/javascript; charset=utf-8 105.5379ms
+[21-02 19:17:34 INF]|Microsoft.AspNetCore.Hosting.Diagnostics|
+ Request starting HTTP/2 GET https://localhost:7120/_vs/browserLink - null null
+[21-02 19:17:35 INF]|Microsoft.AspNetCore.Hosting.Diagnostics|
+ Request finished HTTP/2 GET https://localhost:7120/_vs/browserLink - 200 null text/javascript; charset=UTF-8 584.7385ms
+[21-02 19:17:35 INF]|Microsoft.AspNetCore.Hosting.Diagnostics|
+ Request starting HTTP/2 GET https://localhost:7120/openapi/v1.json - null null
+[21-02 19:17:35 INF]||
+ HTTP Request GET Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpRequestStream at "2026-02-21T17:17:35.6144765Z"
+[21-02 19:17:35 INF]||
+ Request Headers: {"Accept":"application/json,*/*","Host":"localhost:7120","User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36 Edg/145.0.0.0","Accept-Encoding":"gzip, deflate, br, zstd","Accept-Language":"en-US,en;q=0.9,ar;q=0.8","Referer":"https://localhost:7120/swagger/index.html","sec-ch-ua-platform":"\"Windows\"","sec-ch-ua":"\"Not:A-Brand\";v=\"99\", \"Microsoft Edge\";v=\"145\", \"Chromium\";v=\"145\"","sec-ch-ua-mobile":"?0","sec-fetch-site":"same-origin","sec-fetch-mode":"cors","sec-fetch-dest":"empty","priority":"u=1, i"}
+[21-02 19:17:35 INF]|Microsoft.AspNetCore.Routing.EndpointMiddleware|
+ Executing endpoint 'HTTP: GET /openapi/{documentName}.json'
+[21-02 19:17:35 INF]|Microsoft.AspNetCore.Routing.EndpointMiddleware|
+ Executed endpoint 'HTTP: GET /openapi/{documentName}.json'
+[21-02 19:17:35 INF]||
+ Response Status Code: 200
+[21-02 19:17:35 INF]|Serilog.AspNetCore.RequestLoggingMiddleware|
+ HTTP GET /openapi/v1.json responded 200 in 290.7987 ms
+[21-02 19:17:35 INF]|Microsoft.AspNetCore.Hosting.Diagnostics|
+ Request finished HTTP/2 GET https://localhost:7120/openapi/v1.json - 200 null application/json;charset=utf-8 358.8716ms
+[21-02 19:18:05 INF]|Microsoft.AspNetCore.Hosting.Diagnostics|
+ Request starting HTTP/1.1 GET https://localhost:7120/api/Customer/history/25 - application/json 276
+[21-02 19:18:05 INF]||
+ HTTP Request GET Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpRequestStream at "2026-02-21T17:18:05.6985648Z"
+[21-02 19:18:05 INF]||
+ Request Headers: {"Accept":"*/*","Connection":"keep-alive","Host":"localhost:7120","User-Agent":"PostmanRuntime/7.37.3","Accept-Encoding":"gzip, deflate, br","Authorization":"***MASKED***","Content-Type":"application/json","Content-Length":"276","Postman-Token":"***MASKED***"}
+[21-02 19:18:05 INF]|Microsoft.AspNetCore.Authentication.BearerToken.BearerTokenHandler|
+ Identity.Bearer was not authenticated. Failure message: Token expired
+[21-02 19:18:05 INF]|Microsoft.Extensions.DependencyInjection.IdentityServiceCollectionExtensions+CompositeIdentityHandler|
+ Identity.BearerAndApplication was not authenticated. Failure message: Token expired
+[21-02 19:18:05 INF]|Microsoft.AspNetCore.Routing.EndpointMiddleware|
+ Executing endpoint 'CustomersTask4.Controllers.CustomerController.GetCustomerHistory (CustomersTask4)'
+[21-02 19:18:05 INF]|Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker|
+ Route matched with {action = "GetCustomerHistory", controller = "Customer"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[CustomersTask4.Domain.CustomerHistory]] GetCustomerHistory(Int32) on controller CustomersTask4.Controllers.CustomerController (CustomersTask4).
+[21-02 19:18:05 WRN]|LuckyPennySoftware.MediatR.License|
+ You do not have a valid license key for the Lucky Penny software MediatR. This is allowed for development and testing scenarios. If you are running in production you are required to have a licensed version. Please visit https://luckypennysoftware.com to obtain a valid license.
+[21-02 19:18:07 WRN]|Microsoft.EntityFrameworkCore.Model.Validation|
+ Sensitive data logging is enabled. Log entries and exception messages may include sensitive application data; this mode should only be enabled during development.
+[21-02 19:18:09 INF]|Microsoft.EntityFrameworkCore.Database.Command|
+ Executed DbCommand (550ms) [Parameters=[@__customerId_0='25' (Nullable = true)], CommandType='"Text"', CommandTimeout='30']
+SELECT [c].[Id], [c].[Action], [c].[ChangedAt], [c].[CustomerId], [c].[NewValues], [c].[OldValues], [c].[UserEmail], [c].[UserId], [c].[UserRole]
+FROM [CustomerHistories] AS [c]
+WHERE [c].[CustomerId] = @__customerId_0
+[21-02 19:18:09 INF]|Microsoft.AspNetCore.Mvc.Infrastructure.ObjectResultExecutor|
+ Executing OkObjectResult, writing value of type 'System.Collections.Generic.List`1[[CustomersTask4.Domain.CustomerHistory, CustomersTask4, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+[21-02 19:18:09 INF]|Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker|
+ Executed action CustomersTask4.Controllers.CustomerController.GetCustomerHistory (CustomersTask4) in 4002.4256ms
+[21-02 19:18:09 INF]|Microsoft.AspNetCore.Routing.EndpointMiddleware|
+ Executed endpoint 'CustomersTask4.Controllers.CustomerController.GetCustomerHistory (CustomersTask4)'
+[21-02 19:18:09 INF]||
+ Response Status Code: 200
+[21-02 19:18:09 INF]|Serilog.AspNetCore.RequestLoggingMiddleware|
+ HTTP GET /api/Customer/history/25 responded 200 in 4251.8803 ms
+[21-02 19:18:09 INF]|Microsoft.AspNetCore.Hosting.Diagnostics|
+ Request finished HTTP/1.1 GET https://localhost:7120/api/Customer/history/25 - 200 null application/json; charset=utf-8 4303.8163ms
+[21-02 19:31:50 INF]|Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager|
+ User profile is available. Using 'C:\Users\abdul\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+[21-02 19:31:50 INF]|Microsoft.Hosting.Lifetime|
+ Now listening on: https://localhost:7120
+[21-02 19:31:50 INF]|Microsoft.Hosting.Lifetime|
+ Now listening on: http://localhost:5082
+[21-02 19:31:50 INF]|Microsoft.Hosting.Lifetime|
+ Application started. Press Ctrl+C to shut down.
+[21-02 19:31:50 INF]|Microsoft.Hosting.Lifetime|
+ Hosting environment: Development
+[21-02 19:31:50 INF]|Microsoft.Hosting.Lifetime|
+ Content root path: C:\Users\abdul\source\repos\CustomersTask4\CustomersTask4
+[21-02 19:31:52 INF]|Microsoft.AspNetCore.Hosting.Diagnostics|
+ Request starting HTTP/2 GET https://localhost:7120/_framework/aspnetcore-browser-refresh.js - null null
+[21-02 19:31:52 INF]|Microsoft.AspNetCore.Hosting.Diagnostics|
+ Request starting HTTP/2 GET https://localhost:7120/_vs/browserLink - null null
+[21-02 19:31:52 INF]|Microsoft.AspNetCore.Hosting.Diagnostics|
+ Request finished HTTP/2 GET https://localhost:7120/_framework/aspnetcore-browser-refresh.js - 200 16513 application/javascript; charset=utf-8 31.6435ms
+[21-02 19:31:52 INF]|Microsoft.AspNetCore.Hosting.Diagnostics|
+ Request finished HTTP/2 GET https://localhost:7120/_vs/browserLink - 200 null text/javascript; charset=UTF-8 89.0742ms
+[21-02 19:31:52 INF]|Microsoft.AspNetCore.Hosting.Diagnostics|
+ Request starting HTTP/2 GET https://localhost:7120/openapi/v1.json - null null
+[21-02 19:31:52 INF]||
+ HTTP Request GET Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpRequestStream at "2026-02-21T17:31:52.5955694Z"
+[21-02 19:31:52 INF]||
+ Request Headers: {"Accept":"application/json,*/*","Host":"localhost:7120","User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36 Edg/145.0.0.0","Accept-Encoding":"gzip, deflate, br, zstd","Accept-Language":"en-US,en;q=0.9,ar;q=0.8","Referer":"https://localhost:7120/swagger/index.html","sec-ch-ua-platform":"\"Windows\"","sec-ch-ua":"\"Not:A-Brand\";v=\"99\", \"Microsoft Edge\";v=\"145\", \"Chromium\";v=\"145\"","sec-ch-ua-mobile":"?0","sec-fetch-site":"same-origin","sec-fetch-mode":"cors","sec-fetch-dest":"empty","priority":"u=1, i"}
+[21-02 19:31:52 INF]|Microsoft.AspNetCore.Routing.EndpointMiddleware|
+ Executing endpoint 'HTTP: GET /openapi/{documentName}.json'
+[21-02 19:31:52 INF]|Microsoft.AspNetCore.Routing.EndpointMiddleware|
+ Executed endpoint 'HTTP: GET /openapi/{documentName}.json'
+[21-02 19:31:52 INF]||
+ Response Status Code: 200
+[21-02 19:31:52 INF]|Serilog.AspNetCore.RequestLoggingMiddleware|
+ HTTP GET /openapi/v1.json responded 200 in 382.3391 ms
+[21-02 19:31:52 INF]|Microsoft.AspNetCore.Hosting.Diagnostics|
+ Request finished HTTP/2 GET https://localhost:7120/openapi/v1.json - 200 null application/json;charset=utf-8 459.5765ms
+[21-02 19:32:36 INF]|Microsoft.AspNetCore.Hosting.Diagnostics|
+ Request starting HTTP/1.1 GET https://localhost:7120/api/Customer/history/25 - application/json 276
+[21-02 19:32:36 INF]||
+ HTTP Request GET Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpRequestStream at "2026-02-21T17:32:36.6265588Z"
+[21-02 19:32:36 INF]||
+ Request Headers: {"Accept":"*/*","Connection":"keep-alive","Host":"localhost:7120","User-Agent":"PostmanRuntime/7.37.3","Accept-Encoding":"gzip, deflate, br","Authorization":"***MASKED***","Content-Type":"application/json","Content-Length":"276","Postman-Token":"***MASKED***"}
+[21-02 19:32:36 INF]|Microsoft.AspNetCore.Authentication.BearerToken.BearerTokenHandler|
+ Identity.Bearer was not authenticated. Failure message: Token expired
+[21-02 19:32:36 INF]|Microsoft.Extensions.DependencyInjection.IdentityServiceCollectionExtensions+CompositeIdentityHandler|
+ Identity.BearerAndApplication was not authenticated. Failure message: Token expired
+[21-02 19:32:36 INF]|Microsoft.AspNetCore.Routing.EndpointMiddleware|
+ Executing endpoint 'CustomersTask4.Controllers.CustomerController.GetCustomerHistory (CustomersTask4)'
+[21-02 19:32:36 INF]|Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker|
+ Route matched with {action = "GetCustomerHistory", controller = "Customer"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[CustomersTask4.Domain.CustomerHistory]] GetCustomerHistory(Int32) on controller CustomersTask4.Controllers.CustomerController (CustomersTask4).
+[21-02 19:32:36 WRN]|LuckyPennySoftware.MediatR.License|
+ You do not have a valid license key for the Lucky Penny software MediatR. This is allowed for development and testing scenarios. If you are running in production you are required to have a licensed version. Please visit https://luckypennysoftware.com to obtain a valid license.
+[21-02 19:32:38 WRN]|Microsoft.EntityFrameworkCore.Model.Validation|
+ Sensitive data logging is enabled. Log entries and exception messages may include sensitive application data; this mode should only be enabled during development.
+[21-02 19:32:39 INF]|Microsoft.EntityFrameworkCore.Database.Command|
+ Executed DbCommand (72ms) [Parameters=[@__customerId_0='25' (Nullable = true)], CommandType='"Text"', CommandTimeout='30']
+SELECT [c].[Id], [c].[Action], [c].[ChangedAt], [c].[CustomerId], [c].[NewValues], [c].[OldValues], [c].[UserEmail], [c].[UserId], [c].[UserRole]
+FROM [CustomerHistories] AS [c]
+WHERE [c].[CustomerId] = @__customerId_0
+[21-02 19:32:40 INF]|Microsoft.AspNetCore.Mvc.Infrastructure.ObjectResultExecutor|
+ Executing OkObjectResult, writing value of type 'System.Collections.Generic.List`1[[CustomersTask4.Domain.CustomerHistory, CustomersTask4, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+[21-02 19:32:40 INF]|Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker|
+ Executed action CustomersTask4.Controllers.CustomerController.GetCustomerHistory (CustomersTask4) in 3303.8378ms
+[21-02 19:32:40 INF]|Microsoft.AspNetCore.Routing.EndpointMiddleware|
+ Executed endpoint 'CustomersTask4.Controllers.CustomerController.GetCustomerHistory (CustomersTask4)'
+[21-02 19:32:40 INF]||
+ Response Status Code: 200
+[21-02 19:32:40 INF]|Serilog.AspNetCore.RequestLoggingMiddleware|
+ HTTP GET /api/Customer/history/25 responded 200 in 3577.9171 ms
+[21-02 19:32:40 INF]|Microsoft.AspNetCore.Hosting.Diagnostics|
+ Request finished HTTP/1.1 GET https://localhost:7120/api/Customer/history/25 - 200 null application/json; charset=utf-8 3616.0947ms
+[21-02 19:40:58 INF]|Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager|
+ User profile is available. Using 'C:\Users\abdul\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+[21-02 19:40:59 INF]|Microsoft.Hosting.Lifetime|
+ Now listening on: https://localhost:7120
+[21-02 19:40:59 INF]|Microsoft.Hosting.Lifetime|
+ Now listening on: http://localhost:5082
+[21-02 19:40:59 INF]|Microsoft.Hosting.Lifetime|
+ Application started. Press Ctrl+C to shut down.
+[21-02 19:40:59 INF]|Microsoft.Hosting.Lifetime|
+ Hosting environment: Development
+[21-02 19:40:59 INF]|Microsoft.Hosting.Lifetime|
+ Content root path: C:\Users\abdul\source\repos\CustomersTask4\CustomersTask4
+[21-02 19:41:05 INF]|Microsoft.AspNetCore.Hosting.Diagnostics|
+ Request starting HTTP/1.1 GET https://localhost:7120/api/Customer/history/25 - application/json 276
+[21-02 19:41:06 INF]||
+ HTTP Request GET Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpRequestStream at "2026-02-21T17:41:06.0775656Z"
+[21-02 19:41:06 INF]||
+ Request Headers: {"Accept":"*/*","Connection":"keep-alive","Host":"localhost:7120","User-Agent":"PostmanRuntime/7.37.3","Accept-Encoding":"gzip, deflate, br","Authorization":"***MASKED***","Content-Type":"application/json","Content-Length":"276","Postman-Token":"***MASKED***"}
+[21-02 19:41:06 INF]|Microsoft.AspNetCore.Authentication.BearerToken.BearerTokenHandler|
+ Identity.Bearer was not authenticated. Failure message: Token expired
+[21-02 19:41:06 INF]|Microsoft.Extensions.DependencyInjection.IdentityServiceCollectionExtensions+CompositeIdentityHandler|
+ Identity.BearerAndApplication was not authenticated. Failure message: Token expired
+[21-02 19:41:06 INF]|Microsoft.AspNetCore.Routing.EndpointMiddleware|
+ Executing endpoint 'CustomersTask4.Controllers.CustomerController.GetCustomerHistory (CustomersTask4)'
+[21-02 19:41:06 INF]|Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker|
+ Route matched with {action = "GetCustomerHistory", controller = "Customer"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[CustomersTask4.Domain.CustomerHistory]] GetCustomerHistory(Int32) on controller CustomersTask4.Controllers.CustomerController (CustomersTask4).
+[21-02 19:41:06 WRN]|LuckyPennySoftware.MediatR.License|
+ You do not have a valid license key for the Lucky Penny software MediatR. This is allowed for development and testing scenarios. If you are running in production you are required to have a licensed version. Please visit https://luckypennysoftware.com to obtain a valid license.
+[21-02 19:41:07 WRN]|LuckyPennySoftware.AutoMapper.License|
+ You do not have a valid license key for the Lucky Penny software AutoMapper. This is allowed for development and testing scenarios. If you are running in production you are required to have a licensed version. Please visit https://luckypennysoftware.com to obtain a valid license.
+[21-02 19:41:09 WRN]|Microsoft.EntityFrameworkCore.Model.Validation|
+ Sensitive data logging is enabled. Log entries and exception messages may include sensitive application data; this mode should only be enabled during development.
+[21-02 19:41:11 INF]|Microsoft.EntityFrameworkCore.Database.Command|
+ Executed DbCommand (139ms) [Parameters=[@__customerId_0='25' (Nullable = true)], CommandType='"Text"', CommandTimeout='30']
+SELECT [c].[Id], [c].[Action], [c].[ChangedAt], [c].[CustomerId], [c].[NewValues], [c].[OldValues], [c].[UserEmail], [c].[UserId], [c].[UserRole]
+FROM [CustomerHistories] AS [c]
+WHERE [c].[CustomerId] = @__customerId_0
+[21-02 19:41:12 INF]|Microsoft.AspNetCore.Mvc.Infrastructure.ObjectResultExecutor|
+ Executing OkObjectResult, writing value of type 'System.Collections.Generic.List`1[[CustomersTask4.DTO.CustomerHistoryDto, CustomersTask4, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+[21-02 19:41:12 INF]|Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker|
+ Executed action CustomersTask4.Controllers.CustomerController.GetCustomerHistory (CustomersTask4) in 5755.4805ms
+[21-02 19:41:12 INF]|Microsoft.AspNetCore.Routing.EndpointMiddleware|
+ Executed endpoint 'CustomersTask4.Controllers.CustomerController.GetCustomerHistory (CustomersTask4)'
+[21-02 19:41:12 INF]||
+ Response Status Code: 200
+[21-02 19:41:12 INF]|Serilog.AspNetCore.RequestLoggingMiddleware|
+ HTTP GET /api/Customer/history/25 responded 200 in 6180.2759 ms
+[21-02 19:41:12 INF]|Microsoft.AspNetCore.Hosting.Diagnostics|
+ Request finished HTTP/1.1 GET https://localhost:7120/api/Customer/history/25 - 200 null application/json; charset=utf-8 6429.3215ms
