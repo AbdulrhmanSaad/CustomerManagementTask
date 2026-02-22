@@ -4,7 +4,6 @@ using CustomersTask4.Mapping;
 using CustomersTask4.Middleware;
 using CustomersTask4.Repository;
 using CustomersTask4.SerilogMasking;
-using CustomersTask4.Services;
 using CustomersTask4.Users;
 using FluentValidation;
 using FluentValidation.AspNetCore;
@@ -64,7 +63,6 @@ builder.Services.AddScoped<RequestLoggingMiddleware>();
 builder.Services.AddScoped<ErrorHandelingMiddleware>();
 
 builder.Services.AddScoped<IUserContext,UserContext>();
-builder.Services.AddScoped<IAuditService,AuditService>();
 builder.Services.AddScoped<ICustomerHistoryRepository,CustomerHistoryRepository>();
 builder.Services.AddHttpContextAccessor();
 

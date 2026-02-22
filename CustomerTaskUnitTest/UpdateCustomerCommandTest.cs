@@ -3,7 +3,6 @@ using CustomersTask4.CustomerHandler.Command.UpdateCustomer;
 using CustomersTask4.Domain;
 using CustomersTask4.Exceptions;
 using CustomersTask4.Repository;
-using CustomersTask4.Services;
 using CustomersTask4.Users;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
@@ -83,7 +82,6 @@ namespace CustomerTaskUnitTest
             await _handler.Handle(command, CancellationToken.None);
 
             // Assert
-            //await _repository.Received(1).GetByIdAsync(command.Id);
             await _repository.Received(1).Update(Arg.Any<Customer>());
         }
 
