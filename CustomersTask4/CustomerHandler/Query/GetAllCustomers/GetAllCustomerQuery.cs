@@ -2,7 +2,7 @@
 using CustomersTask4.DTO;
 using MediatR;
 
-namespace CustomersTask4.CustomerHandler.Query
+namespace CustomersTask4.CustomerHandler.Query.GetAllCustomers
 {
     public class GetAllCustomerQuery:IRequest<IEnumerable<CustomerDto>>
     {

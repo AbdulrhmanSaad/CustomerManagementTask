@@ -84,14 +84,6 @@ builder.Host.UseSerilog((context, config) =>
     ReadFrom.Configuration(context.Configuration);
     });
 
-//Log.Logger = new LoggerConfiguration()
-//    .MinimumLevel.Information()
-//    .Enrich.FromLogContext()
-//    .Enrich.With(new SensitiveDataMasking())
-//    .WriteTo.Console()
-//    .WriteTo.File("logs/log-.txt", rollingInterval: RollingInterval.Day)
-//    .CreateLogger();
-
 var app = builder.Build();
 
 

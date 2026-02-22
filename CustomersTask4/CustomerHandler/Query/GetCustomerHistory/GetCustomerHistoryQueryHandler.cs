@@ -7,13 +7,14 @@ using MediatR;
 namespace CustomersTask4.CustomerHandler.Query.GetCustomerHistory
 {
     public class GetCustomerHistoryQueryHandler(ILogger<GetCustomerHistoryQueryHandler>logger,
-        ICustomerHistoryRepository repository,
-        IMapper mapper) : IRequestHandler<GetCustomerHistoryQuery,IEnumerable<CustomerHistoryDto>>
+        ICustomerHistoryRepository repository
+        ) : IRequestHandler<GetCustomerHistoryQuery,IEnumerable<Customer>>
     {
-        public async Task<IEnumerable<CustomerHistoryDto>> Handle(GetCustomerHistoryQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<Customer>> Handle(GetCustomerHistoryQuery request, CancellationToken cancellationToken)
         {
            var res=await repository.GetAllCustomerHistory(request.CustomerId);
-           return mapper.Map<IEnumerable<CustomerHistoryDto>>(res);
+            //var address = await repository.GetAllCustomerAddressHistory(request.CustomerId);
+            return res;//mapper.Map<IEnumerable<CustomerHistoryDto>>(res);
         }
     }
 }

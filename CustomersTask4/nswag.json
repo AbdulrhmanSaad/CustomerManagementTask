@@ -1,0 +1,19 @@
+{
+  "runtime": "Net90",
+  "documentGenerator": {
+    "aspNetCoreToOpenApi": {
+      "project": "CustomersTask4.csproj",
+      "aspNetCoreEnvironment": "Development",
+      "output": "swagger.json"
+    }
+  },
+  "codeGenerators": {
+    "openApiToCSharpClient": {
+      "className": "CustomersApiClient",
+      "namespace": "CustomersTask4.Client",
+      "output": "Generated/CustomersApiClient.cs",
+      "generateClientInterfaces": true,
+      "useBaseUrl": true
+    }
+  }
+}

@@ -2,9 +2,11 @@
 using CustomersTask4.CustomerHandler.Command.DeleteCustomerCommand;
 using CustomersTask4.CustomerHandler.Command.UpdateCustomer;
 using CustomersTask4.CustomerHandler.Query;
+using CustomersTask4.CustomerHandler.Query.GetAllCustomers;
 using CustomersTask4.CustomerHandler.Query.GetCustomerById;
 using CustomersTask4.CustomerHandler.Query.GetCustomerHistory;
 using CustomersTask4.Domain;
+using CustomersTask4.DTO;
 using CustomersTask4.Users;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -16,23 +18,21 @@ namespace CustomersTask4.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-  
+    [Authorize]
     public class CustomerController(IMediator mediator) : ControllerBase
     {
         
         [HttpGet]
-        [Authorize]
-        public async Task<ActionResult<List<Customer>>> GetAll()
+        public async Task<ActionResult<IEnumerable<CustomerDto>>> GetAll()
         {
            var customers=await mediator.Send(new GetAllCustomerQuery());
            return Ok(customers);
         }
         [HttpGet("{id}")]
-        public async Task<ActionResult<Customer>> GetCustomerById(int id)
+        public async Task<ActionResult<CustomerDto>> GetCustomerById(int id)
         {
             var customer =await mediator.Send(new GetCustomerByIdQuery(id));
-            //if (customer == null)
-            //    return NotFound();
+           
             return Ok(customer);
         }
         [HttpDelete("{id}")]
@@ -63,8 +63,7 @@ namespace CustomersTask4.Controllers
         public async Task<ActionResult<CustomerHistory>> GetCustomerHistory(int id)
         {
             var customer = await mediator.Send(new GetCustomerHistoryQuery(id));
-            //if (customer == null)
-            //    return NotFound();
+          
             return Ok(customer);
         }
 

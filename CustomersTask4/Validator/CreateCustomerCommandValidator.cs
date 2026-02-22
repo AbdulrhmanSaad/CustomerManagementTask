@@ -4,9 +4,9 @@ using FluentValidation;
 
 namespace CustomersTask4.Validator
 {
-    public class CustomerDtoValidator:AbstractValidator<CreateCustomerCommand>
+    public class CreateCustomerCommandValidator:AbstractValidator<CreateCustomerCommand>
     {
-        public CustomerDtoValidator()
+        public CreateCustomerCommandValidator()
         {
          RuleFor(c=>c.Name).NotEmpty().WithMessage("Name is required.")
              .MaximumLength(200).WithMessage("Name must not exceed 100 characters.");

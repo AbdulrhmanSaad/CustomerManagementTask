@@ -4,7 +4,7 @@ using CustomersTask4.DTO;
 using CustomersTask4.Repository;
 using MediatR;
 
-namespace CustomersTask4.CustomerHandler.Query
+namespace CustomersTask4.CustomerHandler.Query.GetAllCustomers
 {
     public class GetAllCustomerQueryHandler(IGenericRepository<Customer>repository,
         ILogger<GetAllCustomerQueryHandler>logger,

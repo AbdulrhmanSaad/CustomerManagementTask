@@ -37,6 +37,12 @@ namespace CustomersTask4.Data
               .HasForeignKey(a => a.CustomerId)
               .OnDelete(DeleteBehavior.NoAction);
 
+            modelBuilder.Entity<Customer>()
+                .ToTable("Customers", b => b.IsTemporal());
+
+            modelBuilder.Entity<Address>()
+                .ToTable("Addresses", b => b.IsTemporal());
+
         }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Address> Addresses { get; set; }

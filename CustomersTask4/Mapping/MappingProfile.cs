@@ -27,6 +27,7 @@ namespace CustomersTask4.Mapping
                             AddressName = c.WorkAddressLocation
                         }
                     };
+                    d.CreatedAt = DateTime.UtcNow;
                 });
 
             CreateMap<Customer, CustomerDto>()
@@ -64,6 +65,7 @@ namespace CustomersTask4.Mapping
                         }
 
                     };
+                    d.CreatedAt = DateTime.UtcNow;
                 });
 
             CreateMap<Customer, Customer>()

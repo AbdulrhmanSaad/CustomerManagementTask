@@ -1,10 +1,12 @@
 ﻿
 using CustomersTask4.SerilogMasking;
+using CustomersTask4.Users;
 using Serilog;
+using System.Security.Claims;
 
 namespace CustomersTask4.Middleware
 {
-    public class RequestLoggingMiddleware : IMiddleware
+    public class RequestLoggingMiddleware(IUserContext user) : IMiddleware
     {
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
@@ -22,6 +24,9 @@ namespace CustomersTask4.Middleware
               h => SensitiveDataMasking.MaskValue(h.Key, h.Value.ToString())
               );
             Log.Information("Request Headers: {@Headers}", headers);
+            var current=user.GetCurrentUser();
+            if(current is not null)
+                Log.Information("Request User: {@current}",current);
 
             await next(context);
 
