@@ -1,4 +1,6 @@
-﻿namespace CustomersTask4.DTO
+﻿using CustomersTask4.Domain;
+
+namespace CustomersTask4.DTO
 {
     public class CustomerHistoryDto
     {
@@ -26,7 +28,15 @@
     }
     public class AddressDto
     {
-        public int AddressType { get; set; }
+        public string AddressType { get; set; }
         public string AddressName { get; set; }
+    }
+
+    public class CustomerHistoryResponse
+    {
+        public string Name { get; set; }
+        public string Phone { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public string CreatedBy { get; set; }
     }
 }

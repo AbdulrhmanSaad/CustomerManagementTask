@@ -46,6 +46,7 @@ namespace CustomersTask4.Mapping
                         d.WorkAddressLocation = workAddress.AddressName;
                     }
                 });
+            CreateMap<Customer, CustomerHistoryResponse>();
             CreateMap<UpdateCustomerCommand,Customer>()
                 .AfterMap((c, d) =>
                 {

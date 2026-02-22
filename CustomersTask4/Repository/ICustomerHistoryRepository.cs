@@ -6,6 +6,6 @@ namespace CustomersTask4.Repository
     public interface ICustomerHistoryRepository
     {
         Task<IEnumerable<Customer>> GetAllCustomerHistory(int customerId);
-        Task<IEnumerable<Address>> GetAllCustomerAddressHistory(int customerId);
+        Task<IEnumerable<AddressDto>> GetAllCustomerAddressHistory(int customerId);
     }
 }

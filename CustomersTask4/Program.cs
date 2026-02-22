@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
 using Microsoft.OpenApi.Models;
 using Serilog;
@@ -27,6 +28,23 @@ builder.Services.AddControllers();
 
 builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly)
     .AddFluentValidationAutoValidation();
+
+builder.Services.AddAuthentication(op => op.DefaultAuthenticateScheme = "token")
+    .AddJwtBearer("token", op =>
+    {
+        var secretKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes("this is my secret key abdo saad key"));
+
+        op.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateAudience = false,
+            ValidateIssuer = false,
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = secretKey,
+        };
+
+    });
+
+
 
 builder.Services.AddSwaggerGen(c =>
 {

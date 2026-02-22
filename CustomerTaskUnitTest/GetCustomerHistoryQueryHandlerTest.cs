@@ -1,5 +1,7 @@
-﻿using CustomersTask4.CustomerHandler.Query.GetCustomerHistory;
+﻿using AutoMapper;
+using CustomersTask4.CustomerHandler.Query.GetCustomerHistory;
 using CustomersTask4.Domain;
+using CustomersTask4.DTO;
 using CustomersTask4.Repository;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
@@ -16,13 +18,15 @@ namespace CustomerTaskUnitTest
             private readonly ILogger<GetCustomerHistoryQueryHandler> _logger;
             private readonly ICustomerHistoryRepository _repository;
             private readonly GetCustomerHistoryQueryHandler _handler;
+            private readonly IMapper _mapper;
 
             public GetCustomerHistoryQueryHandlerTest()
             {
                 _logger = Substitute.For<ILogger<GetCustomerHistoryQueryHandler>>();
                 _repository = Substitute.For<ICustomerHistoryRepository>();
+                _mapper = Substitute.For<IMapper>();
 
-                _handler = new GetCustomerHistoryQueryHandler(_logger, _repository);
+            _handler = new GetCustomerHistoryQueryHandler(_logger, _repository,_mapper);
             }
 
             #region Success Cases
@@ -50,13 +54,21 @@ namespace CustomerTaskUnitTest
                 _repository.GetAllCustomerHistory(customerId)
                     .Returns(historyRecords);
 
-                // Act
-                var result = await _handler.Handle(query, CancellationToken.None);
+            _mapper.Map<IEnumerable<CustomerHistoryResponse>>(historyRecords)
+                    .Returns(historyRecords.Select(c => new CustomerHistoryResponse
+                    {
+                        Name = c.Name,
+                        Phone = c.Phone,
+                        CreatedAt = c.CreatedAt,
+                        CreatedBy = c.CreatedBy
+                    }));
+            
+            // Act
+            var result = await _handler.Handle(query, CancellationToken.None);
 
                 // Assert
                 Assert.NotNull(result);
                 var firstRecord = result.First();
-                Assert.Equal(customerId, firstRecord.Id);
                 Assert.Equal("Ahmed", firstRecord.Name);
             }
 
@@ -102,8 +114,17 @@ namespace CustomerTaskUnitTest
                 _repository.GetAllCustomerHistory(customerId)
                     .Returns(historyRecords);
 
-                // Act
-                var result = await _handler.Handle(query, CancellationToken.None);
+              _mapper.Map<IEnumerable<CustomerHistoryResponse>>(historyRecords)
+                    .Returns(historyRecords.Select(c => new CustomerHistoryResponse
+                    {
+                        Name = c.Name,
+                        Phone = c.Phone,
+                        CreatedAt = c.CreatedAt,
+                        CreatedBy = c.CreatedBy
+                    }));
+
+            // Act
+            var result = await _handler.Handle(query, CancellationToken.None);
 
                 // Assert
                 Assert.NotNull(result);
