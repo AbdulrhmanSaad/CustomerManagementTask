@@ -34,7 +34,7 @@ namespace CustomersTask4.CustomerHandler.Command.UpdateCustomer
             mapper.Map(request, customer);
             var user=userContext.GetCurrentUser();
             if(user != null)
-                customer.CreatedBy= user.Name;
+                customer.ChangedBy= user.Name;
             await db.Update(customer);
 
 

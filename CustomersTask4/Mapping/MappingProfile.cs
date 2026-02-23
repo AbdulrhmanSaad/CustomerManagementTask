@@ -66,7 +66,7 @@ namespace CustomersTask4.Mapping
                         }
 
                     };
-                    d.CreatedAt = DateTime.UtcNow;
+                    d.ChangedAt = DateTime.UtcNow;
                 });
 
             CreateMap<Customer, Customer>()

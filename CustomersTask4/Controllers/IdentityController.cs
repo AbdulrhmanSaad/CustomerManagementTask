@@ -85,9 +85,11 @@ namespace CustomersTask4.Controllers
         }
         private string GenerateJwtToken(User user)
         {
+            var role =userManager.GetRolesAsync(user)?.Result.FirstOrDefault()??"no role";
+
             var claim = new List<Claim>();
             claim.Add(new Claim(ClaimTypes.Name, user.UserName));
-            //claim.Add(new Claim(ClaimTypes.MobilePhone, user.PhoneNumber));
+            claim.Add(new Claim(ClaimTypes.Role, role));
             claim.Add(new Claim(ClaimTypes.NameIdentifier, user.Id));
 
             var secretKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes("this is my secret key abdo saad key"));
