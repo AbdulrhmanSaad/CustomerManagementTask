@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using CustomersTask4.CustomerHandler.Command.CreateCustomer;
 using CustomersTask4.Domain;
+using CustomersTask4.DTO;
 using CustomersTask4.Exceptions;
 using CustomersTask4.Repository;
 using CustomersTask4.Users;
@@ -19,10 +20,19 @@ namespace CustomerTaskUnitTest
         {
             Name = "Ahmed",
             Phone = "01013513652",
-            AddressType = CustomersTask4.Domain.AddressType.Home,
-            HomeAddressLocation = "123 Alex",
-            AddressType2 = CustomersTask4.Domain.AddressType.Work,
-            WorkAddressLocation = "456 Cairo"
+            Addresses =new List<AddressDtoEnum>()
+            {
+                new AddressDtoEnum
+                {
+                    AddressType=AddressType.Home,
+                    AddressName="Cairo"
+                },
+                new AddressDtoEnum
+                {
+                    AddressType=AddressType.Work,
+                    AddressName="Alex"
+                }
+            }
         };
         private readonly IGenericRepository<Customer> repository;
         private readonly IMapper mapper;
@@ -61,10 +71,19 @@ namespace CustomerTaskUnitTest
             {
                 Name = "updated now ",
                 Phone = "01213213665",
-                AddressType=AddressType.Home,
-                HomeAddressLocation="Cairo",
-                AddressType2=AddressType.Work,
-                WorkAddressLocation= "Alex"
+                Addresses = new List<AddressDtoEnum>()
+            {
+                new AddressDtoEnum
+                {
+                    AddressType=AddressType.Home,
+                    AddressName="Cairo"
+                },
+                new AddressDtoEnum
+                {
+                    AddressType=AddressType.Work,
+                    AddressName="Alex"
+                }
+            }
             };
             repository.PhoneExistsAsync(command.Phone).Returns(true);
             mapper.Map<Customer>(NewCustomer).Returns(new Customer());

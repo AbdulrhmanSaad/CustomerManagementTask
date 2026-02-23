@@ -19,7 +19,7 @@ namespace CustomersTask4.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-   // [Authorize]
+    [Authorize]
     public class CustomerController(IMediator mediator) : ControllerBase
     {
         
@@ -43,6 +43,7 @@ namespace CustomersTask4.Controllers
         [Authorize(Roles =UserRoles.Admin)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<ActionResult> DeleteCustomer(int id)
         {
             await mediator.Send(new DeleteCustomerCommand(id));
@@ -81,7 +82,6 @@ namespace CustomersTask4.Controllers
 
 
         [HttpGet("AddressHistory/{id}")]
-        [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<CustomerHistoryResponse>> GetCustomerAddressHistory(int id)

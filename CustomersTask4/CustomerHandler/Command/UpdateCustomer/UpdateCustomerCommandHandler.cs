@@ -25,11 +25,15 @@ namespace CustomersTask4.CustomerHandler.Command.UpdateCustomer
 
         public async  Task Handle(UpdateCustomerCommand request, CancellationToken cancellationToken)
         {
+           
             var customer = await db.GetByIdAsync(request.Id,c=>c.Addresses);
+           
             if (customer == null)
                throw new NotFoundException($"Customer with id {request.Id} not found.");
+            
             if(db.PhoneExistsAsync(request.Phone)&&customer.Phone!=request.Phone)
                 throw new NotFoundException($"Phone Number: {request.Phone} aleardy exists.");
+            
             mapper.Map<Customer>(customer);
             mapper.Map(request, customer);
             var user=userContext.GetCurrentUser();

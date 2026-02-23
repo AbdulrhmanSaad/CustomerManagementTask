@@ -2,14 +2,17 @@
 using CustomersTask4.CustomerHandler.Query.GetCustomerHistory;
 using CustomersTask4.Domain;
 using CustomersTask4.DTO;
+using CustomersTask4.Exceptions;
 using CustomersTask4.Repository;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace CustomerTaskUnitTest
 {
@@ -35,10 +38,18 @@ namespace CustomerTaskUnitTest
             public async Task Handle_WithValidCustomerId_ShouldReturnCustomerHistory()
             {
                 // Arrange
-                var customerId = 1;
+                var customerId = 25;
                 var query = new GetCustomerHistoryQuery(customerId);
-
-                var historyRecords = new List<Customer>
+            var existtingcustomer = new Customer
+            {
+                Id = 32,
+                Name = "Ahmed Updated",
+                Phone = "01013513653",
+                CreatedAt = DateTime.UtcNow.AddDays(-3),
+                CreatedBy = "admin",
+                Addresses = new List<Address>()
+            };
+            var historyRecords = new List<Customer>
             {
                 new Customer
                 {
@@ -50,8 +61,10 @@ namespace CustomerTaskUnitTest
                     Addresses = new List<Address>()
                 }
             };
+            _repository.GetByIdAsync(customerId)
+             .Returns(existtingcustomer);
 
-                _repository.GetAllCustomerHistory(customerId)
+            _repository.GetAllCustomerHistory(customerId)
                     .Returns(historyRecords);
 
             _mapper.Map<IEnumerable<CustomerHistoryResponse>>(historyRecords)
@@ -77,8 +90,17 @@ namespace CustomerTaskUnitTest
             public async Task Handle_WithMultipleHistoryRecords_ShouldReturnAllRecords()
             {
                 // Arrange
-                var customerId = 1;
+                var customerId = 32;
                 var query = new GetCustomerHistoryQuery(customerId);
+            var existtingcustomer = new Customer
+            {
+                Id = 32,
+                Name = "Ahmed Updated",
+                Phone = "01013513653",
+                CreatedAt = DateTime.UtcNow.AddDays(-3),
+                CreatedBy = "admin",
+                Addresses = new List<Address>()
+            };
 
                 var historyRecords = new List<Customer>
             {
@@ -111,7 +133,10 @@ namespace CustomerTaskUnitTest
                 }
             };
 
-                _repository.GetAllCustomerHistory(customerId)
+            _repository.GetByIdAsync(customerId)
+              .Returns(existtingcustomer);
+
+            _repository.GetAllCustomerHistory(customerId)
                     .Returns(historyRecords);
 
               _mapper.Map<IEnumerable<CustomerHistoryResponse>>(historyRecords)
@@ -136,7 +161,7 @@ namespace CustomerTaskUnitTest
             
 
             [Fact]
-            public async Task Handle_WithEmptyHistoryRecords_ShouldReturnEmptyEnumerable()
+            public async Task Handle_WithEmptyHistoryRecords_ShouldReturnNotFoundException()
             {
                 // Arrange
                 var customerId = 999;
@@ -147,12 +172,18 @@ namespace CustomerTaskUnitTest
                 _repository.GetAllCustomerHistory(customerId)
                     .Returns(emptyHistoryRecords);
 
-                // Act
-                var result = await _handler.Handle(query, CancellationToken.None);
 
-                // Assert
-                Assert.NotNull(result);
-                Assert.Empty(result);
+             _repository.GetByIdAsync(customerId)
+                .Returns((Customer)null);
+
+            // Act & Assert
+            var exception = await Assert.ThrowsAsync<NotFoundException>(
+                () => _handler.Handle(query, CancellationToken.None)
+            );
+
+            Assert.Equal($"Customer with id {customerId} not found.", exception.Message);
+            await _repository.DidNotReceive().GetAllCustomerHistory(Arg.Any<int>());
+
             }
 
            

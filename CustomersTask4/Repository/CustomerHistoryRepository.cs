@@ -5,11 +5,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CustomersTask4.Repository
 {
-    public class CustomerHistoryRepository : ICustomerHistoryRepository
+    public class CustomerHistoryRepository : GenericRepository<Customer>, ICustomerHistoryRepository
     {
         private readonly ApplicationDbContext db;
 
-        public CustomerHistoryRepository(ApplicationDbContext db)
+        public CustomerHistoryRepository(ApplicationDbContext db):base(db)
         {
             this.db = db;
         }

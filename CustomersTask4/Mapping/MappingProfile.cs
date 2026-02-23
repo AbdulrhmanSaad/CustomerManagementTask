@@ -11,24 +11,37 @@ namespace CustomersTask4.Mapping
     {
         public MappingProfile()
         {
+
             CreateMap<CreateCustomerCommand, Customer>()
-                .AfterMap((c, d) =>
-                {
-                    d.Addresses = new List<Address>
-                    {
-                        new Address
-                        {
-                            AddressType = c.AddressType,
-                            AddressName = c.HomeAddressLocation
-                        },
-                        new Address
-                        {
-                            AddressType = c.AddressType2,
-                            AddressName = c.WorkAddressLocation
-                        }
-                    };
-                    d.CreatedAt = DateTime.UtcNow;
-                });
+               .ForMember(dest => dest.Addresses, opt => opt.MapFrom(src =>
+                   src.Addresses.Select(a => new Address
+                   {
+                       AddressType = a.AddressType,
+                       AddressName = a.AddressName
+                   }).ToList()))
+               .AfterMap((c, d) =>
+               {
+                   d.CreatedAt = DateTime.UtcNow;
+               });
+
+            //CreateMap<CreateCustomerCommand, Customer>()
+            //    .AfterMap((c, d) =>
+            //    {
+            //        d.Addresses = new List<Address>
+            //        {
+            //            new Address
+            //            {
+            //                AddressType = c.AddressType,
+            //                AddressName = c.HomeAddressLocation
+            //            },
+            //            new Address
+            //            {
+            //                AddressType = c.AddressType2,
+            //                AddressName = c.WorkAddressLocation
+            //            }
+            //        };
+            //        d.CreatedAt = DateTime.UtcNow;
+            //    });
 
             CreateMap<Customer, CustomerDto>()
                 .AfterMap((c, d) =>
@@ -73,19 +86,31 @@ namespace CustomersTask4.Mapping
                .ForMember(dest => dest.Addresses, opt => opt.MapFrom(src => src.Addresses));
             CreateMap<Address, Address>();
 
-            CreateMap<CustomerHistory, CustomerHistoryDto>()
-    .ForMember(dest => dest.OldValues,
-        opt => opt.MapFrom(src =>
-            string.IsNullOrEmpty(src.OldValues)
-                ? null
-                : JsonSerializer.Deserialize<CustomerSnapshotDto>(src.OldValues, (JsonSerializerOptions)null)
-        ))
-    .ForMember(dest => dest.NewValues,
-        opt => opt.MapFrom(src =>
-            string.IsNullOrEmpty(src.NewValues)
-                ? null
-                : JsonSerializer.Deserialize<CustomerSnapshotDto>(src.NewValues, (JsonSerializerOptions)null)
-        ));
+
+
+
+
+
+
+
+
+
+
+
+
+    //        CreateMap<CustomerHistory, CustomerHistoryDto>()
+    //.ForMember(dest => dest.OldValues,
+    //    opt => opt.MapFrom(src =>
+    //        string.IsNullOrEmpty(src.OldValues)
+    //            ? null
+    //            : JsonSerializer.Deserialize<CustomerSnapshotDto>(src.OldValues, (JsonSerializerOptions)null)
+    //    ))
+    //.ForMember(dest => dest.NewValues,
+    //    opt => opt.MapFrom(src =>
+    //        string.IsNullOrEmpty(src.NewValues)
+    //            ? null
+    //            : JsonSerializer.Deserialize<CustomerSnapshotDto>(src.NewValues, (JsonSerializerOptions)null)
+    //    ));
 
 
 

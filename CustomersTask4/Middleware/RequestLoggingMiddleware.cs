@@ -25,7 +25,7 @@ namespace CustomersTask4.Middleware
               );
             Log.Information("Request Headers: {@Headers}", headers);
             var current=user.GetCurrentUser();
-            if(current is not null)
+            if(current != null)
                 Log.Information("Request User: {@current}",current);
 
             await next(context);

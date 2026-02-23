@@ -118,14 +118,17 @@ if (app.Environment.IsDevelopment())
 }
 app.UseSerilogRequestLogging();
 
-app.UseMiddleware<RequestLoggingMiddleware>();
-app.UseMiddleware<ErrorHandelingMiddleware>();
+
 
 app.UseHttpsRedirection();
-app.MapGroup("/api/Identity").MapIdentityApi<User>();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseMiddleware<RequestLoggingMiddleware>();
+app.UseMiddleware<ErrorHandelingMiddleware>();
+//app.MapGroup("/api/Identity").MapIdentityApi<User>();
+
 
 app.MapControllers();
 

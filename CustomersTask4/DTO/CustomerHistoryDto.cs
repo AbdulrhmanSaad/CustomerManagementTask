@@ -32,6 +32,10 @@ namespace CustomersTask4.DTO
         public string AddressName { get; set; }
     }
 
+
+ 
+
+
     public class CustomerHistoryResponse
     {
         public string Name { get; set; }
@@ -41,5 +45,11 @@ namespace CustomersTask4.DTO
         public DateTime ChangedAt { get; set; }
 
         public string ChangedBy { get; set; }
+    }
+
+    public class AddressDtoEnum
+    {
+        public AddressType AddressType { get; set; }
+        public string AddressName { get; set; }
     }
 }
