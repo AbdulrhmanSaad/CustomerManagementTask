@@ -4,11 +4,11 @@ using CustomersTask4.Domain;
 using CustomersTask4.Exceptions;
 using CustomersTask4.Repository;
 using CustomersTask4.Users;
-using MediatR;
+using Mediator;
 
 namespace CustomersTask4.CustomerHandler.Command.UpdateCustomer
 {
-    public class UpdateCustomerCommandHandler:IRequestHandler<UpdateCustomerCommand>
+    public class UpdateCustomerCommandHandler:IRequestHandler<UpdateCustomerCommand,Unit>
     {
         private IGenericRepository<Customer> db;
         private ILogger<UpdateCustomerCommandHandler> logger;
@@ -23,7 +23,7 @@ namespace CustomersTask4.CustomerHandler.Command.UpdateCustomer
             this.userContext = userContext;
         }
 
-        public async  Task Handle(UpdateCustomerCommand request, CancellationToken cancellationToken)
+        public async ValueTask<Unit> Handle(UpdateCustomerCommand request, CancellationToken cancellationToken)
         {
            
             var customer = await db.GetByIdAsync(request.Id,c=>c.Addresses);
@@ -41,6 +41,7 @@ namespace CustomersTask4.CustomerHandler.Command.UpdateCustomer
                 customer.ChangedBy= user.Name;
             await db.Update(customer);
 
+            return Unit.Value;
 
         }
     }

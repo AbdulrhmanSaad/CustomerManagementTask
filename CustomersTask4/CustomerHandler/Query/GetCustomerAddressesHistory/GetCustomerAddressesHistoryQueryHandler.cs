@@ -2,20 +2,14 @@
 using CustomersTask4.Exceptions;
 using CustomersTask4.Repository;
 using MapsterMapper;
-using MediatR;
+using Mediator;
 
 namespace CustomersTask4.CustomerHandler.Query.GetCustomerAddressesHistory
 {
-    public class GetCustomerAddressesHistoryQueryHandler:IRequestHandler<GetCustomerAddressesHistoryQuery, IEnumerable<AddressDto>>
+    public class GetCustomerAddressesHistoryQueryHandler(ICustomerHistoryRepository repository, IMapper mapper) :IRequestHandler<GetCustomerAddressesHistoryQuery, IEnumerable<AddressDto>>
     {
-        private readonly ICustomerHistoryRepository repository;
-        private readonly IMapper mapper;
-        public GetCustomerAddressesHistoryQueryHandler(ICustomerHistoryRepository repository,IMapper mapper)
-        {
-            this.repository = repository;
-            this.mapper = mapper;
-        }
-        public async Task<IEnumerable<AddressDto>> Handle(GetCustomerAddressesHistoryQuery request, CancellationToken cancellationToken)
+        
+        public async ValueTask<IEnumerable<AddressDto>> Handle(GetCustomerAddressesHistoryQuery request, CancellationToken cancellationToken)
         {
 
             var customer = await repository.GetByIdAsync(request.CustomerId);

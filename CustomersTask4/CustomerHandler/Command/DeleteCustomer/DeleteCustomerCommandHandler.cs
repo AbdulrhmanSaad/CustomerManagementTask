@@ -1,16 +1,16 @@
 ﻿using CustomersTask4.Domain;
 using CustomersTask4.Exceptions;
 using CustomersTask4.Repository;
-using MediatR;
+using Mediator;
 using System.Security.Cryptography;
 
 namespace CustomersTask4.CustomerHandler.Command.DeleteCustomerCommand
 {
     public class DeleteCustomerCommandHandler(IGenericRepository<Customer>db
         ,ILogger<DeleteCustomerCommandHandler>logger
-           ) : IRequestHandler<DeleteCustomerCommand>
+           ) : IRequestHandler<DeleteCustomerCommand,Unit>
     {
-        public async Task Handle(DeleteCustomerCommand request, CancellationToken cancellationToken)
+        public async ValueTask<Unit> Handle(DeleteCustomerCommand request, CancellationToken cancellationToken)
         {
             logger.LogInformation("Handling DeleteCustomerCommand for Customer Id: {CustomerId}", request.Id);
             var customer =await db.GetByIdAsync(request.Id);
@@ -18,6 +18,7 @@ namespace CustomersTask4.CustomerHandler.Command.DeleteCustomerCommand
                 throw new NotFoundException($"Customer With Id={request.Id} not found");
 
             await db.Delete(customer);
+            return Unit.Value;  
 
 
         }

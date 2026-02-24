@@ -1,8 +1,9 @@
-﻿using CustomersTask4.Domain;
+﻿using CustomersTask4.Abstraction;
+using CustomersTask4.Domain;
 using CustomersTask4.DTO;
 using CustomersTask4.UserHandler.Command;
 using CustomersTask4.Users;
-using MediatR;
+using Mediator;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -18,7 +19,7 @@ namespace CustomersTask4.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class IdentityController(IMediator mediator, UserManager<User> userManager, SignInManager<User> signInManager) : ControllerBase
+    public class IdentityController(IAppMeditor mediator, UserManager<User> userManager, SignInManager<User> signInManager) : ControllerBase
     {
         [HttpPost("AssignRoleTo")]
         [Authorize(Roles = UserRoles.Admin)]

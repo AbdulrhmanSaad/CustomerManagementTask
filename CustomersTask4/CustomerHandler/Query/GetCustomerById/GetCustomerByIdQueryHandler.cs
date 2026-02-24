@@ -5,7 +5,7 @@ using CustomersTask4.DTO;
 using CustomersTask4.Exceptions;
 using CustomersTask4.Repository;
 using MapsterMapper;
-using MediatR;
+using Mediator;
 using Microsoft.AspNetCore.Components.Forms.Mapping;
 
 namespace CustomersTask4.CustomerHandler.Query
@@ -14,7 +14,7 @@ namespace CustomersTask4.CustomerHandler.Query
         ILogger<GetAllCustomerQueryHandler>logger,
         IMapper mapper) : IRequestHandler<GetCustomerByIdQuery, CustomerDto?>
     {
-        public async Task<CustomerDto?> Handle(GetCustomerByIdQuery request, CancellationToken cancellationToken)
+        public async ValueTask<CustomerDto?> Handle(GetCustomerByIdQuery request, CancellationToken cancellationToken)
         {
             logger.LogInformation($"Getting customer by id {request.id}");
             var customer = await db.GetByIdAsync(request.id, c => c.Addresses);

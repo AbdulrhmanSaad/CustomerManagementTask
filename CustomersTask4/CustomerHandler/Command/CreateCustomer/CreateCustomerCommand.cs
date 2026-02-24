@@ -1,8 +1,8 @@
 ﻿using CustomersTask4.Domain;
 using CustomersTask4.DTO;
+using Mediator;
 using System.Windows.Input;
-using SimpleSoft.Mediator;
-using MediatR;
+
 
 namespace CustomersTask4.CustomerHandler.Command.CreateCustomer
 {

@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿
+using Mediator;
 
 namespace CustomersTask4.CustomerHandler.Command.DeleteCustomerCommand
 {

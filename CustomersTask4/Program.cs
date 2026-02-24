@@ -8,7 +8,6 @@ using CustomersTask4.Users;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using MapsterMapper;
-using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
@@ -20,6 +19,8 @@ using Microsoft.OpenApi.Models;
 using Serilog;
 using System.Reflection;
 using System.Security.Cryptography.Xml;
+using Mediator;
+using CustomersTask4.Abstraction;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -48,7 +49,6 @@ builder.Services.AddAuthentication(op => op.DefaultAuthenticateScheme = "token")
     });
 
 // inside ConfigureServices
-builder.Services.AddMediator();         // registers mediator core
 
 
 builder.Services.AddSwaggerGen(c =>
@@ -79,10 +79,13 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddScoped(
     typeof(IGenericRepository<>),
     typeof(GenericRepository<>));
-builder.Services.AddMediatR(cfg =>
-    cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
-
-//builder.Services.AddScoped<IAbstracrMeditor, AbstracrtMeditor>();
+//builder.Services.AddMediatR(cfg =>
+//  cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
+builder.Services.AddMediator(cfg =>
+{
+    cfg.ServiceLifetime = ServiceLifetime.Scoped; // must be Scoped for EF Core
+});
+builder.Services.AddScoped<IAppMeditor, AppMediator>();
 //builder.Services.AddAutoMapper(cfg => cfg.AddProfile<MappingProfile>());
 builder.Services.AddScoped<RequestLoggingMiddleware>();
 builder.Services.AddScoped<ErrorHandelingMiddleware>();

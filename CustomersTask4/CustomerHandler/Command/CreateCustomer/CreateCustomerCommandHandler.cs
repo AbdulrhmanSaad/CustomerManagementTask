@@ -3,16 +3,16 @@ using CustomersTask4.Exceptions;
 using CustomersTask4.Repository;
 using CustomersTask4.Users;
 using MapsterMapper;
-using MediatR;
+using Mediator;
 
 namespace CustomersTask4.CustomerHandler.Command.CreateCustomer
 {
     public class CreateCustomerCommandHandler(IGenericRepository<Customer>db
         ,ILogger<CreateCustomerCommandHandler>logger
         ,IMapper mapper,
-        IUserContext userContext) : IRequestHandler<CreateCustomerCommand>
+        IUserContext userContext) : IRequestHandler<CreateCustomerCommand,Unit>
     {
-        public async Task Handle(CreateCustomerCommand request, CancellationToken cancellationToken)
+        public async ValueTask<Unit> Handle(CreateCustomerCommand request, CancellationToken cancellationToken)
         {
             logger.LogInformation("Creating a new customer with Data: {Data}", request);
 
@@ -29,6 +29,7 @@ namespace CustomersTask4.CustomerHandler.Command.CreateCustomer
                 customer.CreatedBy=user.Name;
 
             await db.Add(customer);
+            return Unit.Value;
 
 
         }

@@ -216,7 +216,7 @@ namespace CustomerTaskUnitTest
 
             // Act & Assert
             var exception = await Assert.ThrowsAsync<NotFoundException>(
-                () => _handler.Handle(command, CancellationToken.None)
+                () => _handler.Handle(command, CancellationToken.None).AsTask()
             );
 
             Assert.Equal($"Phone Number: {command.Phone} aleardy exists.", exception.Message);

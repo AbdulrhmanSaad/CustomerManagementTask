@@ -9,18 +9,19 @@ using CustomersTask4.CustomerHandler.Query.GetCustomerHistory;
 using CustomersTask4.Domain;
 using CustomersTask4.DTO;
 using CustomersTask4.Users;
-using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using Mediator;
+using CustomersTask4.Abstraction;
 
 namespace CustomersTask4.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class CustomerController(IMediator mediator) : ControllerBase
+    public class CustomerController(IAppMeditor mediator) : ControllerBase
     {
         
         [HttpGet]
