@@ -1,8 +1,8 @@
-﻿using AutoMapper;
-using CustomersTask4.Domain;
+﻿using CustomersTask4.Domain;
 using CustomersTask4.Exceptions;
 using CustomersTask4.Repository;
 using CustomersTask4.Users;
+using MapsterMapper;
 using MediatR;
 
 namespace CustomersTask4.CustomerHandler.Command.CreateCustomer

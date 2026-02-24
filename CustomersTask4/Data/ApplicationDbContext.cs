@@ -4,11 +4,13 @@ using CustomersTask4.Domain;
 using CustomersTask4.Users;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics.CodeAnalysis;
 using System.Security.AccessControl;
 using System.Text.Json;
 
 namespace CustomersTask4.Data
 {
+    [ExcludeFromCodeCoverage]
     public class ApplicationDbContext:IdentityDbContext<User>
     {
 

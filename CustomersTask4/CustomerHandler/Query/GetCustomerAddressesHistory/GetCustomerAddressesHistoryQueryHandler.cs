@@ -1,7 +1,7 @@
-﻿using AutoMapper;
-using CustomersTask4.DTO;
+﻿using CustomersTask4.DTO;
 using CustomersTask4.Exceptions;
 using CustomersTask4.Repository;
+using MapsterMapper;
 using MediatR;
 
 namespace CustomersTask4.CustomerHandler.Query.GetCustomerAddressesHistory

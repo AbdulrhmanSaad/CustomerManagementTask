@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+﻿using Mapster;
 using CustomersTask4.CustomerHandler.Query;
 using CustomersTask4.CustomerHandler.Query.GetAllCustomers;
 using CustomersTask4.CustomerHandler.Query.GetCustomerById;
@@ -9,6 +9,7 @@ using CustomersTask4.Repository;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using System.Linq.Expressions;
+using MapsterMapper;
 
 
 namespace CustomerTaskUnitTest
@@ -51,16 +52,19 @@ namespace CustomerTaskUnitTest
                 }
                 };
 
-                var expectedDto = new CustomerDto
+            var expectedDto = new CustomerDto
+            {
+                Id = customerId,
+                Name = "Ahmed",
+                Phone = "01013513652",
+                CreatedAt = DateTime.UtcNow,
+                CreatedBy = "admin",
+                Addresses = new List<AddressDto>
                 {
-                    Id = customerId,
-                    Name = "Ahmed",
-                    Phone = "01013513652",
-                    CreatedAt = DateTime.UtcNow,
-                    CreatedBy = "admin",
-                    HomeAddressLocation = "Cairo",
-                    WorkAddressLocation= "Alex"
-                };
+                    new AddressDto { AddressName = "Cairo", AddressType = AddressType.Home.ToString() },
+                    new AddressDto {AddressName = "Alex", AddressType = AddressType.Work.ToString() }
+                }
+            }; 
 
                 _repository.GetByIdAsync(customerId, Arg.Any<Expression<Func<Customer, object>>>())
                     .Returns(customer);

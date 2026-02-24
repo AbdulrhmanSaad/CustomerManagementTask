@@ -7,6 +7,7 @@ using CustomersTask4.SerilogMasking;
 using CustomersTask4.Users;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -25,6 +26,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
+builder.Services.AddSingleton(Mapster.TypeAdapterConfig.GlobalSettings);
+builder.Services.AddScoped<IMapper, ServiceMapper>();
 
 builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly)
     .AddFluentValidationAutoValidation();
@@ -44,6 +47,8 @@ builder.Services.AddAuthentication(op => op.DefaultAuthenticateScheme = "token")
 
     });
 
+// inside ConfigureServices
+builder.Services.AddMediator();         // registers mediator core
 
 
 builder.Services.AddSwaggerGen(c =>
@@ -76,7 +81,9 @@ builder.Services.AddScoped(
     typeof(GenericRepository<>));
 builder.Services.AddMediatR(cfg =>
     cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
-builder.Services.AddAutoMapper(cfg => cfg.AddProfile<MappingProfile>());
+
+//builder.Services.AddScoped<IAbstracrMeditor, AbstracrtMeditor>();
+//builder.Services.AddAutoMapper(cfg => cfg.AddProfile<MappingProfile>());
 builder.Services.AddScoped<RequestLoggingMiddleware>();
 builder.Services.AddScoped<ErrorHandelingMiddleware>();
 

@@ -1,85 +1,33 @@
-<?xml version="1.0" encoding="utf-8"?>
 <RunSettings>
   <DataCollectionRunSettings>
     <DataCollectors>
-      <DataCollector friendlyName="XPlat code coverage">
+      <DataCollector friendlyName="XPlat Code Coverage">
         <Configuration>
-          <CodeCoverage>
-            <!-- Exclude modules -->
-            <ModulePaths>
-              <Exclude>
-                <!-- Exclude all DTO classes -->
-                <ModulePath>.*\.DTO\..*</ModulePath>
-                
-                <!-- Exclude Database Context and Entity Framework -->
-                <ModulePath>.*ApplicationDbContext.*</ModulePath>
-                <ModulePath>.*DbContext.*</ModulePath>
-                
-                <!-- Exclude all Migrations -->
-                <ModulePath>.*Migrations\..*</ModulePath>
-                <ModulePath>.*\.Migrations\..*</ModulePath>
-                
-                <!-- Exclude Entity Framework generated files -->
-                <ModulePath>.*ModelSnapshot.*</ModulePath>
-                <ModulePath>.*Migration\.cs</ModulePath>
-                
-                <!-- Exclude Program.cs and startup configuration -->
-                <ModulePath>.*Program\.cs</ModulePath>
-                <ModulePath>.*Startup\.cs</ModulePath>
-                
-                <!-- Exclude middleware infrastructure -->
-                <ModulePath>.*Middleware\..*</ModulePath>
-                <ModulePath>.*RequestLoggingMiddleware.*</ModulePath>
-                <ModulePath>.*ErrorHandelingMiddleware.*</ModulePath>
-                
-                <!-- Exclude AutoMapper mapping profiles -->
-                <ModulePath>.*Mapping\..*</ModulePath>
-                <ModulePath>.*MappingProfile.*</ModulePath>
-                
-                <!-- Exclude validators (optional, can be included if testing validation) -->
-                <ModulePath>.*Validator\..*</ModulePath>
-                
-                <!-- Exclude configuration and extensions -->
-                <ModulePath>.*Configuration\..*</ModulePath>
-                <ModulePath>.*Extensions\..*</ModulePath>
-                
-                <!-- Exclude Serilog masking utilities -->
-                <ModulePath>.*SerilogMasking\..*</ModulePath>
-                
-                <!-- Exclude generated NSwag client code -->
-                <ModulePath>.*ApiClient.*</ModulePath>
-                <ModulePath>.*Client\..*</ModulePath>
-                
-                <!-- Exclude User context and domain utilities -->
-                <ModulePath>.*Users\..*</ModulePath>
-                <ModulePath>.*UserContext.*</ModulePath>
-              </Exclude>
-            </ModulePaths>
-            
-            <!-- Exclude source files -->
-            <Sources>
-              <Exclude>
-                <!-- Exclude test projects -->
-                <Source>.*Test.*\.csproj$</Source>
-                <Source>.*Tests\.csproj$</Source>
-                <Source>.*\.Tests\.cs$</Source>
-                
-                <!-- Exclude generated code -->
-                <Source>.*\.generated\.cs$</Source>
-                <Source>.*ApiClient\.cs$</Source>
-                <Source>.*Migration.*\.cs$</Source>
-                <Source>.*ModelSnapshot\.cs$</Source>
-              </Exclude>
-            </Sources>
-            
-            <!-- Exclude specific attribute classes -->
-            <Attributes>
-              <Exclude>
-                <Attribute>^System\.Diagnostics\.CodeAnalysis\.ExcludeFromCodeCoverageAttribute$</Attribute>
-                <Attribute>^System\.CodeDom\.Compiler\.GeneratedCodeAttribute$</Attribute>
-              </Exclude>
-            </Attributes>
-          </CodeCoverage>
+
+          <!-- Exclude assemblies -->
+          <Exclude>
+            [*]*Tests*
+          </Exclude>
+
+          <!-- Exclude folders/files -->
+          <ExcludeByFile>
+            **/DTO/*.cs;
+            **/Migrations/*.cs;
+            **/Middleware/*.cs;
+            **/Mapping/*.cs;
+            **/Validator/*.cs;
+            **/Configuration/*.cs;
+            **/Extensions/*.cs;
+            **/Users/*.cs;
+            **/SerilogMasking/*.cs;
+            **/Program.cs;
+            **/Startup.cs;
+            **/*ApiClient.cs;
+            **/*Migration*.cs;
+            **/*ModelSnapshot.cs;
+            **/*.generated.cs
+          </ExcludeByFile>
+
         </Configuration>
       </DataCollector>
     </DataCollectors>

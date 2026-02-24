@@ -1,8 +1,8 @@
-﻿using AutoMapper;
-using CustomersTask4.CustomerHandler.Query.GetAllCustomers;
+﻿using CustomersTask4.CustomerHandler.Query.GetAllCustomers;
 using CustomersTask4.Domain;
 using CustomersTask4.DTO;
 using CustomersTask4.Repository;
+using MapsterMapper;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
@@ -74,7 +74,10 @@ namespace CustomerTaskUnitTest
                     Phone = "01013513652",
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = "admin",
-                    HomeAddressLocation = "Home"
+                    Addresses= new List<AddressDto>(){
+                        new AddressDto { AddressName = "Cairo", AddressType = AddressType.Home.ToString() },
+                        new AddressDto { AddressName = "Alex", AddressType = AddressType.Work.ToString() }
+                    }
                 },
                 new CustomerDto
                 {
@@ -83,7 +86,10 @@ namespace CustomerTaskUnitTest
                     Phone = "01550830820",
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = "admin",
-                    WorkAddressLocation = "Work"
+                    Addresses= new List<AddressDto>(){
+                        new AddressDto { AddressName = "Cairo", AddressType = AddressType.Home.ToString() },
+                        new AddressDto { AddressName = "Alex", AddressType = AddressType.Work.ToString() }
+                    }
                 }
             };
 
@@ -152,10 +158,10 @@ namespace CustomerTaskUnitTest
                     Name = "Ahmed",
                     Phone = "01013513652",
                     CreatedBy = "admin",
-                    AddressType=AddressType.Home.ToString(),
-                    HomeAddressLocation="Cairo",
-                    AddressType2=AddressType.Work.ToString(),
-                    WorkAddressLocation="Alex"
+                    Addresses= new List<AddressDto>(){
+                        new AddressDto { AddressName = "Cairo", AddressType = AddressType.Home.ToString() },
+                        new AddressDto { AddressName = "Alex", AddressType = AddressType.Work.ToString() }
+                    }
                 }
             };
 

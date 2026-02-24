@@ -1,10 +1,10 @@
-﻿using AutoMapper;
-using CustomersTask4.CustomerHandler.Command.CreateCustomer;
+﻿using CustomersTask4.CustomerHandler.Command.CreateCustomer;
 using CustomersTask4.Domain;
 using CustomersTask4.DTO;
 using CustomersTask4.Exceptions;
 using CustomersTask4.Repository;
 using CustomersTask4.Users;
+using MapsterMapper;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.Extensions.Logging;
 using NSubstitute;

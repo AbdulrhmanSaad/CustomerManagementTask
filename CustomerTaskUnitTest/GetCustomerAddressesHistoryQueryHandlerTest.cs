@@ -1,9 +1,9 @@
-using AutoMapper;
 using CustomersTask4.CustomerHandler.Query.GetCustomerAddressesHistory;
 using CustomersTask4.Domain;
 using CustomersTask4.DTO;
 using CustomersTask4.Exceptions;
 using CustomersTask4.Repository;
+using MapsterMapper;
 using NSubstitute;
 using System.Linq.Expressions;
 using Xunit;

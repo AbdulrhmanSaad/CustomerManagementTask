@@ -1,7 +1,9 @@
 ﻿using CustomersTask4.Domain;
-
+using System.Diagnostics.CodeAnalysis;
 namespace CustomersTask4.DTO
 {
+    [ExcludeFromCodeCoverage]
+
     public class CustomerHistoryDto
     {
         public int Id { get; set; }

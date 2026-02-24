@@ -1,9 +1,9 @@
-﻿using AutoMapper;
-using CustomersTask4.CustomerHandler.Query.GetCustomerHistory;
+﻿using CustomersTask4.CustomerHandler.Query.GetCustomerHistory;
 using CustomersTask4.Domain;
 using CustomersTask4.DTO;
 using CustomersTask4.Exceptions;
 using CustomersTask4.Repository;
+using MapsterMapper;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using System;

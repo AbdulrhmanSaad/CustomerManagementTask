@@ -7,6 +7,25 @@
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
+
+	<PropertyGroup>
+		<CollectCoverage>true</CollectCoverage>
+		<Exclude>[*]*Tests*</Exclude>
+		<ExcludeByFile>
+		    **/*.cs;
+			**/DTO/*.cs;
+			**/Migrations/*.cs;
+			**/Middleware/*.cs;
+			**/Mapping/*.cs;
+			**/Validator/*.cs;
+			**/Configuration/*.cs;
+			**/Extensions/*.cs;
+			**/Users/*.cs;
+			**/Program.cs;
+			**/Startup.cs
+		</ExcludeByFile>
+	</PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="coverlet.collector" Version="6.0.2" />
     <PackageReference Include="FluentAssertions" Version="8.8.0" />
@@ -22,6 +41,10 @@
 
   <ItemGroup>
     <Using Include="Xunit" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="TestResults\" />
   </ItemGroup>
 
 </Project>

@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+﻿using MapsterMapper;
 using Castle.Core.Resource;
 using CustomersTask4.Domain;
 using CustomersTask4.Exceptions;
@@ -34,7 +34,7 @@ namespace CustomersTask4.CustomerHandler.Command.UpdateCustomer
             if(db.PhoneExistsAsync(request.Phone)&&customer.Phone!=request.Phone)
                 throw new NotFoundException($"Phone Number: {request.Phone} aleardy exists.");
             
-            mapper.Map<Customer>(customer);
+            //mapper.Map<Customer>(customer);
             mapper.Map(request, customer);
             var user=userContext.GetCurrentUser();
             if(user != null)
