@@ -15,7 +15,7 @@ namespace CustomersTask4.CustomerHandler.Command.CreateCustomer
         public async ValueTask<Unit> Handle(CreateCustomerCommand request, CancellationToken cancellationToken)
         {
             logger.LogInformation("Creating a new customer with Data: {Data}", request);
-
+               
             bool exist = db.PhoneExistsAsync(request.Phone);
 
             if (exist)

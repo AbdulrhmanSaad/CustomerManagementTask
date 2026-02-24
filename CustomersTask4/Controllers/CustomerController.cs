@@ -2,18 +2,13 @@
 using CustomersTask4.CustomerHandler.Command.DeleteCustomerCommand;
 using CustomersTask4.CustomerHandler.Command.UpdateCustomer;
 using CustomersTask4.CustomerHandler.Query.GetCustomerAddressesHistory;
-using CustomersTask4.CustomerHandler.Query;
 using CustomersTask4.CustomerHandler.Query.GetAllCustomers;
 using CustomersTask4.CustomerHandler.Query.GetCustomerById;
 using CustomersTask4.CustomerHandler.Query.GetCustomerHistory;
-using CustomersTask4.Domain;
 using CustomersTask4.DTO;
 using CustomersTask4.Users;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
-using Mediator;
 using CustomersTask4.Abstraction;
 
 namespace CustomersTask4.Controllers

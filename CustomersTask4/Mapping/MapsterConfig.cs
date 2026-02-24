@@ -41,24 +41,16 @@ namespace CustomersTask4.Mapping
             // UpdateCustomerCommand -> Customer
             TypeAdapterConfig<UpdateCustomerCommand, Customer>
                 .NewConfig()
-                .AfterMapping((src, dest) =>
+                .Map(dest => dest.Addresses, src => src.Addresses.Select(a => new Address
                 {
-                    dest.Addresses = new List<Address>
-                    {
-                    new Address
-                    {
-                        AddressType = AddressType.Home,
-                        AddressName = src.HomeAddressLocation
-                    },
-                    new Address
-                    {
-                        AddressType = AddressType.Work,
-                        AddressName = src.WorkAddressLocation
-                    }
-                    };
+                    AddressType = a.AddressType,
+                    AddressName = a.AddressName
+                }).ToList()
 
-                    dest.ChangedAt = DateTime.UtcNow;
-                });
+
+                )
+                .Map(dest => dest.ChangedAt,src => DateTime.UtcNow);
+                
 
             // Customer -> Customer (clone)
             TypeAdapterConfig<Customer, Customer>

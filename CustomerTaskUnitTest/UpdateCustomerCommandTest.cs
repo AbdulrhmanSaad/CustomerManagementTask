@@ -1,5 +1,6 @@
 using CustomersTask4.CustomerHandler.Command.UpdateCustomer;
 using CustomersTask4.Domain;
+using CustomersTask4.DTO;
 using CustomersTask4.Exceptions;
 using CustomersTask4.Repository;
 using CustomersTask4.Users;
@@ -25,10 +26,19 @@ namespace CustomerTaskUnitTest
             Id = 32,
             Name = "Ahmed Updated",
             Phone = "01013513652",
-            AddressType = AddressType.Home,
-            HomeAddressLocation = "Updated Alex Address",
-            AddressType2 = AddressType.Work,
-            WorkAddressLocation = "Updated Cairo Address"
+            Addresses = new List<AddressDtoEnum>()
+            {
+                new AddressDtoEnum
+                {
+                    AddressType=AddressType.Home,
+                    AddressName="Cairo"
+                },
+                new AddressDtoEnum
+                {
+                    AddressType=AddressType.Work,
+                    AddressName="Alex"
+                }
+            }
         };
 
         public UpdateCustomerCommandTest()

@@ -1,26 +1,18 @@
+using CustomersTask4.Abstraction;
 using CustomersTask4.Data;
 using CustomersTask4.Domain;
-using CustomersTask4.Mapping;
 using CustomersTask4.Middleware;
 using CustomersTask4.Repository;
-using CustomersTask4.SerilogMasking;
+using CustomersTask4.Services;
 using CustomersTask4.Users;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using MapsterMapper;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi;
 using Microsoft.OpenApi.Models;
 using Serilog;
-using System.Reflection;
-using System.Security.Cryptography.Xml;
-using Mediator;
-using CustomersTask4.Abstraction;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,6 +21,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddSingleton(Mapster.TypeAdapterConfig.GlobalSettings);
 builder.Services.AddScoped<IMapper, ServiceMapper>();
+builder.Services.AddScoped<IUserTokenMangerService, UserTokenMangerService>();
 
 builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly)
     .AddFluentValidationAutoValidation();
@@ -79,14 +72,12 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddScoped(
     typeof(IGenericRepository<>),
     typeof(GenericRepository<>));
-//builder.Services.AddMediatR(cfg =>
-//  cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
+
 builder.Services.AddMediator(cfg =>
 {
-    cfg.ServiceLifetime = ServiceLifetime.Scoped; // must be Scoped for EF Core
+    cfg.ServiceLifetime = ServiceLifetime.Scoped; 
 });
 builder.Services.AddScoped<IAppMeditor, AppMediator>();
-//builder.Services.AddAutoMapper(cfg => cfg.AddProfile<MappingProfile>());
 builder.Services.AddScoped<RequestLoggingMiddleware>();
 builder.Services.AddScoped<ErrorHandelingMiddleware>();
 
