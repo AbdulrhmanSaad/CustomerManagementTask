@@ -23,7 +23,7 @@ namespace CustomersTask4.Users
             }
 
             var userId = user.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)!.Value;
-            var userName = user.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)!.Value;
+            var userName = user.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)!.Value;
             var userRoles = user.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).ToList();
 
             var currentUser = new CurrentUser(userId, userName, userRoles);

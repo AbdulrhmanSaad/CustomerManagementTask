@@ -186,12 +186,12 @@ namespace CustomerTaskUnitTest
             // Arrange
             var command = new UpdateCustomerCommand { Id = 999, Name = "Test", Phone = "01013513652" };
 
-            _repository.GetByIdAsync(command.Id, Arg.Any<System.Linq.Expressions.Expression<System.Func<Customer, object>>>())
+            _repository.GetByIdAsync(command.Id, Arg.Any<Expression<Func<Customer, object>>>())
                 .Returns((Customer)null);
 
             // Act & Assert
             var exception = await Assert.ThrowsAsync<NotFoundException>(
-                () => _handler.Handle(command, CancellationToken.None)
+                () => _handler.Handle(command, CancellationToken.None).AsTask()
             );
 
             Assert.Equal($"Customer with id {command.Id} not found.", exception.Message);

@@ -1,4 +1,5 @@
-﻿using CustomersTask4.Domain;
+﻿using CustomersTask4.Abstraction;
+using CustomersTask4.Domain;
 using CustomersTask4.DTO;
 using Mediator;
 using System.Windows.Input;
@@ -6,7 +7,7 @@ using System.Windows.Input;
 
 namespace CustomersTask4.CustomerHandler.Command.CreateCustomer
 {
-    public class CreateCustomerCommand: IRequest
+    public class CreateCustomerCommand: ICustomRequest
     {
         public string Name { get; set; }
         public string Phone { get; set; }

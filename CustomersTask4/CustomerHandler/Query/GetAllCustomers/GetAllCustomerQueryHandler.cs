@@ -1,4 +1,5 @@
-﻿using CustomersTask4.Domain;
+﻿using CustomersTask4.Abstraction;
+using CustomersTask4.Domain;
 using CustomersTask4.DTO;
 using CustomersTask4.Repository;
 using MapsterMapper;
@@ -8,7 +9,7 @@ namespace CustomersTask4.CustomerHandler.Query.GetAllCustomers
 {
     public class GetAllCustomerQueryHandler(IGenericRepository<Customer>repository,
         ILogger<GetAllCustomerQueryHandler>logger,
-        IMapper mapper) : IRequestHandler<GetAllCustomerQuery, IEnumerable<CustomerDto>>
+        IMapper mapper) : ICustomRequestHandler<GetAllCustomerQuery, IEnumerable<CustomerDto>>
     {
         public async ValueTask<IEnumerable<CustomerDto>> Handle(GetAllCustomerQuery request, CancellationToken cancellationToken)
         {

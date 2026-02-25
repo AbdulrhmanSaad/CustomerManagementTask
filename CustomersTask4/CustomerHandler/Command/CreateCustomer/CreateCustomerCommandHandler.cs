@@ -1,4 +1,5 @@
-﻿using CustomersTask4.Domain;
+﻿using CustomersTask4.Abstraction;
+using CustomersTask4.Domain;
 using CustomersTask4.Exceptions;
 using CustomersTask4.Repository;
 using CustomersTask4.Users;
@@ -10,7 +11,7 @@ namespace CustomersTask4.CustomerHandler.Command.CreateCustomer
     public class CreateCustomerCommandHandler(IGenericRepository<Customer>db
         ,ILogger<CreateCustomerCommandHandler>logger
         ,IMapper mapper,
-        IUserContext userContext) : IRequestHandler<CreateCustomerCommand,Unit>
+        IUserContext userContext) : ICustomRequestHandler<CreateCustomerCommand,Unit>
     {
         public async ValueTask<Unit> Handle(CreateCustomerCommand request, CancellationToken cancellationToken)
         {

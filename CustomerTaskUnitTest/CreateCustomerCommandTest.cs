@@ -56,8 +56,8 @@ namespace CustomerTaskUnitTest
             repository.PhoneExistsAsync(command.Phone).Returns(true);
             //Act &&
             //assert
-            var ex=await Assert.ThrowsAsync<NotFoundException>(() =>
-            _handler.Handle(command, default));
+            var ex = await Assert.ThrowsAsync<NotFoundException>(() =>
+            _handler.Handle(command, CancellationToken.None).AsTask());
 
             Assert.Equal("this phone number already exists", ex.Message);
             await repository.DidNotReceive().Add(Arg.Any<Customer>());
