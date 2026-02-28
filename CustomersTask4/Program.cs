@@ -111,9 +111,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI(options =>
     {
-        options.SwaggerEndpoint("/swagger/v1/swagger.json", "My API v1");
+        //options.SwaggerEndpoint("/swagger/v1/swagger.json", "My API v1");
 
-        //options.SwaggerEndpoint("/openapi/v1.json", "My API v1");
+        options.SwaggerEndpoint("/openapi/v1.json", "My API v1");
     });
 
 }

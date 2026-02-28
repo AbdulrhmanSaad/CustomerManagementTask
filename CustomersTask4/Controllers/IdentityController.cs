@@ -21,6 +21,7 @@ namespace CustomersTask4.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class IdentityController(IAppMeditor mediator, UserManager<User> userManager, SignInManager<User> signInManager) : ControllerBase
     {
         [HttpPost("AssignRoleTo")]

@@ -33,11 +33,7 @@ namespace CustomersTask4.Data
                 .HasIndex(a=> new {a.CustomerId,a.AddressType})
                 .IsUnique();
 
-            modelBuilder.Entity<Customer>()
-              .HasMany(c => c.History)
-              .WithOne(c=>c.Customer)
-              .HasForeignKey(a => a.CustomerId)
-              .OnDelete(DeleteBehavior.NoAction);
+          
 
             modelBuilder.Entity<Customer>()
                 .ToTable("Customers", b => b.IsTemporal());
@@ -48,7 +44,6 @@ namespace CustomersTask4.Data
         }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Address> Addresses { get; set; }
-        public DbSet<CustomerHistory> CustomerHistories { get; set; }
         //audit on table Customer and Address
 
         //public override int SaveChanges()

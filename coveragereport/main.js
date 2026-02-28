@@ -213,36 +213,31 @@ var assemblies = [
   {
     "name": "CustomersTask4",
     "classes": [
-      { "name": "CustomersTask4.Abstraction.AbstracrtMeditor", "rp": "CustomersTask4_AbstracrtMeditor.html", "cl": 0, "ucl": 15, "cal": 15, "tl": 33, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "CustomersTask4.Controllers.CustomerController", "rp": "CustomersTask4_CustomerController.html", "cl": 0, "ucl": 30, "cal": 30, "tl": 95, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "CustomersTask4.Controllers.IdentityController", "rp": "CustomersTask4_IdentityController.html", "cl": 0, "ucl": 110, "cal": 110, "tl": 190, "cb": 0, "tb": 32, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "CustomersTask4.CustomerHandler.Command.CreateCustomer.CreateCustomerCommand", "rp": "CustomersTask4_CreateCustomerCommand.html", "cl": 3, "ucl": 0, "cal": 3, "tl": 23, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "CustomersTask4.CustomerHandler.Command.CreateCustomer.CreateCustomerCommandHandler", "rp": "CustomersTask4_CreateCustomerCommandHandler.html", "cl": 14, "ucl": 1, "cal": 15, "tl": 37, "cb": 3, "tb": 4, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "CustomersTask4.CustomerHandler.Command.DeleteCustomerCommand.DeleteCustomerCommand", "rp": "CustomersTask4_DeleteCustomerCommand.html", "cl": 2, "ucl": 0, "cal": 2, "tl": 9, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "CustomersTask4.CustomerHandler.Command.DeleteCustomerCommand.DeleteCustomerCommandHandler", "rp": "CustomersTask4_DeleteCustomerCommandHandler.html", "cl": 10, "ucl": 0, "cal": 10, "tl": 25, "cb": 2, "tb": 2, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "CustomersTask4.CustomerHandler.Command.UpdateCustomer.UpdateCustomerCommand", "rp": "CustomersTask4_UpdateCustomerCommand.html", "cl": 7, "ucl": 0, "cal": 7, "tl": 17, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "CustomersTask4.CustomerHandler.Command.UpdateCustomer.UpdateCustomerCommandHandler", "rp": "CustomersTask4_UpdateCustomerCommandHandler.html", "cl": 18, "ucl": 1, "cal": 19, "tl": 47, "cb": 7, "tb": 8, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "CustomersTask4.CustomerHandler.Query.GetAllCustomers.GetAllCustomerQueryHandler", "rp": "CustomersTask4_GetAllCustomerQueryHandler.html", "cl": 8, "ucl": 0, "cal": 8, "tl": 21, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "CustomersTask4.Abstraction.AppMediator", "rp": "CustomersTask4_AppMediator.html", "cl": 0, "ucl": 7, "cal": 7, "tl": 49, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "CustomersTask4.Controllers.CustomerController", "rp": "CustomersTask4_CustomerController.html", "cl": 30, "ucl": 0, "cal": 30, "tl": 91, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "CustomersTask4.Controllers.IdentityController", "rp": "CustomersTask4_IdentityController.html", "cl": 21, "ucl": 0, "cal": 21, "tl": 72, "cb": 4, "tb": 4, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "CustomersTask4.CustomerHandler.Command.CreateCustomer.CreateCustomerCommand", "rp": "CustomersTask4_CreateCustomerCommand.html", "cl": 3, "ucl": 0, "cal": 3, "tl": 20, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "CustomersTask4.CustomerHandler.Command.CreateCustomer.CreateCustomerCommandHandler", "rp": "CustomersTask4_CreateCustomerCommandHandler.html", "cl": 15, "ucl": 1, "cal": 16, "tl": 39, "cb": 3, "tb": 4, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "CustomersTask4.CustomerHandler.Command.DeleteCustomerCommand.DeleteCustomerCommand", "rp": "CustomersTask4_DeleteCustomerCommand.html", "cl": 2, "ucl": 0, "cal": 2, "tl": 10, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "CustomersTask4.CustomerHandler.Command.DeleteCustomerCommand.DeleteCustomerCommandHandler", "rp": "CustomersTask4_DeleteCustomerCommandHandler.html", "cl": 11, "ucl": 0, "cal": 11, "tl": 26, "cb": 2, "tb": 2, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "CustomersTask4.CustomerHandler.Command.UpdateCustomer.UpdateCustomerCommand", "rp": "CustomersTask4_UpdateCustomerCommand.html", "cl": 4, "ucl": 0, "cal": 4, "tl": 21, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "CustomersTask4.CustomerHandler.Command.UpdateCustomer.UpdateCustomerCommandHandler", "rp": "CustomersTask4_UpdateCustomerCommandHandler.html", "cl": 19, "ucl": 1, "cal": 20, "tl": 48, "cb": 7, "tb": 8, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "CustomersTask4.CustomerHandler.Query.GetAllCustomers.GetAllCustomerQueryHandler", "rp": "CustomersTask4_GetAllCustomerQueryHandler.html", "cl": 8, "ucl": 0, "cal": 8, "tl": 22, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "CustomersTask4.CustomerHandler.Query.GetCustomerAddressesHistory.GetCustomerAddressesHistoryQuery", "rp": "CustomersTask4_GetCustomerAddressesHistoryQuery.html", "cl": 2, "ucl": 0, "cal": 2, "tl": 10, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "CustomersTask4.CustomerHandler.Query.GetCustomerAddressesHistory.GetCustomerAddressesHistoryQueryHandler", "rp": "CustomersTask4_GetCustomerAddressesHistoryQueryHandler.html", "cl": 12, "ucl": 0, "cal": 12, "tl": 31, "cb": 2, "tb": 2, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "CustomersTask4.CustomerHandler.Query.GetCustomerAddressesHistory.GetCustomerAddressesHistoryQueryHandler", "rp": "CustomersTask4_GetCustomerAddressesHistoryQueryHandler.html", "cl": 8, "ucl": 0, "cal": 8, "tl": 25, "cb": 2, "tb": 2, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "CustomersTask4.CustomerHandler.Query.GetCustomerById.GetCustomerByIdQuery", "rp": "CustomersTask4_GetCustomerByIdQuery.html", "cl": 2, "ucl": 0, "cal": 2, "tl": 11, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "CustomersTask4.CustomerHandler.Query.GetCustomerByIdQueryHandler", "rp": "CustomersTask4_GetCustomerByIdQueryHandler.html", "cl": 11, "ucl": 0, "cal": 11, "tl": 29, "cb": 2, "tb": 2, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "CustomersTask4.CustomerHandler.Query.GetCustomerHistory.GetCustomerHistoryQuery", "rp": "CustomersTask4_GetCustomerHistoryQuery.html", "cl": 2, "ucl": 0, "cal": 2, "tl": 12, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "CustomersTask4.CustomerHandler.Query.GetCustomerHistory.GetCustomerHistoryQueryHandler", "rp": "CustomersTask4_GetCustomerHistoryQueryHandler.html", "cl": 12, "ucl": 0, "cal": 12, "tl": 35, "cb": 2, "tb": 2, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "CustomersTask4.Data.ApplicationDbContext", "rp": "CustomersTask4_ApplicationDbContext.html", "cl": 0, "ucl": 24, "cal": 24, "tl": 175, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "CustomersTask4.Domain.Address", "rp": "CustomersTask4_Address.html", "cl": 4, "ucl": 0, "cal": 4, "tl": 15, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "CustomersTask4.Domain.Customer", "rp": "CustomersTask4_Customer.html", "cl": 8, "ucl": 1, "cal": 9, "tl": 16, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "CustomersTask4.Domain.CustomerHistory", "rp": "CustomersTask4_CustomerHistory.html", "cl": 0, "ucl": 10, "cal": 10, "tl": 16, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "CustomersTask4.Domain.User", "rp": "CustomersTask4_User.html", "cl": 0, "ucl": 2, "cal": 2, "tl": 10, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "CustomersTask4.DTO.AddressDto", "rp": "CustomersTask4_AddressDto.html", "cl": 2, "ucl": 0, "cal": 2, "tl": 57, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "CustomersTask4.DTO.AddressDtoEnum", "rp": "CustomersTask4_AddressDtoEnum.html", "cl": 2, "ucl": 0, "cal": 2, "tl": 57, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "CustomersTask4.Domain.Customer", "rp": "CustomersTask4_Customer.html", "cl": 7, "ucl": 1, "cal": 8, "tl": 15, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "CustomersTask4.Domain.User", "rp": "CustomersTask4_User.html", "cl": 2, "ucl": 0, "cal": 2, "tl": 10, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "CustomersTask4.DTO.AddressDto", "rp": "CustomersTask4_AddressDto.html", "cl": 2, "ucl": 0, "cal": 2, "tl": 34, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "CustomersTask4.DTO.AddressDtoEnum", "rp": "CustomersTask4_AddressDtoEnum.html", "cl": 2, "ucl": 0, "cal": 2, "tl": 34, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "CustomersTask4.DTO.CustomerDto", "rp": "CustomersTask4_CustomerDto.html", "cl": 6, "ucl": 2, "cal": 8, "tl": 22, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "CustomersTask4.DTO.CustomerHistoryResponse", "rp": "CustomersTask4_CustomerHistoryResponse.html", "cl": 4, "ucl": 2, "cal": 6, "tl": 57, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "CustomersTask4.DTO.CustomerSnapshotDto", "rp": "CustomersTask4_CustomerSnapshotDto.html", "cl": 0, "ucl": 5, "cal": 5, "tl": 57, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "CustomersTask4.DTO.LoginDto", "rp": "CustomersTask4_LoginDto.html", "cl": 0, "ucl": 2, "cal": 2, "tl": 8, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "CustomersTask4.DTO.RefreshTokenRequest", "rp": "CustomersTask4_RefreshTokenRequest.html", "cl": 0, "ucl": 2, "cal": 2, "tl": 9, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "CustomersTask4.DTO.CustomerHistoryResponse", "rp": "CustomersTask4_CustomerHistoryResponse.html", "cl": 4, "ucl": 2, "cal": 6, "tl": 34, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "CustomersTask4.DTO.LoginDto", "rp": "CustomersTask4_LoginDto.html", "cl": 4, "ucl": 0, "cal": 4, "tl": 10, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "CustomersTask4.Exceptions.NotFoundException", "rp": "CustomersTask4_NotFoundException.html", "cl": 1, "ucl": 0, "cal": 1, "tl": 7, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "CustomersTask4.Mapping.MapsterConfig", "rp": "CustomersTask4_MapsterConfig.html", "cl": 0, "ucl": 45, "cal": 45, "tl": 71, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "CustomersTask4.Middleware.ErrorHandelingMiddleware", "rp": "CustomersTask4_ErrorHandelingMiddleware.html", "cl": 0, "ucl": 18, "cal": 18, "tl": 27, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "CustomersTask4.Middleware.RequestLoggingMiddleware", "rp": "CustomersTask4_RequestLoggingMiddleware.html", "cl": 0, "ucl": 19, "cal": 19, "tl": 36, "cb": 0, "tb": 2, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "CustomersTask4.Migrations.AddChangedToCustomer", "rp": "CustomersTask4_AddChangedToCustomer.html", "cl": 0, "ucl": 442, "cal": 442, "tl": 503, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
@@ -259,15 +254,35 @@ var assemblies = [
       { "name": "CustomersTask4.Migrations.updateTableAddressToBeTemporal", "rp": "CustomersTask4_updateTableAddressToBeTemporal.html", "cl": 0, "ucl": 447, "cal": 447, "tl": 510, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "CustomersTask4.Migrations.updateUserTable", "rp": "CustomersTask4_updateUserTable.html", "cl": 0, "ucl": 436, "cal": 436, "tl": 497, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "CustomersTask4.Repository.CustomerHistoryRepository", "rp": "CustomersTask4_CustomerHistoryRepository.html", "cl": 0, "ucl": 14, "cal": 14, "tl": 31, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "CustomersTask4.Repository.GenericRepository<T>", "rp": "CustomersTask4_GenericRepository_1.html", "cl": 0, "ucl": 34, "cal": 34, "tl": 61, "cb": 0, "tb": 4, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "CustomersTask4.Repository.GenericRepository<T>", "rp": "CustomersTask4_GenericRepository_1.html", "cl": 28, "ucl": 6, "cal": 34, "tl": 61, "cb": 2, "tb": 4, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "CustomersTask4.SerilogMasking.SensitiveDataMasking", "rp": "CustomersTask4_SensitiveDataMasking.html", "cl": 0, "ucl": 13, "cal": 13, "tl": 25, "cb": 0, "tb": 2, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "CustomersTask4.UserHandler.Command.AssignUserRoleCommand", "rp": "CustomersTask4_AssignUserRoleCommand.html", "cl": 0, "ucl": 2, "cal": 2, "tl": 10, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "CustomersTask4.UserHandler.Command.AssignUserRoleCommandHandler", "rp": "CustomersTask4_AssignUserRoleCommandHandler.html", "cl": 0, "ucl": 13, "cal": 13, "tl": 29, "cb": 0, "tb": 4, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "CustomersTask4.Services.UserTokenMangerService", "rp": "CustomersTask4_UserTokenMangerService.html", "cl": 0, "ucl": 46, "cal": 46, "tl": 82, "cb": 0, "tb": 8, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "CustomersTask4.UserHandler.Command.AssignUserRoleCommand", "rp": "CustomersTask4_AssignUserRoleCommand.html", "cl": 0, "ucl": 2, "cal": 2, "tl": 11, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "CustomersTask4.UserHandler.Command.AssignUserRoleCommandHandler", "rp": "CustomersTask4_AssignUserRoleCommandHandler.html", "cl": 0, "ucl": 14, "cal": 14, "tl": 28, "cb": 0, "tb": 4, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "CustomersTask4.UserHandler.Command.LoginUser.LoginUserCommand", "rp": "CustomersTask4_LoginUserCommand.html", "cl": 2, "ucl": 0, "cal": 2, "tl": 11, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "CustomersTask4.UserHandler.Command.LoginUser.LoginUserCommandHandler", "rp": "CustomersTask4_LoginUserCommandHandler.html", "cl": 22, "ucl": 0, "cal": 22, "tl": 50, "cb": 4, "tb": 4, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "CustomersTask4.UserHandler.Command.RefreshToken.RefreshTokenCommand", "rp": "CustomersTask4_RefreshTokenCommand.html", "cl": 2, "ucl": 0, "cal": 2, "tl": 11, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "CustomersTask4.UserHandler.Command.RefreshToken.RefreshTokenCommandHandler", "rp": "CustomersTask4_RefreshTokenCommandHandler.html", "cl": 23, "ucl": 1, "cal": 24, "tl": 50, "cb": 9, "tb": 12, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "CustomersTask4.UserHandler.Command.RegisterNewUserCommand", "rp": "CustomersTask4_RegisterNewUserCommand.html", "cl": 2, "ucl": 0, "cal": 2, "tl": 10, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "CustomersTask4.UserHandler.Command.RegisterNewUserCommandHandler", "rp": "CustomersTask4_RegisterNewUserCommandHandler.html", "cl": 9, "ucl": 0, "cal": 9, "tl": 26, "cb": 2, "tb": 2, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "CustomersTask4.Users.CurrentUser", "rp": "CustomersTask4_CurrentUser.html", "cl": 0, "ucl": 4, "cal": 4, "tl": 10, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "CustomersTask4.Users.UserContext", "rp": "CustomersTask4_UserContext.html", "cl": 0, "ucl": 15, "cal": 15, "tl": 34, "cb": 0, "tb": 10, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "CustomersTask4.Validator.CreateCustomerCommandValidator", "rp": "CustomersTask4_CreateCustomerCommandValidator.html", "cl": 0, "ucl": 45, "cal": 45, "tl": 84, "cb": 0, "tb": 4, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "CustomersTask4.Validator.UpdateCustomerCommandValidator", "rp": "CustomersTask4_UpdateCustomerCommandValidator.html", "cl": 0, "ucl": 25, "cal": 25, "tl": 42, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "Program", "rp": "CustomersTask4_Program.html", "cl": 0, "ucl": 89, "cal": 89, "tl": 143, "cb": 0, "tb": 2, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "CustomersTask4.Validator.UpdateCustomerCommandValidator", "rp": "CustomersTask4_UpdateCustomerCommandValidator.html", "cl": 0, "ucl": 48, "cal": 48, "tl": 65, "cb": 0, "tb": 4, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "Mediator.AssemblyReference", "rp": "CustomersTask4_AssemblyReference.html", "cl": 0, "ucl": 7, "cal": 7, "tl": 38, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "Mediator.Internals.CommandHandlerWrapper<T1, T2>", "rp": "CustomersTask4_CommandHandlerWrapper_2.html", "cl": 0, "ucl": 39, "cal": 39, "tl": 1541, "cb": 0, "tb": 6, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "Mediator.Internals.ContainerMetadata", "rp": "CustomersTask4_ContainerMetadata.html", "cl": 0, "ucl": 43, "cal": 43, "tl": 1541, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "Mediator.Internals.NotificationHandlerWrapper<T>", "rp": "CustomersTask4_NotificationHandlerWrapper_1.html", "cl": 0, "ucl": 28, "cal": 28, "tl": 1541, "cb": 0, "tb": 8, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "Mediator.Internals.QueryHandlerWrapper<T1, T2>", "rp": "CustomersTask4_QueryHandlerWrapper_2.html", "cl": 0, "ucl": 39, "cal": 39, "tl": 1541, "cb": 0, "tb": 6, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "Mediator.Internals.RequestHandlerWrapper<T1, T2>", "rp": "CustomersTask4_RequestHandlerWrapper_2.html", "cl": 0, "ucl": 39, "cal": 39, "tl": 1541, "cb": 0, "tb": 6, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "Mediator.Internals.StreamCommandHandlerWrapper<T1, T2>", "rp": "CustomersTask4_StreamCommandHandlerWrapper_2.html", "cl": 0, "ucl": 40, "cal": 40, "tl": 1541, "cb": 0, "tb": 12, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "Mediator.Internals.StreamQueryHandlerWrapper<T1, T2>", "rp": "CustomersTask4_StreamQueryHandlerWrapper_2.html", "cl": 0, "ucl": 40, "cal": 40, "tl": 1541, "cb": 0, "tb": 12, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "Mediator.Internals.StreamRequestHandlerWrapper<T1, T2>", "rp": "CustomersTask4_StreamRequestHandlerWrapper_2.html", "cl": 0, "ucl": 40, "cal": 40, "tl": 1541, "cb": 0, "tb": 12, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "Mediator.Mediator", "rp": "CustomersTask4_Mediator.html", "cl": 0, "ucl": 317, "cal": 317, "tl": 1541, "cb": 0, "tb": 138, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "Mediator.MediatorOptions", "rp": "CustomersTask4_MediatorOptions.html", "cl": 0, "ucl": 8, "cal": 8, "tl": 55, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "Mediator.MediatorOptionsAttribute", "rp": "CustomersTask4_MediatorOptionsAttribute.html", "cl": 0, "ucl": 4, "cal": 4, "tl": 33, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "Microsoft.Extensions.DependencyInjection.MediatorDependencyInjectionExtensions", "rp": "CustomersTask4_MediatorDependencyInjectionExtensions.html", "cl": 0, "ucl": 59, "cal": 59, "tl": 1541, "cb": 0, "tb": 6, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "Program", "rp": "CustomersTask4_Program.html", "cl": 0, "ucl": 92, "cal": 92, "tl": 136, "cb": 0, "tb": 2, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
     ]},
 ];
 
@@ -282,10 +297,22 @@ var riskHotspotMetrics = [
 
 var riskHotspots = [
   {
-    "assembly": "CustomersTask4", "class": "CustomersTask4.Controllers.IdentityController", "reportPath": "CustomersTask4_IdentityController.html", "methodName": "RefreshToken()", "methodShortName": "RefreshToken()", "fileIndex": 0, "line": 114,
+    "assembly": "CustomersTask4", "class": "Mediator.Mediator", "reportPath": "CustomersTask4_Mediator.html", "methodName": "Send(Mediator.IRequest`1<TResponse>,System.Threading.CancellationToken)", "methodShortName": "Send(...)", "fileIndex": 0, "line": 987,
     "metrics": [
-      { "value": 210, "exceeded": true },
-      { "value": 14, "exceeded": false },
+      { "value": 1980, "exceeded": true },
+      { "value": 44, "exceeded": true },
+    ]},
+  {
+    "assembly": "CustomersTask4", "class": "Mediator.Mediator", "reportPath": "CustomersTask4_Mediator.html", "methodName": "Send()", "methodShortName": "Send()", "fileIndex": 0, "line": 1288,
+    "metrics": [
+      { "value": 812, "exceeded": true },
+      { "value": 28, "exceeded": true },
+    ]},
+  {
+    "assembly": "CustomersTask4", "class": "Mediator.Mediator", "reportPath": "CustomersTask4_Mediator.html", "methodName": "SendAsync()", "methodShortName": "SendAsync()", "fileIndex": 0, "line": 1101,
+    "metrics": [
+      { "value": 506, "exceeded": true },
+      { "value": 22, "exceeded": true },
     ]},
   {
     "assembly": "CustomersTask4", "class": "CustomersTask4.Users.UserContext", "reportPath": "CustomersTask4_UserContext.html", "methodName": "GetCurrentUser()", "methodShortName": "GetCurrentUser()", "fileIndex": 0, "line": 13,
@@ -294,7 +321,67 @@ var riskHotspots = [
       { "value": 10, "exceeded": false },
     ]},
   {
-    "assembly": "CustomersTask4", "class": "CustomersTask4.Controllers.IdentityController", "reportPath": "CustomersTask4_IdentityController.html", "methodName": "Login()", "methodShortName": "Login()", "fileIndex": 0, "line": 57,
+    "assembly": "CustomersTask4", "class": "Mediator.Internals.NotificationHandlerWrapper<T>", "reportPath": "CustomersTask4_NotificationHandlerWrapper_1.html", "methodName": "Handle(Mediator.Mediator,TNotification,System.Threading.CancellationToken)", "methodShortName": "Handle(...)", "fileIndex": 0, "line": 609,
+    "metrics": [
+      { "value": 72, "exceeded": true },
+      { "value": 8, "exceeded": false },
+    ]},
+  {
+    "assembly": "CustomersTask4", "class": "Mediator.Internals.CommandHandlerWrapper<T1, T2>", "reportPath": "CustomersTask4_CommandHandlerWrapper_2.html", "methodName": "Handle(Mediator.Mediator,TRequest,System.Threading.CancellationToken)", "methodShortName": "Handle(...)", "fileIndex": 0, "line": 311,
+    "metrics": [
+      { "value": 42, "exceeded": true },
+      { "value": 6, "exceeded": false },
+    ]},
+  {
+    "assembly": "CustomersTask4", "class": "Mediator.Internals.QueryHandlerWrapper<T1, T2>", "reportPath": "CustomersTask4_QueryHandlerWrapper_2.html", "methodName": "Handle(Mediator.Mediator,TRequest,System.Threading.CancellationToken)", "methodShortName": "Handle(...)", "fileIndex": 0, "line": 464,
+    "metrics": [
+      { "value": 42, "exceeded": true },
+      { "value": 6, "exceeded": false },
+    ]},
+  {
+    "assembly": "CustomersTask4", "class": "Mediator.Internals.RequestHandlerWrapper<T1, T2>", "reportPath": "CustomersTask4_RequestHandlerWrapper_2.html", "methodName": "Handle(Mediator.Mediator,TRequest,System.Threading.CancellationToken)", "methodShortName": "Handle(...)", "fileIndex": 0, "line": 158,
+    "metrics": [
+      { "value": 42, "exceeded": true },
+      { "value": 6, "exceeded": false },
+    ]},
+  {
+    "assembly": "CustomersTask4", "class": "Mediator.Internals.StreamCommandHandlerWrapper<T1, T2>", "reportPath": "CustomersTask4_StreamCommandHandlerWrapper_2.html", "methodName": "Handle(Mediator.Mediator,TRequest,System.Threading.CancellationToken)", "methodShortName": "Handle(...)", "fileIndex": 0, "line": 387,
+    "metrics": [
+      { "value": 42, "exceeded": true },
+      { "value": 6, "exceeded": false },
+    ]},
+  {
+    "assembly": "CustomersTask4", "class": "Mediator.Internals.StreamCommandHandlerWrapper<T1, T2>", "reportPath": "CustomersTask4_StreamCommandHandlerWrapper_2.html", "methodName": "Handle()", "methodShortName": "Handle()", "fileIndex": 0, "line": 438,
+    "metrics": [
+      { "value": 42, "exceeded": true },
+      { "value": 6, "exceeded": false },
+    ]},
+  {
+    "assembly": "CustomersTask4", "class": "Mediator.Internals.StreamQueryHandlerWrapper<T1, T2>", "reportPath": "CustomersTask4_StreamQueryHandlerWrapper_2.html", "methodName": "Handle(Mediator.Mediator,TRequest,System.Threading.CancellationToken)", "methodShortName": "Handle(...)", "fileIndex": 0, "line": 540,
+    "metrics": [
+      { "value": 42, "exceeded": true },
+      { "value": 6, "exceeded": false },
+    ]},
+  {
+    "assembly": "CustomersTask4", "class": "Mediator.Internals.StreamQueryHandlerWrapper<T1, T2>", "reportPath": "CustomersTask4_StreamQueryHandlerWrapper_2.html", "methodName": "Handle()", "methodShortName": "Handle()", "fileIndex": 0, "line": 591,
+    "metrics": [
+      { "value": 42, "exceeded": true },
+      { "value": 6, "exceeded": false },
+    ]},
+  {
+    "assembly": "CustomersTask4", "class": "Mediator.Internals.StreamRequestHandlerWrapper<T1, T2>", "reportPath": "CustomersTask4_StreamRequestHandlerWrapper_2.html", "methodName": "Handle(Mediator.Mediator,TRequest,System.Threading.CancellationToken)", "methodShortName": "Handle(...)", "fileIndex": 0, "line": 234,
+    "metrics": [
+      { "value": 42, "exceeded": true },
+      { "value": 6, "exceeded": false },
+    ]},
+  {
+    "assembly": "CustomersTask4", "class": "Mediator.Internals.StreamRequestHandlerWrapper<T1, T2>", "reportPath": "CustomersTask4_StreamRequestHandlerWrapper_2.html", "methodName": "Handle()", "methodShortName": "Handle()", "fileIndex": 0, "line": 285,
+    "metrics": [
+      { "value": 42, "exceeded": true },
+      { "value": 6, "exceeded": false },
+    ]},
+  {
+    "assembly": "CustomersTask4", "class": "Microsoft.Extensions.DependencyInjection.MediatorDependencyInjectionExtensions", "reportPath": "CustomersTask4_MediatorDependencyInjectionExtensions.html", "methodName": "AddMediator(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action`1<Mediator.MediatorOptions>)", "methodShortName": "AddMediator(...)", "fileIndex": 0, "line": 37,
     "metrics": [
       { "value": 42, "exceeded": true },
       { "value": 6, "exceeded": false },

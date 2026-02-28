@@ -28,6 +28,9 @@ namespace CustomersTask4.Abstraction
         }
     }
 
+
+
+
     public interface ICustomRequest : IRequest<Unit> { }
     public interface ICustomRequest<out TResponse> : IRequest<TResponse> { }
 
