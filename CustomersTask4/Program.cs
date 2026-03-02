@@ -19,7 +19,6 @@ using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
 builder.Services.AddControllers();
 MapsterConfig.Register();
 builder.Services.AddSingleton(Mapster.TypeAdapterConfig.GlobalSettings);
@@ -29,10 +28,17 @@ builder.Services.AddScoped<IUserTokenMangerService, UserTokenMangerService>();
 builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly)
     .AddFluentValidationAutoValidation();
 
-builder.Services.AddAuthentication(op => op.DefaultAuthenticateScheme = "token")
+// Only JWT — nothing else will override this
+builder.Services.AddAuthentication(op =>
+    {
+        op.DefaultAuthenticateScheme = "token";
+        op.DefaultChallengeScheme = "token";
+        op.DefaultScheme = "token";
+    })
     .AddJwtBearer("token", op =>
     {
-        var secretKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes("this is my secret key abdo saad key"));
+        var secretKey = new SymmetricSecurityKey(
+            System.Text.Encoding.UTF8.GetBytes("this is my secret key abdo saad key"));
 
         op.TokenValidationParameters = new TokenValidationParameters
         {
@@ -73,7 +79,9 @@ builder.Services.AddOpenApi(options =>
             }
         };
 
-       
+        // This was missing — tells Swagger to send the token with every request
+        document.SecurityRequirements ??= new List<OpenApiSecurityRequirement>();
+        document.SecurityRequirements.Add(securityRequirement);
 
         return Task.CompletedTask;
     });
@@ -87,14 +95,24 @@ builder.Services.AddMediator(cfg =>
 builder.Services.AddScoped<IAppMeditor, AppMediator>();
 builder.Services.AddScoped<RequestLoggingMiddleware>();
 builder.Services.AddScoped<ErrorHandelingMiddleware>();
-
 builder.Services.AddScoped<IUserContext, UserContext>();
 builder.Services.AddScoped<ICustomerHistoryRepository, CustomerHistoryRepository>();
 builder.Services.AddHttpContextAccessor();
 
-builder.Services.AddIdentityApiEndpoints<User>()
-          .AddRoles<IdentityRole>()
-          .AddEntityFrameworkStores<ApplicationDbContext>();
+// AddIdentityCore registers ONLY: UserManager, RoleManager, SignInManager
+// It does NOT register any authentication scheme (no Cookie, no Bearer)
+// so our JWT "token" scheme above is never overridden
+builder.Services.AddIdentityCore<User>(options =>
+    {
+        options.Password.RequireDigit = false;
+        options.Password.RequiredLength = 6;
+        options.Password.RequireNonAlphanumeric = false;
+        options.Password.RequireUppercase = false;
+    })
+    .AddRoles<IdentityRole>()
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddDefaultTokenProviders()
+    .AddSignInManager();
 
 builder.Services.AddDbContext<ApplicationDbContext>(option =>
     option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
@@ -106,13 +124,11 @@ switch (provider)
 {
     case "Mongo":
         builder.AddMongoSetings();
-        
         break;
-
     case "Sql":
     default:
         builder.AddSqlSetings();
-    break;
+        break;
 }
 
 builder.Host.UseSerilog((context, config) =>
@@ -122,6 +138,11 @@ builder.Host.UseSerilog((context, config) =>
 
 var app = builder.Build();
 
+if (provider == "Mongo")
+{
+    await app.SeedMongoRolesAsync();
+}
+
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
@@ -130,7 +151,7 @@ if (app.Environment.IsDevelopment())
         options.SwaggerEndpoint("/openapi/v1.json", "My API v1");
     });
 }
-await app.SeedMongoRolesAsync();
+
 app.UseSerilogRequestLogging();
 app.UseHttpsRedirection();
 app.UseAuthentication();

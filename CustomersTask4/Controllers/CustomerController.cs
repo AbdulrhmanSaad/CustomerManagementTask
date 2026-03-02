@@ -15,7 +15,7 @@ namespace CustomersTask4.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-   // [Authorize]
+    [Authorize]
     public class CustomerController(IAppMeditor mediator) : ControllerBase
     {
         
