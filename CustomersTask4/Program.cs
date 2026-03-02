@@ -14,21 +14,21 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using MongoDB.Driver;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
+
 MapsterConfig.Register();
 builder.Services.AddSingleton(Mapster.TypeAdapterConfig.GlobalSettings);
 builder.Services.AddScoped<IMapper, ServiceMapper>();
+
 builder.Services.AddScoped<IUserTokenMangerService, UserTokenMangerService>();
 
 builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly)
     .AddFluentValidationAutoValidation();
 
-// Only JWT — nothing else will override this
 builder.Services.AddAuthentication(op =>
     {
         op.DefaultAuthenticateScheme = "token";
@@ -38,7 +38,7 @@ builder.Services.AddAuthentication(op =>
     .AddJwtBearer("token", op =>
     {
         var secretKey = new SymmetricSecurityKey(
-            System.Text.Encoding.UTF8.GetBytes("this is my secret key abdo saad key"));
+            System.Text.Encoding.UTF8.GetBytes(builder.Configuration["ConnectionStrings:key"]!));
 
         op.TokenValidationParameters = new TokenValidationParameters
         {
@@ -79,7 +79,6 @@ builder.Services.AddOpenApi(options =>
             }
         };
 
-        // This was missing — tells Swagger to send the token with every request
         document.SecurityRequirements ??= new List<OpenApiSecurityRequirement>();
         document.SecurityRequirements.Add(securityRequirement);
 
@@ -96,12 +95,9 @@ builder.Services.AddScoped<IAppMeditor, AppMediator>();
 builder.Services.AddScoped<RequestLoggingMiddleware>();
 builder.Services.AddScoped<ErrorHandelingMiddleware>();
 builder.Services.AddScoped<IUserContext, UserContext>();
-builder.Services.AddScoped<ICustomerHistoryRepository, CustomerHistoryRepository>();
 builder.Services.AddHttpContextAccessor();
 
-// AddIdentityCore registers ONLY: UserManager, RoleManager, SignInManager
-// It does NOT register any authentication scheme (no Cookie, no Bearer)
-// so our JWT "token" scheme above is never overridden
+
 builder.Services.AddIdentityCore<User>(options =>
     {
         options.Password.RequireDigit = false;
@@ -114,9 +110,7 @@ builder.Services.AddIdentityCore<User>(options =>
     .AddDefaultTokenProviders()
     .AddSignInManager();
 
-builder.Services.AddDbContext<ApplicationDbContext>(option =>
-    option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
-          .EnableSensitiveDataLogging());
+
 
 string provider = builder.Configuration["DatabaseProvidor"] ?? "Sql";
 

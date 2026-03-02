@@ -6,6 +6,7 @@ using CustomersTask4.Repository;
 using CustomersTask4.Services;
 using CustomersTask4.Users;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using MongoDB.Driver;
 
 namespace CustomersTask4.IServiceExtentions
@@ -51,18 +52,28 @@ namespace CustomersTask4.IServiceExtentions
                 .AddSignInManager<SignInManager<MongoUser>>()
                 .AddDefaultTokenProviders();
 
-            builder.Services.AddScoped<IGenericRepository<Customer>, MongoCustomerReository>();
+            builder.Services.AddScoped<IGenericRepository<Customer>, MongoCustomerRepository>();
+            builder.Services.AddScoped<ICustomerHistoryRepository, MongoCustomerRepository>();
+
             builder.Services.AddScoped<IAppUserManager, MongoAppUserManager>();
         }
 
         public static void AddSqlSetings(this WebApplicationBuilder builder)
         {
+            builder.Services.AddDbContext<ApplicationDbContext>(option =>
+                  option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
+                  .EnableSensitiveDataLogging());
+
             builder.Services.AddScoped(
                 typeof(IGenericRepository<>),
                 typeof(GenericRepository<>));
 
+            builder.Services.AddScoped<ICustomerHistoryRepository, CustomerHistoryRepository>();
             builder.Services.AddScoped<IAppUserManager, SqlAppUserManager>();
+
         }
+
+
 
 
         public static async Task SeedMongoRolesAsync(this IApplicationBuilder app)

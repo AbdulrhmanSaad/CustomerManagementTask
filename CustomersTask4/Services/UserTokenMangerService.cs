@@ -9,14 +9,14 @@ namespace CustomersTask4.Services
 {
     public interface IUserTokenMangerService
     {
-        string GenerateJwtToken(IAppUser user, IList<string> roles);
+        string GenerateJwtToken(IAppUser user, IEnumerable<string> roles);
         string GenerateRefreshToken();
         ClaimsPrincipal? GetPrincipalFromExpiredToken(string token);
     }
 
     public class UserTokenMangerService : IUserTokenMangerService
     {
-        public string GenerateJwtToken(IAppUser user, IList<string> roles)
+        public string GenerateJwtToken(IAppUser user, IEnumerable<string> roles)
         {
             var role = roles.FirstOrDefault() ?? "no role";
 

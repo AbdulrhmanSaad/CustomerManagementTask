@@ -223,10 +223,10 @@ namespace CustomersTaskUnitTest.UnitTesting
             _mediator.Send(Arg.Any<GetCustomerHistoryQuery>()).Returns(new List<CustomerHistoryResponse>());
 
             // Act
-            await _controller.GetCustomerHistory("7");
+            await _controller.GetCustomerHistory("69a5ab9bfe4b58bfdfcf9836");
 
             // Assert
-            await _mediator.Received(1).Send(Arg.Is<GetCustomerHistoryQuery>(q => q.CustomerId == ""));
+            await _mediator.Received(1).Send(Arg.Is<GetCustomerHistoryQuery>(q => q.CustomerId == "69a5ab9bfe4b58bfdfcf9836"));
         }
 
         #endregion

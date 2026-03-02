@@ -12,7 +12,7 @@ namespace CustomersTask4.Services
         public async Task<bool> CheckPasswordAsync(IAppUser user, string password)
             => await userManager.CheckPasswordAsync((MongoUser)user, password);
 
-        public async Task<IList<string>> GetRolesAsync(IAppUser user)
+        public async Task<IEnumerable<string>> GetRolesAsync(IAppUser user)
             => await userManager.GetRolesAsync((MongoUser)user);
 
         public async Task UpdateAsync(IAppUser user)

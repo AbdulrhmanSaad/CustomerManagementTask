@@ -17,25 +17,14 @@ namespace CustomersTask4.Tests.Controllers
     public class IdentityControllerTests
     {
         private readonly IAppMeditor _mediator;
-        private readonly UserManager<User> _userManager;
-        private readonly SignInManager<User> _signInManager;
         private readonly IdentityController _controller;
 
         public IdentityControllerTests()
         {
             _mediator = Substitute.For<IAppMeditor>();
 
-            var userStore = Substitute.For<IUserStore<User>>();
-            _userManager = Substitute.For<UserManager<User>>(
-                userStore, null, null, null, null, null, null, null, null);
-
-            _signInManager = Substitute.For<SignInManager<User>>(
-                _userManager,
-                Substitute.For<Microsoft.AspNetCore.Http.IHttpContextAccessor>(),
-                Substitute.For<IUserClaimsPrincipalFactory<User>>(),
-                null, null, null, null);
-
-            _controller = new IdentityController(_mediator, _userManager, _signInManager);
+          
+            _controller = new IdentityController(_mediator);
         }
 
         [Fact]

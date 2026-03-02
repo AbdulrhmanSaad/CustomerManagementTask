@@ -11,8 +11,7 @@ using Xunit;
 namespace CustomersTaskUnitTest.UnitTesting;
 public class LoginUserCommandHandlerTests
 {
-    private readonly UserManager<User> _userManager;
-    private readonly SignInManager<User> _signInManager;
+    private readonly  IAppUserManager _userManager;
     private readonly IUserTokenMangerService _tokenService;
     private readonly LoginUserCommandHandler _handler;
 
@@ -20,20 +19,14 @@ public class LoginUserCommandHandlerTests
     {
         var userStore = Substitute.For<IUserStore<User>>();
 
-        _userManager = Substitute.For<UserManager<User>>(
-            userStore, null, null, null, null, null, null, null, null);
+        _userManager = Substitute.For<IAppUserManager>();
 
-        _signInManager = Substitute.For<SignInManager<User>>(
-            _userManager,
-            Substitute.For<Microsoft.AspNetCore.Http.IHttpContextAccessor>(),
-            Substitute.For<IUserClaimsPrincipalFactory<User>>(),
-            null, null, null, null);
+        
 
         _tokenService = Substitute.For<IUserTokenMangerService>();
 
         _handler = new LoginUserCommandHandler(
             _userManager,
-            _signInManager,
             _tokenService
         );
     }
@@ -44,18 +37,17 @@ public class LoginUserCommandHandlerTests
         // Arrange
         var command = new LoginUserCommand
         {
-            Email = "test@test.com",
-            Password = "123456"
+            Email = "abdo@gmail.com",
+            Password = "Test@12"
         };
 
         var user = new User { Email = command.Email };
 
         _userManager.FindByEmailAsync(command.Email).Returns(user);
 
-        _signInManager.CheckPasswordSignInAsync(user, command.Password, false)
-            .Returns(SignInResult.Success);
-
-        _tokenService.GenerateJwtToken(user).Returns("access-token");
+        _userManager.CheckPasswordAsync(user, command.Password)
+            .Returns(true);
+        _tokenService.GenerateJwtToken(user,new List<string>() {"User"}).Returns("access-token");
         _tokenService.GenerateRefreshToken().Returns("refresh-token");
 
         // Act
@@ -67,7 +59,6 @@ public class LoginUserCommandHandlerTests
         Assert.Equal("refresh-token", result.RefreshToken);
 
         await _userManager.Received(1).UpdateAsync(user);
-        await _signInManager.Received(1).SignInAsync(user, false);
     }
 
     [Fact]
@@ -101,8 +92,8 @@ public class LoginUserCommandHandlerTests
 
         _userManager.FindByEmailAsync(command.Email).Returns(user);
 
-        _signInManager.CheckPasswordSignInAsync(user, command.Password, false)
-            .Returns(SignInResult.Failed);
+        _userManager.CheckPasswordAsync(user, command.Password)
+           .Returns(false);
 
         // Act & Assert
         await Assert.ThrowsAsync<NotFoundException>(() =>

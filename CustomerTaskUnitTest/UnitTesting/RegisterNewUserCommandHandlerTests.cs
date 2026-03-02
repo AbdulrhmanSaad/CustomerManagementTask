@@ -7,19 +7,19 @@ using NSubstitute;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
+using CustomersTask4.Services;
 
 namespace CustomersTaskUnitTest.UnitTesting;
 public class RegisterNewUserCommandHandlerTests
 {
-    private readonly UserManager<User> _userManager;
+    private readonly IAppUserManager _userManager;
     private readonly RegisterNewUserCommandHandler _handler;
 
     public RegisterNewUserCommandHandlerTests()
     {
         var userStore = Substitute.For<IUserStore<User>>();
 
-        _userManager = Substitute.For<UserManager<User>>(
-            userStore, null, null, null, null, null, null, null, null);
+        _userManager = Substitute.For<IAppUserManager>();
 
         _handler = new RegisterNewUserCommandHandler(_userManager);
     }
@@ -34,19 +34,19 @@ public class RegisterNewUserCommandHandlerTests
             Password = "Test@12"
         };
 
-        _userManager.CreateAsync(Arg.Any<User>(), command.Password)
-            .Returns(IdentityResult.Success);
+        _userManager.CreateAsync(Arg.Any<IAppUser>(), command.Password)
+            .Returns(true);
 
-        _userManager.AddToRoleAsync(Arg.Any<User>(), UserRoles.User)
-            .Returns(new IdentityResult());
+        _userManager.AddToRoleAsync(Arg.Any<IAppUser>(), UserRoles.User)
+            .Returns(Task.CompletedTask);
 
         // Act
         var result = await _handler.Handle(command, CancellationToken.None);
 
         // Assert
         Assert.Equal(Mediator.Unit.Value, result);
-        await _userManager.Received(1).CreateAsync(Arg.Any<User>(), command.Password);
-        await _userManager.Received(1).AddToRoleAsync(Arg.Any<User>(), UserRoles.User);
+        await _userManager.Received(1).CreateAsync(Arg.Any<IAppUser>(), command.Password);
+        await _userManager.Received(1).AddToRoleAsync(Arg.Any<IAppUser>(), UserRoles.User);
     }
 
     [Fact]
@@ -56,18 +56,18 @@ public class RegisterNewUserCommandHandlerTests
         var command = new RegisterNewUserCommand
         {
             Email = "test@gmail.com",
-            Password = "Test@12"
+            Password = "Test@123"
         };
 
         _userManager.CreateAsync(Arg.Any<User>(), command.Password)
-            .Returns(IdentityResult.Failed(new IdentityError { Description = "Username Already Exists" }));
+            .Returns(false);
 
         // Act & Assert
         var ex = await Assert.ThrowsAsync<NotFoundException>(() =>
             _handler.Handle(command, CancellationToken.None).AsTask());
 
         Assert.Equal("Username Already Exists", ex.Message);
-        await _userManager.Received(1).CreateAsync(Arg.Any<User>(), command.Password);
+        await _userManager.DidNotReceive().CreateAsync(Arg.Any<User>(), command.Password);
         await _userManager.DidNotReceive().AddToRoleAsync(Arg.Any<User>(), Arg.Any<string>());
     }
 }

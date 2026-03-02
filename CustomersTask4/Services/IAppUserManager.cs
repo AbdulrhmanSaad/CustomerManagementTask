@@ -6,7 +6,7 @@ namespace CustomersTask4.Services
     {
         Task<IAppUser?> FindByEmailAsync(string email);
         Task<bool> CheckPasswordAsync(IAppUser user, string password);
-        Task<IList<string>> GetRolesAsync(IAppUser user);
+        Task<IEnumerable<string>> GetRolesAsync(IAppUser user);
         Task UpdateAsync(IAppUser user);
         Task<bool> CreateAsync(IAppUser user, string password);
         Task<bool> RoleExistsAsync(string role);

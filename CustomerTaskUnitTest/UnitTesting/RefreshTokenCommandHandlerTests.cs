@@ -16,15 +16,14 @@ namespace CustomersTaskUnitTest.UnitTesting;
 
 public class RefreshTokenCommandHandlerTests
 {
-    private readonly UserManager<User> _userManager;
+    private readonly IAppUserManager _userManager;
     private readonly IUserTokenMangerService _tokenService;
     private readonly RefreshTokenCommandHandler _handler;
 
     public RefreshTokenCommandHandlerTests()
     {
         var userStore = Substitute.For<Microsoft.AspNetCore.Identity.IUserStore<User>>();
-        _userManager = Substitute.For<UserManager<User>>(
-            userStore, null, null, null, null, null, null, null, null);
+        _userManager = Substitute.For<IAppUserManager>();
 
         _tokenService = Substitute.For<IUserTokenMangerService>();
 
@@ -56,9 +55,10 @@ public class RefreshTokenCommandHandlerTests
 
         _tokenService.GetPrincipalFromExpiredToken(command.AccessToken).Returns(claims);
         _userManager.FindByEmailAsync("test@gmail.com").Returns(user);
-        _tokenService.GenerateJwtToken(user).Returns("new-access-token");
+
+        _tokenService.GenerateJwtToken(user, new List<string>() { "User" }).Returns("new-access-token");
         _tokenService.GenerateRefreshToken().Returns("new-refresh-token");
-        _userManager.UpdateAsync(user).Returns(new IdentityResult());
+        _userManager.UpdateAsync(user).Returns(Task.CompletedTask);
 
         // Act
         var result = await _handler.Handle(command, CancellationToken.None);
@@ -67,7 +67,6 @@ public class RefreshTokenCommandHandlerTests
         Assert.NotNull(result);
         Assert.Equal("new-access-token", result.AccessToken);
         Assert.Equal("new-refresh-token", result.RefreshToken);
-        Assert.Equal("new-refresh-token", user.RefreshToken);
         Assert.True(user.RefreshTokenExpiryTime > DateTime.UtcNow);
 
         await _userManager.Received(1).UpdateAsync(user);

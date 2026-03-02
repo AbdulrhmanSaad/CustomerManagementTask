@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace CustomersTask4.Migrations
 {
     /// <inheritdoc />
-    public partial class IdentityAdded : Migration
+    public partial class allAfterChanges : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -30,6 +30,8 @@ namespace CustomersTask4.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    RefreshToken = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    RefreshTokenExpiryTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -49,6 +51,32 @@ namespace CustomersTask4.Migrations
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
                 });
+
+            migrationBuilder.CreateTable(
+                name: "Customers",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Phone = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ChangedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ChangedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PeriodEnd = table.Column<DateTime>(type: "datetime2", nullable: false)
+                        .Annotation("SqlServer:TemporalIsPeriodEndColumn", true),
+                    PeriodStart = table.Column<DateTime>(type: "datetime2", nullable: false)
+                        .Annotation("SqlServer:TemporalIsPeriodStartColumn", true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Customers", x => x.Id);
+                })
+                .Annotation("SqlServer:IsTemporal", true)
+                .Annotation("SqlServer:TemporalHistoryTableName", "CustomersHistory")
+                .Annotation("SqlServer:TemporalHistoryTableSchema", null)
+                .Annotation("SqlServer:TemporalPeriodEndColumnName", "PeriodEnd")
+                .Annotation("SqlServer:TemporalPeriodStartColumnName", "PeriodStart");
 
             migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
@@ -156,6 +184,42 @@ namespace CustomersTask4.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Addresses",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    AddressType = table.Column<int>(type: "int", nullable: false),
+                    AddressName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CustomerId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    PeriodEnd = table.Column<DateTime>(type: "datetime2", nullable: false)
+                        .Annotation("SqlServer:TemporalIsPeriodEndColumn", true),
+                    PeriodStart = table.Column<DateTime>(type: "datetime2", nullable: false)
+                        .Annotation("SqlServer:TemporalIsPeriodStartColumn", true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Addresses", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Addresses_Customers_CustomerId",
+                        column: x => x.CustomerId,
+                        principalTable: "Customers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("SqlServer:IsTemporal", true)
+                .Annotation("SqlServer:TemporalHistoryTableName", "AddressesHistory")
+                .Annotation("SqlServer:TemporalHistoryTableSchema", null)
+                .Annotation("SqlServer:TemporalPeriodEndColumnName", "PeriodEnd")
+                .Annotation("SqlServer:TemporalPeriodStartColumnName", "PeriodStart");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Addresses_CustomerId_AddressType",
+                table: "Addresses",
+                columns: new[] { "CustomerId", "AddressType" },
+                unique: true);
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -194,11 +258,25 @@ namespace CustomersTask4.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Customers_Phone",
+                table: "Customers",
+                column: "Phone",
+                unique: true);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "Addresses")
+                .Annotation("SqlServer:IsTemporal", true)
+                .Annotation("SqlServer:TemporalHistoryTableName", "AddressesHistory")
+                .Annotation("SqlServer:TemporalHistoryTableSchema", null)
+                .Annotation("SqlServer:TemporalPeriodEndColumnName", "PeriodEnd")
+                .Annotation("SqlServer:TemporalPeriodStartColumnName", "PeriodStart");
+
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
@@ -213,6 +291,14 @@ namespace CustomersTask4.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "Customers")
+                .Annotation("SqlServer:IsTemporal", true)
+                .Annotation("SqlServer:TemporalHistoryTableName", "CustomersHistory")
+                .Annotation("SqlServer:TemporalHistoryTableSchema", null)
+                .Annotation("SqlServer:TemporalPeriodEndColumnName", "PeriodEnd")
+                .Annotation("SqlServer:TemporalPeriodStartColumnName", "PeriodStart");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

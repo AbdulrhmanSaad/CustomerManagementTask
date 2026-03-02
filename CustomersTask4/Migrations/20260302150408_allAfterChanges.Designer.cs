@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CustomersTask4.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260222220549_updateUserTable")]
-    partial class updateUserTable
+    [Migration("20260302150408_allAfterChanges")]
+    partial class allAfterChanges
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -40,8 +40,9 @@ namespace CustomersTask4.Migrations
                     b.Property<int>("AddressType")
                         .HasColumnType("int");
 
-                    b.Property<int>("CustomerId")
-                        .HasColumnType("int");
+                    b.Property<string>("CustomerId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("PeriodEnd")
                         .ValueGeneratedOnAddOrUpdate()
@@ -74,11 +75,14 @@ namespace CustomersTask4.Migrations
 
             modelBuilder.Entity("CustomersTask4.Domain.Customer", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<DateTime?>("ChangedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ChangedBy")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -124,51 +128,6 @@ namespace CustomersTask4.Migrations
                             }));
                 });
 
-            modelBuilder.Entity("CustomersTask4.Domain.CustomerHistory", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Action")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("ChangedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("CustomerId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("NewValues")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("OldValues")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserEmail")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserRole")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CustomerId");
-
-                    b.ToTable("CustomerHistories");
-                });
-
             modelBuilder.Entity("CustomersTask4.Domain.User", b =>
                 {
                     b.Property<string>("Id")
@@ -212,7 +171,6 @@ namespace CustomersTask4.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("RefreshToken")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("RefreshTokenExpiryTime")
@@ -376,19 +334,11 @@ namespace CustomersTask4.Migrations
 
             modelBuilder.Entity("CustomersTask4.Domain.Address", b =>
                 {
-                    b.HasOne("CustomersTask4.Domain.Customer", null)
+                    b.HasOne("CustomersTask4.Domain.Customer", "Customer")
                         .WithMany("Addresses")
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("CustomersTask4.Domain.CustomerHistory", b =>
-                {
-                    b.HasOne("CustomersTask4.Domain.Customer", "Customer")
-                        .WithMany("History")
-                        .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.Navigation("Customer");
                 });
@@ -447,8 +397,6 @@ namespace CustomersTask4.Migrations
             modelBuilder.Entity("CustomersTask4.Domain.Customer", b =>
                 {
                     b.Navigation("Addresses");
-
-                    b.Navigation("History");
                 });
 #pragma warning restore 612, 618
         }
