@@ -35,8 +35,8 @@ namespace CustomersTaskUnitTest.UnitTesting
             // Arrange
             var customers = new List<CustomerDto>
             {
-                new CustomerDto { Id = 1, Name = "Alice",Phone="01013513652",CreatedAt=DateTime.UtcNow,CreatedBy="abdo@gmail.com" },
-                new CustomerDto { Id = 2, Name = "Bob",Phone="01013513656",CreatedAt=DateTime.UtcNow,CreatedBy="abdo@gmail.com"  }
+                new CustomerDto { Id = "1", Name = "Alice",Phone="01013513652",CreatedAt=DateTime.UtcNow,CreatedBy="abdo@gmail.com" },
+                new CustomerDto { Id = "2", Name = "Bob",Phone="01013513656",CreatedAt=DateTime.UtcNow,CreatedBy="abdo@gmail.com"  }
             };
             _mediator.Send(Arg.Any<GetAllCustomerQuery>()).Returns(customers);
 
@@ -71,11 +71,11 @@ namespace CustomersTaskUnitTest.UnitTesting
         public async Task GetCustomerById_ReturnsOkWithCustomer()
         {
             // Arrange
-            var customer = new CustomerDto { Id = 1, Name = "Alice", Phone = "01013513652", CreatedAt = DateTime.UtcNow, CreatedBy = "abdo@gmail.com" };
+            var customer = new CustomerDto { Id = "1", Name = "Alice", Phone = "01013513652", CreatedAt = DateTime.UtcNow, CreatedBy = "abdo@gmail.com" };
             _mediator.Send(Arg.Any<GetCustomerByIdQuery>()).Returns(customer);
 
             // Act
-            var result = await _controller.GetCustomerById(1);
+            var result = await _controller.GetCustomerById("1");
 
             // Assert
             var ok = Assert.IsType<OkObjectResult>(result.Result);
@@ -86,14 +86,14 @@ namespace CustomersTaskUnitTest.UnitTesting
         public async Task GetCustomerById_SendsQueryWithCorrectId()
         {
             // Arrange
-            var customer = new CustomerDto { Id = 32, Name = "Charlie" };
+            var customer = new CustomerDto { Id = "32", Name = "Charlie" };
             _mediator.Send(Arg.Any<GetCustomerByIdQuery>()).Returns(customer);
 
             // Act
-            await _controller.GetCustomerById(32);
+            await _controller.GetCustomerById("32");
 
             // Assert
-            await _mediator.Received(1).Send(Arg.Is<GetCustomerByIdQuery>(q => q.id == 32));
+            await _mediator.Received(1).Send(Arg.Is<GetCustomerByIdQuery>(q => q.id == "32"));
         }
 
         #endregion
@@ -107,7 +107,7 @@ namespace CustomersTaskUnitTest.UnitTesting
             _mediator.Send(Arg.Any<DeleteCustomerCommand>()).Returns(Task.FromResult(Unit.Value));
 
             // Act
-            var result = await _controller.DeleteCustomer(1);
+            var result = await _controller.DeleteCustomer("1");
 
             // Assert
             var ok = Assert.IsType<OkObjectResult>(result);
@@ -121,10 +121,10 @@ namespace CustomersTaskUnitTest.UnitTesting
             _mediator.Send(Arg.Any<DeleteCustomerCommand>()).Returns(Task.FromResult(Unit.Value));
 
             // Act
-            await _controller.DeleteCustomer(42);
+            await _controller.DeleteCustomer("42");
 
             // Assert
-            await _mediator.Received(1).Send(Arg.Is<DeleteCustomerCommand>(c => c.Id == 42));
+            await _mediator.Received(1).Send(Arg.Is<DeleteCustomerCommand>(c => c.Id == "42"));
         }
 
         #endregion
@@ -172,7 +172,7 @@ namespace CustomersTaskUnitTest.UnitTesting
             _mediator.Send(Arg.Any<UpdateCustomerCommand>()).Returns(Task.FromResult(Unit.Value));
 
             // Act
-            var result = await _controller.UpdateCustomer(command, 10);
+            var result = await _controller.UpdateCustomer(command, "10");
 
             // Assert
             var ok = Assert.IsType<OkObjectResult>(result);
@@ -187,11 +187,11 @@ namespace CustomersTaskUnitTest.UnitTesting
             _mediator.Send(Arg.Any<UpdateCustomerCommand>()).Returns(Task.FromResult(Unit.Value));
 
             // Act
-            await _controller.UpdateCustomer(command, 99);
+            await _controller.UpdateCustomer(command, "99");
 
             // Assert
-            Assert.Equal(99, command.Id);
-            await _mediator.Received(1).Send(Arg.Is<UpdateCustomerCommand>(c => c.Id == 99));
+            Assert.Equal("99", command.Id);
+            await _mediator.Received(1).Send(Arg.Is<UpdateCustomerCommand>(c => c.Id == "99"));
         }
 
         #endregion
@@ -209,7 +209,7 @@ namespace CustomersTaskUnitTest.UnitTesting
             _mediator.Send(Arg.Any<GetCustomerHistoryQuery>()).Returns(history);
 
             // Act
-            var result = await _controller.GetCustomerHistory(1);
+            var result = await _controller.GetCustomerHistory("1");
 
             // Assert
             var ok = Assert.IsType<OkObjectResult>(result.Result);
@@ -223,10 +223,10 @@ namespace CustomersTaskUnitTest.UnitTesting
             _mediator.Send(Arg.Any<GetCustomerHistoryQuery>()).Returns(new List<CustomerHistoryResponse>());
 
             // Act
-            await _controller.GetCustomerHistory(7);
+            await _controller.GetCustomerHistory("7");
 
             // Assert
-            await _mediator.Received(1).Send(Arg.Is<GetCustomerHistoryQuery>(q => q.CustomerId == 7));
+            await _mediator.Received(1).Send(Arg.Is<GetCustomerHistoryQuery>(q => q.CustomerId == ""));
         }
 
         #endregion
@@ -244,7 +244,7 @@ namespace CustomersTaskUnitTest.UnitTesting
             _mediator.Send(Arg.Any<GetCustomerAddressesHistoryQuery>()).Returns(history);
 
             // Act
-            var result = await _controller.GetCustomerAddressHistory(3);
+            var result = await _controller.GetCustomerAddressHistory("3");
 
             // Assert
             var ok = Assert.IsType<OkObjectResult>(result.Result);
@@ -258,10 +258,10 @@ namespace CustomersTaskUnitTest.UnitTesting
             _mediator.Send(Arg.Any<GetCustomerAddressesHistoryQuery>()).Returns(new List<AddressDto>());
 
             // Act
-            await _controller.GetCustomerAddressHistory(15);
+            await _controller.GetCustomerAddressHistory("15");
 
             // Assert
-            await _mediator.Received(1).Send(Arg.Is<GetCustomerAddressesHistoryQuery>(q => q.CustomerId == 15));
+            await _mediator.Received(1).Send(Arg.Is<GetCustomerAddressesHistoryQuery>(q => q.CustomerId == "15"));
         }
 
         #endregion

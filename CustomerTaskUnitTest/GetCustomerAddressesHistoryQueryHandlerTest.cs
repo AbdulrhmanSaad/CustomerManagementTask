@@ -30,7 +30,7 @@ namespace CustomerTaskUnitTest
         public async Task Handle_WithValidCustomerId_ShouldReturnAddressHistory()
         {
             // Arrange
-            var customerId = 25;
+            var customerId = "25";
             var query = new GetCustomerAddressesHistoryQuery(customerId);
 
             var existingCustomer = new Customer
@@ -75,7 +75,7 @@ namespace CustomerTaskUnitTest
         public async Task Handle_WithMultipleAddressHistoryRecords_ShouldReturnAllRecords()
         {
             // Arrange
-            var customerId = 32;
+            var customerId = "32";
             var query = new GetCustomerAddressesHistoryQuery(customerId);
 
             var existingCustomer = new Customer
@@ -133,7 +133,7 @@ namespace CustomerTaskUnitTest
         public async Task Handle_WithAddressNameChanges_ShouldReturnAllVersions()
         {
             // Arrange
-            var customerId = 32;
+            var customerId = "32";
             var query = new GetCustomerAddressesHistoryQuery(customerId);
 
             var existingCustomer = new Customer
@@ -196,7 +196,7 @@ namespace CustomerTaskUnitTest
         public async Task Handle_WithNonExistentCustomer_ShouldThrowNotFoundException()
         {
             // Arrange
-            var customerId = 999;
+            var customerId = "999";
             var query = new GetCustomerAddressesHistoryQuery(customerId);
 
             _repository.GetByIdAsync(customerId)
@@ -209,7 +209,7 @@ namespace CustomerTaskUnitTest
 
             Assert.Equal($"Customer with id {customerId} not found.", exception.Message);
 
-            await _repository.DidNotReceive().GetAllCustomerAddressHistory(Arg.Any<int>());
+            await _repository.DidNotReceive().GetAllCustomerAddressHistory(Arg.Any<string>());
         }
 
         #endregion

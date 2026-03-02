@@ -9,50 +9,50 @@ namespace CustomersTask4.Services
 {
     public interface IUserTokenMangerService
     {
-        string GenerateJwtToken(User user);
+        string GenerateJwtToken(IAppUser user, IList<string> roles);
         string GenerateRefreshToken();
         ClaimsPrincipal? GetPrincipalFromExpiredToken(string token);
-
     }
-    public class UserTokenMangerService(UserManager<User>userManager):IUserTokenMangerService
+
+    public class UserTokenMangerService : IUserTokenMangerService
     {
-        public string GenerateJwtToken(User user)
+        public string GenerateJwtToken(IAppUser user, IList<string> roles)
         {
-            var role = userManager.GetRolesAsync(user)?.Result.FirstOrDefault() ?? "no role";
+            var role = roles.FirstOrDefault() ?? "no role";
 
-            var claim = new List<Claim>();
-            claim.Add(new Claim(ClaimTypes.Email, user.Email));
-            claim.Add(new Claim(ClaimTypes.Role, role));
-            claim.Add(new Claim(ClaimTypes.NameIdentifier, user.Id));
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Email, user.Email ?? string.Empty),
+                new Claim(ClaimTypes.Role, role),
+                new Claim(ClaimTypes.NameIdentifier, user.Id)
+            };
 
-            var secretKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes("this is my secret key abdo saad key"));
+            var secretKey = new SymmetricSecurityKey(
+                System.Text.Encoding.UTF8.GetBytes("this is my secret key abdo saad key"));
             var signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
 
             var token = new JwtSecurityToken(
-                claims: claim,
-                expires: DateTime.Now.AddDays(1),
-                signingCredentials: signinCredentials
-                );
+                claims: claims,
+                expires: DateTime.UtcNow.AddDays(1),
+                signingCredentials: signinCredentials);
 
-            var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
-            return tokenString;
+            return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
         public string GenerateRefreshToken()
         {
             var randomNumber = new byte[64];
-            using (var rng = RandomNumberGenerator.Create())
-            {
-                rng.GetBytes(randomNumber);
-                return Convert.ToBase64String(randomNumber);
-            }
+            using var rng = RandomNumberGenerator.Create();
+            rng.GetBytes(randomNumber);
+            return Convert.ToBase64String(randomNumber);
         }
 
         public ClaimsPrincipal? GetPrincipalFromExpiredToken(string token)
         {
             try
             {
-                var secretKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes("this is my secret key abdo saad key"));
+                var secretKey = new SymmetricSecurityKey(
+                    System.Text.Encoding.UTF8.GetBytes("this is my secret key abdo saad key"));
 
                 var tokenValidationParameters = new TokenValidationParameters
                 {
@@ -60,16 +60,16 @@ namespace CustomersTask4.Services
                     ValidateIssuer = false,
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = secretKey,
-                    ValidateLifetime = false // Don't validate lifetime for expired tokens
+                    ValidateLifetime = false
                 };
 
                 var tokenHandler = new JwtSecurityTokenHandler();
                 var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out SecurityToken securityToken);
-                if (!(securityToken is JwtSecurityToken jwtSecurityToken) ||
-                      !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
-                {
+
+                if (securityToken is not JwtSecurityToken jwtSecurityToken ||
+                    !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256,
+                        StringComparison.InvariantCultureIgnoreCase))
                     return null;
-                }
 
                 return principal;
             }

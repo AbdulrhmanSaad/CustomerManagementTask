@@ -3,8 +3,8 @@ using Mediator;
 
 namespace CustomersTask4.CustomerHandler.Query.GetCustomerAddressesHistory
 {
-    public class GetCustomerAddressesHistoryQuery(int customerId) : IRequest<IEnumerable<AddressDto>>
+    public class GetCustomerAddressesHistoryQuery(string customerId) : IRequest<IEnumerable<AddressDto>>
     {
-        public int CustomerId { get; } = customerId;
+        public string CustomerId { get; } = customerId;
     }
 }

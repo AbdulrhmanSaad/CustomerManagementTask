@@ -34,7 +34,7 @@ namespace CustomerTaskUnitTest
             public async Task Handle_WithValidCustomerId_ShouldReturnCustomerDto()
             {
                 // Arrange
-                var customerId = 1;
+                var customerId = "1";
                 var query = new GetCustomerByIdQuery(customerId);
 
                 var customer = new Customer
@@ -46,8 +46,8 @@ namespace CustomerTaskUnitTest
                     CreatedBy = "admin",
                     Addresses = new List<Address>
                 {
-                    new Address { Id = 1, CustomerId = customerId, AddressName = "Cairo", AddressType = AddressType.Home },
-                    new Address { Id = 2, CustomerId = customerId, AddressName = "Alex", AddressType = AddressType.Work }
+                    new Address {  CustomerId = customerId, AddressName = "Cairo", AddressType = AddressType.Home },
+                    new Address { CustomerId = customerId, AddressName = "Alex", AddressType = AddressType.Work }
 
                 }
                 };
@@ -85,7 +85,7 @@ namespace CustomerTaskUnitTest
             public async Task Handle_WithNonExistentCustomerId_ShouldThrowNotFoundException()
             {
                 // Arrange
-                var customerId = 999;
+                var customerId = "999";
                 var query = new GetCustomerByIdQuery(customerId);
 
                 _repository.GetByIdAsync(customerId, Arg.Any<Expression<Func<Customer, object>>>())

@@ -1,6 +1,8 @@
 using CustomersTask4.Abstraction;
 using CustomersTask4.Data;
 using CustomersTask4.Domain;
+using CustomersTask4.IServiceExtentions;
+using CustomersTask4.Mapping;
 using CustomersTask4.Middleware;
 using CustomersTask4.Repository;
 using CustomersTask4.Services;
@@ -12,13 +14,14 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using MongoDB.Driver;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 
 builder.Services.AddControllers();
+MapsterConfig.Register();
 builder.Services.AddSingleton(Mapster.TypeAdapterConfig.GlobalSettings);
 builder.Services.AddScoped<IMapper, ServiceMapper>();
 builder.Services.AddScoped<IUserTokenMangerService, UserTokenMangerService>();
@@ -38,98 +41,102 @@ builder.Services.AddAuthentication(op => op.DefaultAuthenticateScheme = "token")
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = secretKey,
         };
-
     });
 
-// inside ConfigureServices
-
-
-builder.Services.AddSwaggerGen(c =>
+builder.Services.AddOpenApi(options =>
 {
-    c.AddSecurityDefinition("bearerAuth", new OpenApiSecurityScheme
+    options.AddDocumentTransformer((document, context, ct) =>
     {
-        Type = SecuritySchemeType.Http,
-        Scheme = "bearer",
-        BearerFormat = "JWT"
-
-    });
-    c.AddSecurityRequirement(new OpenApiSecurityRequirement
-    {
+        document.Components ??= new OpenApiComponents();
+        document.Components.SecuritySchemes = new Dictionary<string, OpenApiSecurityScheme>
         {
-            new OpenApiSecurityScheme
+            ["bearerAuth"] = new OpenApiSecurityScheme
             {
-                 Reference = new OpenApiReference
-                  {
-                      Type = ReferenceType.SecurityScheme,
-                      Id="bearerAuth"
-                  }
+                Type = SecuritySchemeType.Http,
+                Scheme = "bearer",
+                BearerFormat = "JWT"
+            }
+        };
 
-            },new List<string>()
-        }
+        var securityRequirement = new OpenApiSecurityRequirement
+        {
+            {
+                new OpenApiSecurityScheme
+                {
+                    Reference = new OpenApiReference
+                    {
+                        Type = ReferenceType.SecurityScheme,
+                        Id = "bearerAuth"
+                    }
+                },
+                new List<string>()
+            }
+        };
+
+       
+
+        return Task.CompletedTask;
     });
 });
-
-builder.Services.AddScoped(
-    typeof(IGenericRepository<>),
-    typeof(GenericRepository<>));
 
 builder.Services.AddMediator(cfg =>
 {
-    cfg.ServiceLifetime = ServiceLifetime.Scoped; 
+    cfg.ServiceLifetime = ServiceLifetime.Scoped;
 });
+
 builder.Services.AddScoped<IAppMeditor, AppMediator>();
 builder.Services.AddScoped<RequestLoggingMiddleware>();
 builder.Services.AddScoped<ErrorHandelingMiddleware>();
 
-builder.Services.AddScoped<IUserContext,UserContext>();
-builder.Services.AddScoped<ICustomerHistoryRepository,CustomerHistoryRepository>();
+builder.Services.AddScoped<IUserContext, UserContext>();
+builder.Services.AddScoped<ICustomerHistoryRepository, CustomerHistoryRepository>();
 builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddIdentityApiEndpoints<User>()
-    .AddRoles<IdentityRole>()
-    .AddEntityFrameworkStores<ApplicationDbContext>();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
-builder.Services.AddDbContext<ApplicationDbContext>(
-    option=>option
-    .UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
-    .EnableSensitiveDataLogging()
-    );
+          .AddRoles<IdentityRole>()
+          .AddEntityFrameworkStores<ApplicationDbContext>();
+
+builder.Services.AddDbContext<ApplicationDbContext>(option =>
+    option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
+          .EnableSensitiveDataLogging());
+
+string provider = builder.Configuration["DatabaseProvidor"] ?? "Sql";
+
+switch (provider)
+{
+    case "Mongo":
+        builder.AddMongoSetings();
+        
+        break;
+
+    case "Sql":
+    default:
+        builder.AddSqlSetings();
+    break;
+}
+
 builder.Host.UseSerilog((context, config) =>
 {
-    config.
-    ReadFrom.Configuration(context.Configuration);
-    });
+    config.ReadFrom.Configuration(context.Configuration);
+});
 
 var app = builder.Build();
 
-
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
-    app.UseSwagger();
     app.UseSwaggerUI(options =>
     {
-        //options.SwaggerEndpoint("/swagger/v1/swagger.json", "My API v1");
-
         options.SwaggerEndpoint("/openapi/v1.json", "My API v1");
     });
-
 }
+await app.SeedMongoRolesAsync();
 app.UseSerilogRequestLogging();
-
-
-
 app.UseHttpsRedirection();
-
 app.UseAuthentication();
 app.UseAuthorization();
-
 app.UseMiddleware<RequestLoggingMiddleware>();
 app.UseMiddleware<ErrorHandelingMiddleware>();
-//app.MapGroup("/api/Identity").MapIdentityApi<User>();
-
 
 app.MapControllers();
 

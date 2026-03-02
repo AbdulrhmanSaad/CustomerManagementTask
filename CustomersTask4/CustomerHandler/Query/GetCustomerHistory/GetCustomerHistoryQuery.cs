@@ -4,9 +4,9 @@ using Mediator;
 
 namespace CustomersTask4.CustomerHandler.Query.GetCustomerHistory
 {
-    public class GetCustomerHistoryQuery(int customerId) : IRequest<IEnumerable<CustomerHistoryResponse>>
+    public class GetCustomerHistoryQuery(string customerId) : IRequest<IEnumerable<CustomerHistoryResponse>>
     {
-        public int CustomerId { get; } = customerId;
+        public string CustomerId { get; } = customerId;
     }
 }
 

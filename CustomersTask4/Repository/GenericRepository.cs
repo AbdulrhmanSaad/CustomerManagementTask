@@ -36,7 +36,7 @@ namespace CustomersTask4.Repository
             return query.ToList();
         }
 
-        public async Task<T?> GetByIdAsync(int id, params Expression<Func<T, object>>[] includes)
+        public async Task<T?> GetByIdAsync(string id, params Expression<Func<T, object>>[] includes)
         {
             IQueryable<T> query = db.Set<T>();
 
@@ -44,7 +44,7 @@ namespace CustomersTask4.Repository
             {
                 query = query.Include(include);
             }
-            return await query.FirstOrDefaultAsync(e => EF.Property<int>(e, "Id") == id);
+            return await query.FirstOrDefaultAsync(e => EF.Property<string>(e, "Id") == id);
         }
         public bool PhoneExistsAsync(string phoneNumber)
         {

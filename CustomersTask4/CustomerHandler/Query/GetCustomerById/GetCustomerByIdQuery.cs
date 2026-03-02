@@ -4,8 +4,8 @@ using Mediator;
 
 namespace CustomersTask4.CustomerHandler.Query.GetCustomerById
 {
-    public class GetCustomerByIdQuery(int id): IRequest<CustomerDto?>
+    public class GetCustomerByIdQuery(string id): IRequest<CustomerDto?>
     {
-        public int id=id;
+        public string id=id;
     }
 }

@@ -15,7 +15,7 @@ namespace CustomersTask4.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+   // [Authorize]
     public class CustomerController(IAppMeditor mediator) : ControllerBase
     {
         
@@ -29,18 +29,18 @@ namespace CustomersTask4.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<CustomerDto>> GetCustomerById(int id)
+        public async Task<ActionResult<CustomerDto>> GetCustomerById(string id)
         {
             var customer =await mediator.Send(new GetCustomerByIdQuery(id));
            
             return Ok(customer);
         }
         [HttpDelete("{id}")]
-        [Authorize(Roles =UserRoles.Admin)]
+       // [Authorize(Roles =UserRoles.Admin)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public async Task<ActionResult> DeleteCustomer(int id)
+        public async Task<ActionResult> DeleteCustomer(string id)
         {
             await mediator.Send(new DeleteCustomerCommand(id));
             return Ok("Customer Deleted Successfully");
@@ -60,7 +60,7 @@ namespace CustomersTask4.Controllers
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult> UpdateCustomer(UpdateCustomerCommand command, [FromRoute]int id)
+        public async Task<ActionResult> UpdateCustomer(UpdateCustomerCommand command, [FromRoute]string id)
         {
             command.Id = id;
             await mediator.Send(command);
@@ -69,7 +69,7 @@ namespace CustomersTask4.Controllers
         [HttpGet("history/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<CustomerHistoryResponse>> GetCustomerHistory(int id)
+        public async Task<ActionResult<CustomerHistoryResponse>> GetCustomerHistory(string id)
         {
             var customer = await mediator.Send(new GetCustomerHistoryQuery(id));
           
@@ -80,7 +80,7 @@ namespace CustomersTask4.Controllers
         [HttpGet("AddressHistory/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<CustomerHistoryResponse>> GetCustomerAddressHistory(int id)
+        public async Task<ActionResult<CustomerHistoryResponse>> GetCustomerAddressHistory(string id)
         {
             var customer = await mediator.Send(new GetCustomerAddressesHistoryQuery(id));
 

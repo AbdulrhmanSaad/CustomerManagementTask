@@ -41,26 +41,26 @@ namespace CustomerTaskUnitTest
             {
                 new Customer
                 {
-                    Id = 1,
+                    Id = "1",
                     Name = "Ahmed",
                     Phone = "01013513652",
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = "admin",
                     Addresses = new List<Address>
                     {
-                        new Address { Id = 1, CustomerId = 1, AddressName = "Home", AddressType = AddressType.Home }
+                        new Address { CustomerId = "1", AddressName = "Home", AddressType = AddressType.Home }
                     }
                 },
                 new Customer
                 {
-                    Id = 2,
+                    Id = "2",
                     Name = "Fatima",
                     Phone = "01550830820",
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = "admin",
                     Addresses = new List<Address>
                     {
-                        new Address { Id = 2, CustomerId = 2, AddressName = "Work", AddressType = AddressType.Work }
+                        new Address {  CustomerId = "2", AddressName = "Work", AddressType = AddressType.Work }
                     }
                 }
             };
@@ -69,7 +69,7 @@ namespace CustomerTaskUnitTest
             {
                 new CustomerDto
                 {
-                    Id = 1,
+                    Id = "1",
                     Name = "Ahmed",
                     Phone = "01013513652",
                     CreatedAt = DateTime.UtcNow,
@@ -81,7 +81,7 @@ namespace CustomerTaskUnitTest
                 },
                 new CustomerDto
                 {
-                    Id = 2,
+                    Id = "2",
                     Name = "Fatima",
                     Phone = "01550830820",
                     CreatedAt = DateTime.UtcNow,
@@ -137,15 +137,15 @@ namespace CustomerTaskUnitTest
             {
                 new Customer
                 {
-                    Id = 1,
+                    Id = "1",
                     Name = "Ahmed",
                     Phone = "01013513652",
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = "admin",
                     Addresses = new List<Address>()
                     {
-                        new Address { Id = 1, CustomerId = 1, AddressName = "Cairo", AddressType = AddressType.Home },
-                        new Address { Id = 2, CustomerId = 1, AddressName = "Alex", AddressType = AddressType.Work }
+                        new Address { CustomerId = "1", AddressName = "Cairo", AddressType = AddressType.Home },
+                        new Address { CustomerId = "1", AddressName = "Alex", AddressType = AddressType.Work }
                     }
                 }
             };
@@ -154,7 +154,7 @@ namespace CustomerTaskUnitTest
             {
                 new CustomerDto
                 {
-                    Id = 1,
+                    Id = "1",
                     Name = "Ahmed",
                     Phone = "01013513652",
                     CreatedBy = "admin",

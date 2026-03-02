@@ -13,17 +13,17 @@ namespace CustomersTask4.Repository
         {
             this.db = db;
         }
-        public async Task<IEnumerable<Customer>> GetAllCustomerHistory(int customerId)
+        public async Task<IEnumerable<Customer>> GetAllCustomerHistory(string customerId)
         {
             var res =await db.Customers.TemporalAll()
-                .Where(c => c.Id == customerId).ToListAsync();
+                .Where(c => c.Id.Equals(customerId)).ToListAsync();
             
             return res;
         }
-        public async Task<IEnumerable<AddressDto>> GetAllCustomerAddressHistory(int customerId)
+        public async Task<IEnumerable<AddressDto>> GetAllCustomerAddressHistory(string customerId)
         {
             var res = await db.Addresses.TemporalAll()
-                .Where(c => c.CustomerId == customerId).Select(e => new AddressDto{ AddressType = e.AddressType.ToString(), AddressName = e.AddressName.ToString() }).ToListAsync();
+                .Where(c => c.CustomerId.Equals(customerId)).Select(e => new AddressDto{ AddressType = e.AddressType.ToString(), AddressName = e.AddressName.ToString() }).ToListAsync();
             // var res=await db.CustomerHistories.Where(c => c.CustomerId == customerId).ToListAsync();
             return res;
         }

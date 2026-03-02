@@ -5,7 +5,7 @@ namespace CustomersTask4.Repository
 {
     public interface ICustomerHistoryRepository:IGenericRepository<Customer>
     {
-        Task<IEnumerable<Customer>> GetAllCustomerHistory(int customerId);
-        Task<IEnumerable<AddressDto>> GetAllCustomerAddressHistory(int customerId);
+        Task<IEnumerable<Customer>> GetAllCustomerHistory(string customerId);
+        Task<IEnumerable<AddressDto>> GetAllCustomerAddressHistory(string customerId);
     }
 }

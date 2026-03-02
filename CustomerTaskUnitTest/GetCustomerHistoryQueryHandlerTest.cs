@@ -38,11 +38,11 @@ namespace CustomerTaskUnitTest
             public async Task Handle_WithValidCustomerId_ShouldReturnCustomerHistory()
             {
                 // Arrange
-                var customerId = 25;
+                var customerId = "25";
                 var query = new GetCustomerHistoryQuery(customerId);
             var existtingcustomer = new Customer
             {
-                Id = 32,
+                Id = "32",
                 Name = "Ahmed Updated",
                 Phone = "01013513653",
                 CreatedAt = DateTime.UtcNow.AddDays(-3),
@@ -90,11 +90,11 @@ namespace CustomerTaskUnitTest
             public async Task Handle_WithMultipleHistoryRecords_ShouldReturnAllRecords()
             {
                 // Arrange
-                var customerId = 32;
+                var customerId = "32";
                 var query = new GetCustomerHistoryQuery(customerId);
             var existtingcustomer = new Customer
             {
-                Id = 32,
+                Id = "32",
                 Name = "Ahmed Updated",
                 Phone = "01013513653",
                 CreatedAt = DateTime.UtcNow.AddDays(-3),
@@ -164,7 +164,7 @@ namespace CustomerTaskUnitTest
             public async Task Handle_WithEmptyHistoryRecords_ShouldReturnNotFoundException()
             {
                 // Arrange
-                var customerId = 999;
+                var customerId = "999";
                 var query = new GetCustomerHistoryQuery(customerId);
 
                 var emptyHistoryRecords = new List<Customer>();
@@ -182,7 +182,7 @@ namespace CustomerTaskUnitTest
             );
 
             Assert.Equal($"Customer with id {customerId} not found.", exception.Message);
-            await _repository.DidNotReceive().GetAllCustomerHistory(Arg.Any<int>());
+            await _repository.DidNotReceive().GetAllCustomerHistory(Arg.Any<string>());
 
             }
 

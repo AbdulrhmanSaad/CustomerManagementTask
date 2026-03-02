@@ -8,8 +8,7 @@ namespace CustomersTask4.Validator
     {
         public UpdateCustomerCommandValidator()
         {
-            RuleFor(x => x.Id)
-                .GreaterThan(0).WithMessage("Id must be greater than 0.");
+
 
             RuleFor(x => x.Name)
                 .NotEmpty().WithMessage("Name is required.")

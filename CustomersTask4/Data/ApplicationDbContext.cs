@@ -33,7 +33,13 @@ namespace CustomersTask4.Data
                 .HasIndex(a=> new {a.CustomerId,a.AddressType})
                 .IsUnique();
 
-          
+
+
+            modelBuilder.Entity<Customer>()
+                 .HasMany(c => c.Addresses)
+                 .WithOne(a => a.Customer)
+                 .HasForeignKey(a => a.CustomerId)
+                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Customer>()
                 .ToTable("Customers", b => b.IsTemporal());

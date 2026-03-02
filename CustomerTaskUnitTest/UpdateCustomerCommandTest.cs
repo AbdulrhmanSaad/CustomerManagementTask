@@ -23,7 +23,7 @@ namespace CustomerTaskUnitTest
 
         private static readonly UpdateCustomerCommand _validCommand = new()
         {
-            Id = 32,
+            Id = "32",
             Name = "Ahmed Updated",
             Phone = "01013513652",
             Addresses = new List<AddressDtoEnum>()
@@ -60,7 +60,7 @@ namespace CustomerTaskUnitTest
             var command = _validCommand;
             var existingCustomer = new Customer
             {
-                Id = 32,
+                Id = "32",
                 Name = "updated now ",
                 Phone = "01213213665",
                 CreatedAt = DateTime.Now,
@@ -70,7 +70,7 @@ namespace CustomerTaskUnitTest
 
             var oldCustomer = new Customer
             {
-                Id = 32,
+                Id = "32",
                 Name = "Ahmed",
                 Phone = "01013513652",
                 CreatedAt = DateTime.UtcNow,
@@ -101,14 +101,14 @@ namespace CustomerTaskUnitTest
             // Arrange
             var command = new UpdateCustomerCommand
             {
-                Id = 1,
+                Id = "1",
                 Name = "Ahmed",
                 Phone = "01550830821",
             };
 
             var existingCustomer = new Customer
             {
-                Id = 1,
+                Id = "1",
                 Name = "Ahmed",
                 Phone = "01013513652",
                 CreatedAt = DateTime.UtcNow,
@@ -142,13 +142,13 @@ namespace CustomerTaskUnitTest
             var command = _validCommand;
             var addresses = new List<Address>
             {
-                new Address { Id = 1, CustomerId = 1, AddressName = "Home", AddressType = AddressType.Home },
-                new Address { Id = 2, CustomerId = 1, AddressName = "Work", AddressType = AddressType.Work }
+                new Address {  CustomerId = "1", AddressName = "Home", AddressType = AddressType.Home },
+                new Address { CustomerId = "1", AddressName = "Work", AddressType = AddressType.Work }
             };
 
             var existingCustomer = new Customer
             {
-                Id = 1,
+                Id = "1",
                 Name = "Ahmed",
                 Phone = "01013513652",
                 CreatedAt = DateTime.UtcNow,
@@ -184,7 +184,7 @@ namespace CustomerTaskUnitTest
         public async Task Handle_WithNonExistentCustomer_ShouldThrowNotFoundException()
         {
             // Arrange
-            var command = new UpdateCustomerCommand { Id = 999, Name = "Test", Phone = "01013513652" };
+            var command = new UpdateCustomerCommand { Id = "999", Name = "Test", Phone = "01013513652" };
 
             _repository.GetByIdAsync(command.Id, Arg.Any<Expression<Func<Customer, object>>>())
                 .Returns((Customer)null);
@@ -204,14 +204,14 @@ namespace CustomerTaskUnitTest
             // Arrange
             var command = new UpdateCustomerCommand
             {
-                Id = 1,
+                Id = "1",
                 Name = "Ahmed",
                 Phone = "01550830820",
             };
 
             var existingCustomer = new Customer
             {
-                Id = 1,
+                Id = "1",
                 Name = "Ahmed",
                 Phone = "01013513652",
                 CreatedAt = DateTime.UtcNow,

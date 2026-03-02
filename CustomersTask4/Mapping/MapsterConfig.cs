@@ -12,20 +12,18 @@ namespace CustomersTask4.Mapping
     {
         public static void Register()
         {
-            // CreateCustomerCommand -> Customer
             TypeAdapterConfig<CreateCustomerCommand, Customer>
                 .NewConfig()
-                .Map(dest => dest.Addresses, src => src.Addresses.Select(a => new Address
+                .Map(dest => dest.Addresses, src => src.Addresses.Select(a => new AddressDtoEnum
                 {
                     AddressType = a.AddressType,
                     AddressName = a.AddressName
                 }).ToList())
-                .AfterMapping((src, dest) =>
-                {
-                    dest.CreatedAt = DateTime.UtcNow;
-                });
+                .AfterMapping((src, dest) => { dest.CreatedAt = DateTime.UtcNow; });
 
-            // Customer -> CustomerDto
+
+
+
             TypeAdapterConfig<Customer, CustomerDto>
                 .NewConfig()
                 .Map(dest => dest.Addresses, src => src.Addresses.Select(a => new Address
@@ -35,29 +33,22 @@ namespace CustomersTask4.Mapping
                 }).ToList());
 
 
-            // Customer -> CustomerHistoryResponse
             TypeAdapterConfig<Customer, CustomerHistoryResponse>.NewConfig();
 
-            // UpdateCustomerCommand -> Customer
             TypeAdapterConfig<UpdateCustomerCommand, Customer>
                 .NewConfig()
                 .Map(dest => dest.Addresses, src => src.Addresses.Select(a => new Address
                 {
                     AddressType = a.AddressType,
                     AddressName = a.AddressName
-                }).ToList()
+                }).ToList())
+                .AfterMapping((src, dest) => { dest.ChangedAt = DateTime.UtcNow; });
 
 
-                )
-                .Map(dest => dest.ChangedAt,src => DateTime.UtcNow);
-                
-
-            // Customer -> Customer (clone)
             TypeAdapterConfig<Customer, Customer>
                 .NewConfig()
                 .Map(dest => dest.Addresses, src => src.Addresses);
 
-            // Address -> Address
             TypeAdapterConfig<Address, Address>.NewConfig();
         }
     }

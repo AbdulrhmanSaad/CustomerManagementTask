@@ -1,14 +1,18 @@
-﻿namespace CustomersTask4.Domain
+﻿using MongoDB.Bson.Serialization.Attributes;
+
+namespace CustomersTask4.Domain
 {
     public class Customer
     {
-        public int Id { get; set; }
+        [BsonId]
+        [BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)]
+        public string Id { get; set; }
         public string Name { get; set; }=default!;
         public string Phone { get; set; } = default!;
         public DateTime CreatedAt { get; set; }
         public string CreatedBy { get; set; } = default!;
 
-        public DateTime? ChangedAt { get; set; }
+        public DateTime? ChangedAt { get; set; } = DateTime.UtcNow;
         public string? ChangedBy { get; set; } = default!;
         public  List<Address> Addresses { get; set; }=new List<Address>();
     }

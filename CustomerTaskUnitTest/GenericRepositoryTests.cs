@@ -89,7 +89,7 @@ namespace CustomersTaskUnitTest.UnitTesting
             var context = GetDbContext();
             var repo = new GenericRepository<Customer>(context);
 
-            var result = await repo.GetByIdAsync(999);
+            var result = await repo.GetByIdAsync("999");
 
             Assert.Null(result);
         }

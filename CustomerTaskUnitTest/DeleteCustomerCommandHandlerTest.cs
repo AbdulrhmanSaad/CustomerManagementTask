@@ -32,10 +32,10 @@ namespace CustomerTaskUnitTest
         public async Task Handler_ShouldDeleteCustomerSuccessfully()
         {
             // Arrange
-            var command = new DeleteCustomerCommand(32);
+            var command = new DeleteCustomerCommand("32");
             var existingCustomer = new Customer
             {
-                Id = 32,
+                Id = "32",
                 Name = "Ahmed",
                 Phone = "01013513652",
                 CreatedAt = DateTime.Now,
@@ -56,10 +56,10 @@ namespace CustomerTaskUnitTest
         public async Task Handle_WithIdNotExist_ShouldThrowNotFoundException()
         {
             // Arrange
-            var command = new DeleteCustomerCommand(1);
+            var command = new DeleteCustomerCommand("1");
             var existingCustomer = new Customer
             {
-                Id = 1,
+                Id = "1",
                 Name = "Ahmed",
                 Phone = "01013513652",
                 CreatedAt = DateTime.Now,

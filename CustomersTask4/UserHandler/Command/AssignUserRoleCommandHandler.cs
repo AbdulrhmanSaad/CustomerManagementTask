@@ -1,13 +1,15 @@
 ﻿using CustomersTask4.Domain;
 using CustomersTask4.Exceptions;
+using CustomersTask4.Services;
 using Mediator;
 using Microsoft.AspNetCore.Identity;
 
 namespace CustomersTask4.UserHandler.Command
 {
-    public class AssignUserRoleCommandHandler(ILogger<AssignUserRoleCommandHandler>logger,
-        UserManager<User>userManager,
-        RoleManager<IdentityRole>role) : IRequestHandler<AssignUserRoleCommand,Unit>
+    public class AssignUserRoleCommandHandler
+        (ILogger<AssignUserRoleCommandHandler> logger,
+        IAppUserManager userManager
+        ) : IRequestHandler<AssignUserRoleCommand,Unit>
     {
         public async ValueTask<Unit> Handle(AssignUserRoleCommand request, CancellationToken cancellationToken)
         {
@@ -17,7 +19,7 @@ namespace CustomersTask4.UserHandler.Command
             if (user == null) 
                 throw new NotFoundException("User Not Found");
 
-            var roleExists=await role.RoleExistsAsync(request.RoleName);
+            var roleExists=await userManager.RoleExistsAsync(request.RoleName);
             if (!roleExists)
                 throw new NotFoundException("Role Not Found");
 

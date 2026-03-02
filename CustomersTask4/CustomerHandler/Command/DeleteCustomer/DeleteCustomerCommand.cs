@@ -3,8 +3,8 @@ using Mediator;
 
 namespace CustomersTask4.CustomerHandler.Command.DeleteCustomerCommand
 {
-    public class DeleteCustomerCommand(int id): IRequest
+    public class DeleteCustomerCommand(string id): IRequest
     {
-        public int Id { get; set; } = id;
+        public string Id { get; set; } = id;
     }
 }
