@@ -60,9 +60,7 @@ namespace CustomersTask4.IServiceExtentions
 
         public static void AddSqlSetings(this WebApplicationBuilder builder)
         {
-            builder.Services.AddDbContext<ApplicationDbContext>(option =>
-                  option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
-                  .EnableSensitiveDataLogging());
+            
 
             builder.Services.AddScoped(
                 typeof(IGenericRepository<>),

@@ -2,6 +2,7 @@
 using CustomersTask4.Domain;
 using CustomersTask4.DTO;
 using CustomersTask4.UserHandler.Command;
+using CustomersTask4.UserHandler.Command.AssignUserRole;
 using CustomersTask4.UserHandler.Command.LoginUser;
 using CustomersTask4.UserHandler.Command.RefreshToken;
 using CustomersTask4.Users;
@@ -32,7 +33,7 @@ namespace CustomersTask4.Controllers
         }
 
 
-        [HttpPost("register/me")]
+        [HttpPost("registerNew")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Register(RegisterNewUserCommand request)
@@ -44,7 +45,7 @@ namespace CustomersTask4.Controllers
             return Ok(new { message = "User registered successfully" });
         }
 
-        [HttpPost("login/me")]
+        [HttpPost("loginUser")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Login(LoginUserCommand request)
@@ -53,7 +54,7 @@ namespace CustomersTask4.Controllers
             return Ok(token);
         }
 
-        [HttpPost("refresh/me")]
+        [HttpPost("refreshUser")]
         [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]

@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using MongoDB.Driver;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -23,7 +24,6 @@ builder.Services.AddControllers();
 MapsterConfig.Register();
 builder.Services.AddSingleton(Mapster.TypeAdapterConfig.GlobalSettings);
 builder.Services.AddScoped<IMapper, ServiceMapper>();
-
 builder.Services.AddScoped<IUserTokenMangerService, UserTokenMangerService>();
 
 builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly)
@@ -86,6 +86,10 @@ builder.Services.AddOpenApi(options =>
     });
 });
 
+builder.Services.AddDbContext<ApplicationDbContext>(option =>
+    option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
+          .EnableSensitiveDataLogging());
+
 builder.Services.AddMediator(cfg =>
 {
     cfg.ServiceLifetime = ServiceLifetime.Scoped;
@@ -95,8 +99,8 @@ builder.Services.AddScoped<IAppMeditor, AppMediator>();
 builder.Services.AddScoped<RequestLoggingMiddleware>();
 builder.Services.AddScoped<ErrorHandelingMiddleware>();
 builder.Services.AddScoped<IUserContext, UserContext>();
+builder.Services.AddScoped<IMigratetoMongo, MigrateToMongo>();
 builder.Services.AddHttpContextAccessor();
-
 
 builder.Services.AddIdentityCore<User>(options =>
     {
@@ -110,8 +114,6 @@ builder.Services.AddIdentityCore<User>(options =>
     .AddDefaultTokenProviders()
     .AddSignInManager();
 
-
-
 string provider = builder.Configuration["DatabaseProvidor"] ?? "Sql";
 
 switch (provider)
@@ -122,6 +124,15 @@ switch (provider)
     case "Sql":
     default:
         builder.AddSqlSetings();
+        builder.Services.Configure<MongoDbSetting>(
+            builder.Configuration.GetSection("MongoDbSetting"));
+        builder.Services.AddSingleton<IMongoClient>(sp =>
+        {
+            var s = builder.Configuration
+                .GetSection("MongoDbSetting")
+                .Get<MongoDbSetting>();
+            return new MongoClient(s?.ConnectionString);
+        });
         break;
 }
 

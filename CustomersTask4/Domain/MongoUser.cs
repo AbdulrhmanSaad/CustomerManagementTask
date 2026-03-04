@@ -8,5 +8,7 @@ namespace CustomersTask4.Domain
     {
         public string? RefreshToken { get; set; }
         public DateTime RefreshTokenExpiryTime { get; set; }
+
+     
     }
 }

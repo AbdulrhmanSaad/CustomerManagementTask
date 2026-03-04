@@ -8,21 +8,18 @@ using NSubstitute;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
+
 namespace CustomersTaskUnitTest.UnitTesting;
+
 public class LoginUserCommandHandlerTests
 {
-    private readonly  IAppUserManager _userManager;
+    private readonly IAppUserManager _userManager;
     private readonly IUserTokenMangerService _tokenService;
     private readonly LoginUserCommandHandler _handler;
 
     public LoginUserCommandHandlerTests()
     {
-        var userStore = Substitute.For<IUserStore<User>>();
-
         _userManager = Substitute.For<IAppUserManager>();
-
-        
-
         _tokenService = Substitute.For<IUserTokenMangerService>();
 
         _handler = new LoginUserCommandHandler(
@@ -43,11 +40,15 @@ public class LoginUserCommandHandlerTests
 
         var user = new User { Email = command.Email };
 
-        _userManager.FindByEmailAsync(command.Email).Returns(user);
+        // Same reference used in both GetRolesAsync stub and GenerateJwtToken stub
+        var roles = new List<string> { "User" };
 
-        _userManager.CheckPasswordAsync(user, command.Password)
-            .Returns(true);
-        _tokenService.GenerateJwtToken(user,new List<string>() {"User"}).Returns("access-token");
+        _userManager.FindByEmailAsync(command.Email).Returns(user);
+        _userManager.CheckPasswordAsync(user, command.Password).Returns(true);
+
+        _userManager.GetRolesAsync(user).Returns(roles);
+
+        _tokenService.GenerateJwtToken(user, roles).Returns("access-token");
         _tokenService.GenerateRefreshToken().Returns("refresh-token");
 
         // Act
@@ -91,9 +92,7 @@ public class LoginUserCommandHandlerTests
         var user = new User { Email = command.Email };
 
         _userManager.FindByEmailAsync(command.Email).Returns(user);
-
-        _userManager.CheckPasswordAsync(user, command.Password)
-           .Returns(false);
+        _userManager.CheckPasswordAsync(user, command.Password).Returns(false);
 
         // Act & Assert
         await Assert.ThrowsAsync<NotFoundException>(() =>

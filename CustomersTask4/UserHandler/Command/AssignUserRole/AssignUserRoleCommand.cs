@@ -1,7 +1,6 @@
-﻿
-using Mediator;
+﻿using Mediator;
 
-namespace CustomersTask4.UserHandler.Command
+namespace CustomersTask4.UserHandler.Command.AssignUserRole
 {
     public class AssignUserRoleCommand:IRequest
     {

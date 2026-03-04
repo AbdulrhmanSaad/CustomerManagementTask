@@ -16,6 +16,12 @@ namespace CustomersTask4.Middleware
                 await context.Response.WriteAsync(exption.Message);
                 logger.LogWarning(exption.Message);
             }
+            catch(ArgumentException ex)
+            {
+                context.Response.StatusCode = 400;
+                await context.Response.WriteAsync(ex.Message);
+                logger.LogWarning(ex.Message);
+            }
             catch (Exception ex)
             {
                 logger.LogError(ex, ex.Message);

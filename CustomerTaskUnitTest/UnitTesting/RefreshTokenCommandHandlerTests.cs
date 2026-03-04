@@ -55,8 +55,10 @@ public class RefreshTokenCommandHandlerTests
 
         _tokenService.GetPrincipalFromExpiredToken(command.AccessToken).Returns(claims);
         _userManager.FindByEmailAsync("test@gmail.com").Returns(user);
+        var roles = new List<string> { "User" };
+        _userManager.GetRolesAsync(user).Returns(roles);
 
-        _tokenService.GenerateJwtToken(user, new List<string>() { "User" }).Returns("new-access-token");
+        _tokenService.GenerateJwtToken(user, roles).Returns("new-access-token");
         _tokenService.GenerateRefreshToken().Returns("new-refresh-token");
         _userManager.UpdateAsync(user).Returns(Task.CompletedTask);
 

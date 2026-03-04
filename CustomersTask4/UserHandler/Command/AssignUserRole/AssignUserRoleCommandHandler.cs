@@ -4,7 +4,7 @@ using CustomersTask4.Services;
 using Mediator;
 using Microsoft.AspNetCore.Identity;
 
-namespace CustomersTask4.UserHandler.Command
+namespace CustomersTask4.UserHandler.Command.AssignUserRole
 {
     public class AssignUserRoleCommandHandler
         (ILogger<AssignUserRoleCommandHandler> logger,
