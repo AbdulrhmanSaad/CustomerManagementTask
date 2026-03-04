@@ -4,7 +4,7 @@ using Mediator;
 
 namespace CustomersTask4.CustomerHandler.Command.MigrateToMongo
 {
-    public class MigrateToMongoCommandHandler(IMigratetoMongo migratetoMongo)
+    public class MigrateToMongoCommandHandler(IMigrateDatabases migratetoMongo)
         : IRequestHandler<MigrateToMongoCommand, MigrateToMongoResult>
     {
         public async ValueTask<MigrateToMongoResult> Handle(

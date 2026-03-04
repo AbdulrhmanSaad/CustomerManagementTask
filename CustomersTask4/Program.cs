@@ -2,6 +2,7 @@ using CustomersTask4.Abstraction;
 using CustomersTask4.Data;
 using CustomersTask4.Domain;
 using CustomersTask4.IServiceExtentions;
+using CustomersTask4.Jobs;
 using CustomersTask4.Mapping;
 using CustomersTask4.Middleware;
 using CustomersTask4.Repository;
@@ -15,6 +16,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using MongoDB.Driver;
+using Quartz;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -90,6 +92,16 @@ builder.Services.AddDbContext<ApplicationDbContext>(option =>
     option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
           .EnableSensitiveDataLogging());
 
+builder.Services.Configure<MongoDbSetting>(
+            builder.Configuration.GetSection("MongoDbSetting"));
+builder.Services.AddSingleton<IMongoClient>(sp =>
+{
+    var s = builder.Configuration
+        .GetSection("MongoDbSetting")
+        .Get<MongoDbSetting>();
+    return new MongoClient(s?.ConnectionString);
+});
+
 builder.Services.AddMediator(cfg =>
 {
     cfg.ServiceLifetime = ServiceLifetime.Scoped;
@@ -99,7 +111,7 @@ builder.Services.AddScoped<IAppMeditor, AppMediator>();
 builder.Services.AddScoped<RequestLoggingMiddleware>();
 builder.Services.AddScoped<ErrorHandelingMiddleware>();
 builder.Services.AddScoped<IUserContext, UserContext>();
-builder.Services.AddScoped<IMigratetoMongo, MigrateToMongo>();
+builder.Services.AddScoped<IMigrateDatabases, MigrateToMongo>();
 builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddIdentityCore<User>(options =>
@@ -114,6 +126,29 @@ builder.Services.AddIdentityCore<User>(options =>
     .AddDefaultTokenProviders()
     .AddSignInManager();
 
+builder.Services.AddQuartz(q =>
+{
+    var jobKey = new JobKey("MigrationJob");
+
+    q.AddJob<MigrateJobUsingPolly>(opts => opts
+        .WithIdentity(jobKey)
+        .StoreDurably()                         
+        .UsingJobData("RetryCount", 0));      
+
+    q.AddTrigger(opts => opts
+        .ForJob(jobKey)
+        .WithIdentity("MigrationTrigger")
+        .WithSimpleSchedule(s => s
+            .WithIntervalInMinutes(10)
+            .RepeatForever())
+        .StartNow());
+});
+
+builder.Services.AddQuartzHostedService(q =>
+{
+    q.WaitForJobsToComplete = true;
+});
+
 string provider = builder.Configuration["DatabaseProvidor"] ?? "Sql";
 
 switch (provider)
@@ -124,15 +159,7 @@ switch (provider)
     case "Sql":
     default:
         builder.AddSqlSetings();
-        builder.Services.Configure<MongoDbSetting>(
-            builder.Configuration.GetSection("MongoDbSetting"));
-        builder.Services.AddSingleton<IMongoClient>(sp =>
-        {
-            var s = builder.Configuration
-                .GetSection("MongoDbSetting")
-                .Get<MongoDbSetting>();
-            return new MongoClient(s?.ConnectionString);
-        });
+        
         break;
 }
 

@@ -7,13 +7,13 @@ using MongoDB.Bson;
 using MongoDB.Driver;
 namespace CustomersTask4.Services
 {
-    public interface IMigratetoMongo
+    public interface IMigrateDatabases
     {
         Task<MigrateToMongoResult> MigrateFromSqlToMongo();
         Task<MigrateToMongoResult> MigrateFromMongoToSql();
     }
 
-    public class MigrateToMongo : IMigratetoMongo
+    public class MigrateToMongo : IMigrateDatabases
     {
         private readonly ApplicationDbContext sqlDb;
         private readonly IMongoClient mongoClient;
@@ -139,7 +139,7 @@ namespace CustomersTask4.Services
 
             int migratedCount = 0;
             int skippedCount = 0;
-
+            List<Customer> customers = new List<Customer>();
             foreach (var sqlCustomer in sqlCustomers)
             {
                 var alreadyExists = await mongoCollection
@@ -172,11 +172,12 @@ namespace CustomersTask4.Services
                         })
                         .ToList()
                 };
-
-                await mongoCollection.InsertOneAsync(mongoCustomer);
+                customers.Add(mongoCustomer);
                 logger.LogInformation("Migrated customer {Name}", mongoCustomer.Name);
                 migratedCount++;
             }
+            if(customers.Count > 0)
+                await mongoCollection.InsertManyAsync(customers);
 
             List<MongoUser> mongoUsers = new List<MongoUser>();
             foreach (var sqlUser in sqlUsers)
@@ -206,7 +207,8 @@ namespace CustomersTask4.Services
                 logger.LogInformation("Migrated customer {Name}", mongoUser.UserName);
                 migratedCount++;
             }
-            await mongoUsersCollection.InsertManyAsync(mongoUsers);
+            if(mongoUsers.Count > 0)
+                await mongoUsersCollection.InsertManyAsync(mongoUsers);
 
             logger.LogInformation(
                 "Migration complete — Migrated: {Migrated}, Skipped: {Skipped}",

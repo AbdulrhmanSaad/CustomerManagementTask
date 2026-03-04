@@ -15,21 +15,9 @@ namespace CustomersTask4.IServiceExtentions
     {
         public static void AddMongoSetings(this WebApplicationBuilder builder)
         {
-            builder.Services.Configure<MongoDbSetting>(
-                builder.Configuration.GetSection("MongoDbSetting"));
-
-            builder.Services.AddSingleton<IMongoClient>(sp =>
-            {
-                var settings = builder.Configuration
-                    .GetSection("MongoDbSetting")
-                    .Get<MongoDbSetting>();
-                return new MongoClient(settings?.ConnectionString);
-            });
-
             var mongoSettings = builder.Configuration
                 .GetSection("MongoDbSetting")
                 .Get<MongoDbSetting>();
-
             var mongoIdentityConfig = new MongoDbIdentityConfiguration
             {
                 MongoDbSettings = new MongoDbSettings
