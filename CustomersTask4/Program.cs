@@ -126,28 +126,7 @@ builder.Services.AddIdentityCore<User>(options =>
     .AddDefaultTokenProviders()
     .AddSignInManager();
 
-builder.Services.AddQuartz(q =>
-{
-    var jobKey = new JobKey("MigrationJob");
-
-    q.AddJob<MigrateJobUsingPolly>(opts => opts
-        .WithIdentity(jobKey)
-        .StoreDurably()                         
-        .UsingJobData("RetryCount", 0));      
-
-    q.AddTrigger(opts => opts
-        .ForJob(jobKey)
-        .WithIdentity("MigrationTrigger")
-        .WithSimpleSchedule(s => s
-            .WithIntervalInMinutes(10)
-            .RepeatForever())
-        .StartNow());
-});
-
-builder.Services.AddQuartzHostedService(q =>
-{
-    q.WaitForJobsToComplete = true;
-});
+builder.AddQuartzConfig();
 
 string provider = builder.Configuration["DatabaseProvidor"] ?? "Sql";
 

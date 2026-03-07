@@ -38,7 +38,7 @@ namespace CustomersTask4.Jobs
 
                 if (retryCount <= MaxRetries)
                 {
-                    var delaySeconds = (int)Math.Pow(2, retryCount);
+                    var delaySeconds = (int)Math.Pow(2,retryCount);
 
                     logger.LogWarning(
                         ex,
