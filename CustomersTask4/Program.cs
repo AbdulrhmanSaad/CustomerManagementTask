@@ -1,4 +1,5 @@
 using CustomersTask4.Abstraction;
+using CustomersTask4.Consumers;
 using CustomersTask4.Data;
 using CustomersTask4.Domain;
 using CustomersTask4.IServiceExtentions;
@@ -11,6 +12,7 @@ using CustomersTask4.Users;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using MapsterMapper;
+using MassTransit;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -127,6 +129,27 @@ builder.Services.AddIdentityCore<User>(options =>
     .AddSignInManager();
 
 builder.AddQuartzConfig();
+
+//var rabbitConfig=builder.Configuration.GetSection(nameof(RabbitMqConfig)).Get<RabbitMqConfig>();
+
+//builder.Services.AddMassTransit(option =>
+//{
+//    option.AddConsumer<CustomerSyncConsumer>();
+
+//    option.UsingRabbitMq((context, cfg) =>
+//    {
+//        cfg.Host(rabbitConfig!.Server, s =>
+//        {
+//            s.Username(rabbitConfig.Username);
+//            s.Password(rabbitConfig.Password);
+//        });
+//        cfg.ConfigureEndpoints(context);
+//        cfg.Exclusive = false;
+//        cfg.Durable = false;
+
+//    });
+//});
+
 
 string provider = builder.Configuration["DatabaseProvidor"] ?? "Sql";
 

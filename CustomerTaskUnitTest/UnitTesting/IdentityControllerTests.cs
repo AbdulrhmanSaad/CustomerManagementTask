@@ -3,6 +3,7 @@ using CustomersTask4.Controllers;
 using CustomersTask4.Domain;
 using CustomersTask4.DTO;
 using CustomersTask4.UserHandler.Command;
+using CustomersTask4.UserHandler.Command.AssignUserRole;
 using CustomersTask4.UserHandler.Command.LoginUser;
 using CustomersTask4.UserHandler.Command.RefreshToken;
 using CustomersTask4.Users;
