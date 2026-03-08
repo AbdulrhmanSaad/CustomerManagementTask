@@ -1,6 +1,6 @@
 ﻿using CustomersTask4.Domain;
 using CustomersTask4.DTO;
-using Mediator;
+using MediatR;
 
 namespace CustomersTask4.CustomerHandler.Command.UpdateCustomer
 {

@@ -31,6 +31,5 @@ namespace CustomersTask4.Messages
     public class CustomerDeletedMessage
     {
         public string Id { get; init; } = default!;
-        public string Phone { get; init; } = default!;
     }
 }

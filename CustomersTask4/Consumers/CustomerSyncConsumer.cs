@@ -1,10 +1,12 @@
-﻿using CustomersTask4.Data;
+﻿using AutoMapper;
+using CustomersTask4.Data;
 using CustomersTask4.Domain;
 using CustomersTask4.Messages;
 using MassTransit;
 using Microsoft.Extensions.Options;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using SharpCompress.Common;
 
 namespace CustomersTask4.Consumers
 {
@@ -28,16 +30,9 @@ namespace CustomersTask4.Consumers
             var msg = context.Message;
             var collection = GetCollection();
 
-            var exists = await collection.Find(c => c.Phone == msg.Phone).AnyAsync();
-            if (exists)
-            {
-                logger.LogInformation("Customer {Phone} already in MongoDB", msg.Phone);
-                return;
-            }
-
             var customer = new Customer
             {
-                Id = ObjectId.GenerateNewId().ToString(),
+                Id = msg.Id,
                 Name = msg.Name,
                 Phone = msg.Phone,
                 CreatedAt = msg.CreatedAt,
@@ -54,46 +49,50 @@ namespace CustomersTask4.Consumers
             logger.LogInformation("Customer {Name} created in MongoDB", customer.Name);
         }
 
-        // ── UPDATE ──────────────────────────────────────────────
+        //UPDATE
         public async Task Consume(ConsumeContext<CustomerUpdatedMessage> context)
         {
             var msg = context.Message;
             var collection = GetCollection();
 
-            var update = Builders<Customer>.Update
-                .Set(c => c.Name, msg.Name)
-                .Set(c => c.Phone, msg.Phone)
-                .Set(c => c.ChangedAt, msg.ChangedAt)
-                .Set(c => c.ChangedBy, msg.ChangedBy)
-                .Set(c => c.Addresses, msg.Addresses
-                    .Select(a => new Address
-                    {
-                        AddressName = a.AddressName,
-                        AddressType = Enum.Parse<AddressType>(a.AddressType)
-                    }).ToList());
+            var existing = await collection.Find(c => c.Id == msg.Id).FirstOrDefaultAsync();
 
-            var result = await collection.UpdateOneAsync(
-                c => c.Phone == msg.Phone,
-                update);
+            if (existing != null)
+            {
+                existing.Name = msg.Name;
+                existing.Phone = msg.Phone;
+                existing.ChangedAt = msg.ChangedAt;
+                existing.ChangedBy = msg.ChangedBy;
+                existing.Addresses = msg.Addresses
+                   .Select(a => new Address
+                   {
+                       AddressName = a.AddressName,
+                       AddressType = Enum.Parse<AddressType>(a.AddressType)
+                   }).ToList();
+                var result = await collection.ReplaceOneAsync(c => c.Id == msg.Id, existing);
 
-            if (result.MatchedCount == 0)
-                logger.LogWarning("CustomerUpdatedMessage — customer {Phone} not found in MongoDB", msg.Phone);
-            else
-                logger.LogInformation("Customer {Phone} updated in MongoDB", msg.Phone);
+                if (result.MatchedCount == 0)
+                    logger.LogWarning("CustomerUpdatedMessage — customer {Phone} not found in MongoDB", msg.Phone);
+                else
+                    logger.LogInformation("Customer {Phone} updated in MongoDB", msg.Phone);
+
+            }
         }
 
-        // ── DELETE ──────────────────────────────────────────────
+        //DELETE
         public async Task Consume(ConsumeContext<CustomerDeletedMessage> context)
         {
             var msg = context.Message;
             var collection = GetCollection();
 
-            var result = await collection.DeleteOneAsync(c => c.Phone == msg.Phone);
+            var result = await collection.DeleteOneAsync(c => c.Id==msg.Id);
 
             if (result.DeletedCount == 0)
-                logger.LogWarning("CustomerDeletedMessage — customer {Phone} not found in MongoDB", msg.Phone);
+                logger.LogWarning("CustomerDeletedMessage — customer id={Phone} not found in MongoDB", msg.Id);
             else
-                logger.LogInformation("Customer {Phone} deleted from MongoDB", msg.Phone);
+                logger.LogInformation("Customer {Phone} deleted from MongoDB", msg.Id);
         }
+
+     
     }
 }

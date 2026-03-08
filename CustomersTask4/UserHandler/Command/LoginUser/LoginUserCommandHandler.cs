@@ -2,7 +2,7 @@
 using CustomersTask4.DTO;
 using CustomersTask4.Exceptions;
 using CustomersTask4.Services;
-using Mediator;
+using MediatR;
 using Microsoft.AspNetCore.Identity;
 
 namespace CustomersTask4.UserHandler.Command.LoginUser
@@ -12,7 +12,7 @@ namespace CustomersTask4.UserHandler.Command.LoginUser
         IUserTokenMangerService userTokenManger)
         : IRequestHandler<LoginUserCommand, LoginDto>
     {
-        public async ValueTask<LoginDto> Handle(LoginUserCommand request, CancellationToken cancellationToken)
+        public async Task<LoginDto> Handle(LoginUserCommand request, CancellationToken cancellationToken)
         {
             var user = await userManager.FindByEmailAsync(request.Email);
 

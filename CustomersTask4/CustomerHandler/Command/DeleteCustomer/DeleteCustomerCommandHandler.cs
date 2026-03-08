@@ -1,16 +1,20 @@
 ﻿using CustomersTask4.Domain;
 using CustomersTask4.Exceptions;
+using CustomersTask4.Messages;
 using CustomersTask4.Repository;
-using Mediator;
+using MassTransit;
+using MassTransit.Transports;
+using MediatR;
 using System.Security.Cryptography;
 
 namespace CustomersTask4.CustomerHandler.Command.DeleteCustomerCommand
 {
     public class DeleteCustomerCommandHandler(IGenericRepository<Customer>db
-        ,ILogger<DeleteCustomerCommandHandler>logger
-           ) : IRequestHandler<DeleteCustomerCommand,Unit>
+        ,ILogger<DeleteCustomerCommandHandler>logger,
+        IConfiguration configuration,
+        IBus bus) : IRequestHandler<DeleteCustomerCommand>
     {
-        public async ValueTask<Unit> Handle(DeleteCustomerCommand request, CancellationToken cancellationToken)
+        public async Task Handle(DeleteCustomerCommand request, CancellationToken cancellationToken)
         {
             logger.LogInformation("Handling DeleteCustomerCommand for Customer Id: {CustomerId}", request.Id);
             var customer =await db.GetByIdAsync(request.Id);
@@ -18,9 +22,17 @@ namespace CustomersTask4.CustomerHandler.Command.DeleteCustomerCommand
                 throw new NotFoundException($"Customer With Id={request.Id} not found");
 
             await db.Delete(customer);
-            return Unit.Value;  
+            if (!configuration["DatabaseProvidor"]!.Equals("Mongo"))
+            {
+                await bus.Publish(new CustomerDeletedMessage
+                {
+                    Id = customer.Id,
+                }, cancellationToken);
 
-
+                logger.LogInformation("CustomerDeletedMessage published for {Id}", customer.Id);
+            }
         }
+
+
     }
 }

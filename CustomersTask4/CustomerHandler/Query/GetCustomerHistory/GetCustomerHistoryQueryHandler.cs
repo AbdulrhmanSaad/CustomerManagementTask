@@ -3,7 +3,7 @@ using CustomersTask4.DTO;
 using CustomersTask4.Exceptions;
 using CustomersTask4.Repository;
 using MapsterMapper;
-using Mediator;
+using MediatR;
 
 namespace CustomersTask4.CustomerHandler.Query.GetCustomerHistory
 {
@@ -12,7 +12,7 @@ namespace CustomersTask4.CustomerHandler.Query.GetCustomerHistory
         IMapper mapper
         ) : IRequestHandler<GetCustomerHistoryQuery,IEnumerable<CustomerHistoryResponse>>
     {
-        public async ValueTask<IEnumerable<CustomerHistoryResponse>> Handle(GetCustomerHistoryQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<CustomerHistoryResponse>> Handle(GetCustomerHistoryQuery request, CancellationToken cancellationToken)
         {
 
             var customer =await repository.GetByIdAsync(request.CustomerId);
@@ -22,14 +22,8 @@ namespace CustomersTask4.CustomerHandler.Query.GetCustomerHistory
 
             var CustomerUpdates=await repository.GetAllCustomerHistory(request.CustomerId);
 
-           
-
             var res=mapper.Map<IEnumerable<CustomerHistoryResponse >>(CustomerUpdates);
-
-
-
-            //var address = await repository.GetAllCustomerAddressHistory(request.CustomerId);
-            return res;//mapper.Map<IEnumerable<CustomerHistoryDto>>(res);
+            return res;
         }
     }
 }

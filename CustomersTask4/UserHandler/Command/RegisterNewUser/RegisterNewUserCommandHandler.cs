@@ -1,14 +1,14 @@
 ﻿using CustomersTask4.Exceptions;
 using CustomersTask4.Services;
 using CustomersTask4.Users;
-using Mediator;
+using MediatR;
 
 namespace CustomersTask4.UserHandler.Command
 {
     public class RegisterNewUserCommandHandler(IAppUserManager userManager)
         : IRequestHandler<RegisterNewUserCommand>
     {
-        public async ValueTask<Unit> Handle(RegisterNewUserCommand request, CancellationToken cancellationToken)
+        public async Task Handle(RegisterNewUserCommand request, CancellationToken cancellationToken)
         {
             var user = userManager.CreateUser(request.Email);
 
@@ -19,7 +19,6 @@ namespace CustomersTask4.UserHandler.Command
 
             await userManager.AddToRoleAsync(user, UserRoles.User);
 
-            return Unit.Value;
         }
     }
 }

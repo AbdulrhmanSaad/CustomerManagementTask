@@ -1,5 +1,5 @@
 ﻿using CustomersTask4.DTO;
-using Mediator;
+using MediatR;
 
 namespace CustomersTask4.UserHandler.Command.RefreshToken
 {

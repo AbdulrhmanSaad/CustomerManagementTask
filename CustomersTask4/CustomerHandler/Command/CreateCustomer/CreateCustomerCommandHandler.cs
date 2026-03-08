@@ -6,24 +6,27 @@ using CustomersTask4.Repository;
 using CustomersTask4.Users;
 using MapsterMapper;
 using MassTransit;
-using Mediator;
+using MassTransit.Transports;
+using MediatR;
 
 namespace CustomersTask4.CustomerHandler.Command.CreateCustomer
 {
-    public class CreateCustomerCommandHandler(
-        IGenericRepository<Customer> db,
-        ILogger<CreateCustomerCommandHandler> logger,
-        IMapper mapper,
-        IUserContext userContext
-        ) : ICustomRequestHandler<CreateCustomerCommand, Unit>
+    public class CreateCustomerCommandHandler(IGenericRepository<Customer> db
+        , ILogger<CreateCustomerCommandHandler> logger
+        , IMapper mapper,
+        IUserContext userContext,
+        IConfiguration configuration,
+        IBus bus) : ICustomRequestHandler<CreateCustomerCommand>
     {
-        public async ValueTask<Unit> Handle(CreateCustomerCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(CreateCustomerCommand request, CancellationToken cancellationToken)
         {
             logger.LogInformation("Creating a new customer with Data: {Data}", request);
 
             bool exist = db.PhoneExistsAsync(request.Phone);
+
             if (exist)
                 throw new NotFoundException("this phone number already exists");
+
 
             var customer = mapper.Map<Customer>(request);
 
@@ -32,7 +35,14 @@ namespace CustomersTask4.CustomerHandler.Command.CreateCustomer
                 customer.CreatedBy = user.Name;
 
             await db.Add(customer);
+            if (!configuration["DatabaseProvidor"]!.Equals("Mongo"))
+            {
+                var CreatedCustomer = mapper.Map<CustomerCreatedMessage>(customer);
 
+                await bus.Publish(CreatedCustomer,cancellationToken);
+
+                logger.LogInformation("CustomerCreatedMessage published for {Name}", customer.Name);
+            }
             return Unit.Value;
         }
     }

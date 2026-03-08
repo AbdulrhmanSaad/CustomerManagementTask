@@ -1,7 +1,7 @@
 ﻿using CustomersTask4.Domain;
 using CustomersTask4.Exceptions;
 using CustomersTask4.Services;
-using Mediator;
+using MediatR;
 using Microsoft.AspNetCore.Identity;
 
 namespace CustomersTask4.UserHandler.Command.AssignUserRole
@@ -9,9 +9,9 @@ namespace CustomersTask4.UserHandler.Command.AssignUserRole
     public class AssignUserRoleCommandHandler
         (ILogger<AssignUserRoleCommandHandler> logger,
         IAppUserManager userManager
-        ) : IRequestHandler<AssignUserRoleCommand,Unit>
+        ) : IRequestHandler<AssignUserRoleCommand>
     {
-        public async ValueTask<Unit> Handle(AssignUserRoleCommand request, CancellationToken cancellationToken)
+        public async Task Handle(AssignUserRoleCommand request, CancellationToken cancellationToken)
         {
             logger.LogInformation("Assigning role {RoleName} to user with email {Email}", request.RoleName, request.Email);
 
@@ -24,7 +24,6 @@ namespace CustomersTask4.UserHandler.Command.AssignUserRole
                 throw new NotFoundException("Role Not Found");
 
             await userManager.AddToRoleAsync(user, request.RoleName);
-            return Unit.Value;
         }
     }
 }

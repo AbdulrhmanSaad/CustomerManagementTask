@@ -1,4 +1,4 @@
-﻿using Mediator;
+﻿using MediatR;
 
 namespace CustomersTask4.UserHandler.Command.AssignUserRole
 {

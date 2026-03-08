@@ -1,6 +1,6 @@
 ﻿using CustomersTask4.DTO;
-using Mediator;
-
+using CustomersTask4.Abstraction;
+using MediatR;
 namespace CustomersTask4.CustomerHandler.Query.GetCustomerAddressesHistory
 {
     public class GetCustomerAddressesHistoryQuery(string customerId) : IRequest<IEnumerable<AddressDto>>

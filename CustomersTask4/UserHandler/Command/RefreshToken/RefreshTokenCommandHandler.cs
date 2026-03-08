@@ -1,7 +1,7 @@
 ﻿using CustomersTask4.DTO;
 using CustomersTask4.Exceptions;
 using CustomersTask4.Services;
-using Mediator;
+using MediatR;
 using System.Security.Claims;
 
 namespace CustomersTask4.UserHandler.Command.RefreshToken
@@ -11,7 +11,7 @@ namespace CustomersTask4.UserHandler.Command.RefreshToken
         IUserTokenMangerService userTokenManger)
         : IRequestHandler<RefreshTokenCommand, LoginDto>
     {
-        public async ValueTask<LoginDto> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
+        public async Task<LoginDto> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
         {
             var principal = userTokenManger.GetPrincipalFromExpiredToken(request.AccessToken);
             if (principal == null)

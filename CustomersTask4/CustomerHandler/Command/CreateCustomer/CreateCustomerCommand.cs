@@ -1,7 +1,7 @@
 ﻿using CustomersTask4.Abstraction;
 using CustomersTask4.Domain;
 using CustomersTask4.DTO;
-using Mediator;
+using MediatR;
 using System.Windows.Input;
 
 

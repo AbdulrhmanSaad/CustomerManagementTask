@@ -1,17 +1,18 @@
 ﻿using Azure;
 using Azure.Core;
-using Mediator;
+using MediatR;
 
 namespace CustomersTask4.Abstraction
 {
     public interface IAppMeditor
     {
         Task<TResponse> Send<TResponse>(IRequest<TResponse> request, CancellationToken cancellationToken = default);
-        
+
+        Task Send(IRequest request, CancellationToken cancellationToken = default);
 
     }
 
-  
+
 
     public class AppMediator : IAppMeditor
     {
@@ -24,7 +25,12 @@ namespace CustomersTask4.Abstraction
 
         public Task<TResponse> Send<TResponse>(IRequest<TResponse> request, CancellationToken cancellationToken = default)
         {
-            return _mediator.Send(request, cancellationToken).AsTask();
+            return _mediator.Send(request, cancellationToken);
+        }
+
+        public Task Send(IRequest request, CancellationToken cancellationToken = default)
+        {
+            return _mediator.Send(request, cancellationToken);
         }
     }
 

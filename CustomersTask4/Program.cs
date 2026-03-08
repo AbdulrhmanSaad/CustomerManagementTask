@@ -3,7 +3,6 @@ using CustomersTask4.Consumers;
 using CustomersTask4.Data;
 using CustomersTask4.Domain;
 using CustomersTask4.IServiceExtentions;
-using CustomersTask4.Jobs;
 using CustomersTask4.Mapping;
 using CustomersTask4.Middleware;
 using CustomersTask4.Repository;
@@ -13,13 +12,14 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using MapsterMapper;
 using MassTransit;
+using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using MongoDB.Driver;
-using Quartz;
 using Serilog;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -95,7 +95,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(option =>
           .EnableSensitiveDataLogging());
 
 builder.Services.Configure<MongoDbSetting>(
-            builder.Configuration.GetSection("MongoDbSetting"));
+    builder.Configuration.GetSection("MongoDbSetting"));
 builder.Services.AddSingleton<IMongoClient>(sp =>
 {
     var s = builder.Configuration
@@ -104,10 +104,9 @@ builder.Services.AddSingleton<IMongoClient>(sp =>
     return new MongoClient(s?.ConnectionString);
 });
 
-builder.Services.AddMediator(cfg =>
-{
-    cfg.ServiceLifetime = ServiceLifetime.Scoped;
-});
+// MediatR — scoped handlers, no source generator restrictions
+builder.Services.AddMediatR(cfg =>
+    cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 
 builder.Services.AddScoped<IAppMeditor, AppMediator>();
 builder.Services.AddScoped<RequestLoggingMiddleware>();
@@ -130,26 +129,35 @@ builder.Services.AddIdentityCore<User>(options =>
 
 builder.AddQuartzConfig();
 
-//var rabbitConfig=builder.Configuration.GetSection(nameof(RabbitMqConfig)).Get<RabbitMqConfig>();
+var rabbitConfig=builder.Configuration.GetSection(nameof(RabbitMqConfig)).Get<RabbitMqConfig>();
+builder.Services.AddMassTransit(option =>
+{
+    option.AddConsumer<CustomerSyncConsumer>();
+
+    option.UsingRabbitMq((context, cfg) =>
+    {
+        cfg.Host(rabbitConfig!.Server, "/", s =>
+        {
+            s.Username(rabbitConfig.Username);
+            s.Password(rabbitConfig.Password);
+        });
+        cfg.ConfigureEndpoints(context);
+        cfg.Exclusive = false;
+        cfg.Durable = false;
+
+    });
+});
+
 
 //builder.Services.AddMassTransit(option =>
 //{
 //    option.AddConsumer<CustomerSyncConsumer>();
 
-//    option.UsingRabbitMq((context, cfg) =>
+//    option.UsingInMemory((context, cfg) =>
 //    {
-//        cfg.Host(rabbitConfig!.Server, s =>
-//        {
-//            s.Username(rabbitConfig.Username);
-//            s.Password(rabbitConfig.Password);
-//        });
 //        cfg.ConfigureEndpoints(context);
-//        cfg.Exclusive = false;
-//        cfg.Durable = false;
-
 //    });
 //});
-
 
 string provider = builder.Configuration["DatabaseProvidor"] ?? "Sql";
 
@@ -161,7 +169,6 @@ switch (provider)
     case "Sql":
     default:
         builder.AddSqlSetings();
-        
         break;
 }
 

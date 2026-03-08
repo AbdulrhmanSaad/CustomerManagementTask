@@ -4,45 +4,47 @@ using CustomersTask4.Domain;
 using CustomersTask4.Exceptions;
 using CustomersTask4.Repository;
 using CustomersTask4.Users;
-using Mediator;
+using MediatR;
+using MassTransit;
+using CustomersTask4.Messages;
 
 namespace CustomersTask4.CustomerHandler.Command.UpdateCustomer
 {
-    public class UpdateCustomerCommandHandler:IRequestHandler<UpdateCustomerCommand,Unit>
+    public class UpdateCustomerCommandHandler(
+        IGenericRepository<Customer> db,
+        ILogger<UpdateCustomerCommandHandler> logger,
+        IMapper mapper,
+        IUserContext userContext,
+        IConfiguration configuration,
+        IBus bus) : IRequestHandler<UpdateCustomerCommand>
     {
-        private IGenericRepository<Customer> db;
-        private ILogger<UpdateCustomerCommandHandler> logger;
-        private IMapper mapper;
-        private IUserContext userContext;
-
-        public UpdateCustomerCommandHandler(IGenericRepository<Customer> repository, ILogger<UpdateCustomerCommandHandler> logger, IMapper mapper,IUserContext userContext)
+        public async Task Handle(UpdateCustomerCommand request, CancellationToken cancellationToken)
         {
-            this.db = repository;
-            this.logger = logger;
-            this.mapper = mapper;
-            this.userContext = userContext;
-        }
+            var customer = await db.GetByIdAsync(request.Id, c => c.Addresses);
 
-        public async ValueTask<Unit> Handle(UpdateCustomerCommand request, CancellationToken cancellationToken)
-        {
-           
-            var customer = await db.GetByIdAsync(request.Id,c=>c.Addresses);
-           
             if (customer == null)
-               throw new NotFoundException($"Customer with id {request.Id} not found.");
-            
-            if(db.PhoneExistsAsync(request.Phone)&&customer.Phone!=request.Phone)
-                throw new NotFoundException($"Phone Number: {request.Phone} aleardy exists.");
-            
-            //mapper.Map<Customer>(customer);
+                throw new NotFoundException($"Customer with id {request.Id} not found.");
+
+            if (db.PhoneExistsAsync(request.Phone) && customer.Phone != request.Phone)
+                throw new NotFoundException($"Phone Number: {request.Phone} already exists.");
+
             mapper.Map(request, customer);
-            var user=userContext.GetCurrentUser();
-            if(user != null)
-                customer.ChangedBy= user.Name;
+
+            var user = userContext.GetCurrentUser();
+            if (user != null)
+                customer.ChangedBy = user.Name;
+
+            customer.ChangedAt = DateTime.UtcNow;
+
             await db.Update(customer);
+            if (!configuration["DatabaseProvidor"]!.Equals("Mongo"))
+            {
+                var updatedCustomer = mapper.Map<CustomerUpdatedMessage>(customer);
+                await bus.Publish(updatedCustomer,cancellationToken);
 
-            return Unit.Value;
+                logger.LogInformation("CustomerUpdatedMessage published for {Id}", customer.Id);
 
+            }
         }
     }
 }

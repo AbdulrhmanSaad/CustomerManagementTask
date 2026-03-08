@@ -2,6 +2,7 @@
 using CustomersTask4.CustomerHandler.Command.UpdateCustomer;
 using CustomersTask4.Domain;
 using CustomersTask4.DTO;
+using CustomersTask4.Messages;
 using Mapster;
 using System.Diagnostics.CodeAnalysis;
 namespace CustomersTask4.Mapping
@@ -50,6 +51,24 @@ namespace CustomersTask4.Mapping
                 .Map(dest => dest.Addresses, src => src.Addresses);
 
             TypeAdapterConfig<Address, Address>.NewConfig();
+
+            TypeAdapterConfig<Customer, CustomerCreatedMessage>
+                .NewConfig()
+                .Map(dest => dest.Addresses, src => src.Addresses.Select(a => new Address
+                {
+                    AddressType = a.AddressType,
+                    AddressName = a.AddressName
+                }).ToList());
+
+            TypeAdapterConfig<Customer, CustomerUpdatedMessage>
+                .NewConfig()
+                .Map(dest => dest.Addresses, src => src.Addresses.Select(a => new Address
+                {
+                    AddressType = a.AddressType,
+                    AddressName = a.AddressName
+                }).ToList());
+
+
         }
     }
 }
