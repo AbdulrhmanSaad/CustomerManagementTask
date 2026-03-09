@@ -128,36 +128,8 @@ builder.Services.AddIdentityCore<User>(options =>
     .AddSignInManager();
 
 builder.AddQuartzConfig();
+builder.AddMassTransitConfig();
 
-var rabbitConfig=builder.Configuration.GetSection(nameof(RabbitMqConfig)).Get<RabbitMqConfig>();
-builder.Services.AddMassTransit(option =>
-{
-    option.AddConsumer<CustomerSyncConsumer>();
-
-    option.UsingRabbitMq((context, cfg) =>
-    {
-        cfg.Host(rabbitConfig!.Server, "/", s =>
-        {
-            s.Username(rabbitConfig.Username);
-            s.Password(rabbitConfig.Password);
-        });
-        cfg.ConfigureEndpoints(context);
-        cfg.Exclusive = false;
-        cfg.Durable = false;
-
-    });
-});
-
-
-//builder.Services.AddMassTransit(option =>
-//{
-//    option.AddConsumer<CustomerSyncConsumer>();
-
-//    option.UsingInMemory((context, cfg) =>
-//    {
-//        cfg.ConfigureEndpoints(context);
-//    });
-//});
 
 string provider = builder.Configuration["DatabaseProvidor"] ?? "Sql";
 

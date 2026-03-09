@@ -52,8 +52,14 @@ namespace CustomersTask4.Mapping
 
             TypeAdapterConfig<Address, Address>.NewConfig();
 
+
+
+
+
+
             TypeAdapterConfig<Customer, CustomerCreatedMessage>
                 .NewConfig()
+                //.TwoWays()
                 .Map(dest => dest.Addresses, src => src.Addresses.Select(a => new Address
                 {
                     AddressType = a.AddressType,
@@ -62,6 +68,7 @@ namespace CustomersTask4.Mapping
 
             TypeAdapterConfig<Customer, CustomerUpdatedMessage>
                 .NewConfig()
+                //.TwoWays()
                 .Map(dest => dest.Addresses, src => src.Addresses.Select(a => new Address
                 {
                     AddressType = a.AddressType,

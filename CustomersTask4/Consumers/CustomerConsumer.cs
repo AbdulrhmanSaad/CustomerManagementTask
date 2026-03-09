@@ -1,19 +1,18 @@
-﻿using AutoMapper;
-using CustomersTask4.Data;
+﻿using CustomersTask4.Data;
 using CustomersTask4.Domain;
 using CustomersTask4.Messages;
 using MassTransit;
 using Microsoft.Extensions.Options;
-using MongoDB.Bson;
 using MongoDB.Driver;
-using SharpCompress.Common;
+using MapsterMapper;
 
 namespace CustomersTask4.Consumers
 {
-    public class CustomerSyncConsumer(
+    public class CustomerConsumer(
         IMongoClient mongoClient,
         IOptions<MongoDbSetting> mongoSettings,
-        ILogger<CustomerSyncConsumer> logger)
+        ILogger<CustomerConsumer> logger,
+        IMapper mapper)
         : IConsumer<CustomerCreatedMessage>,
           IConsumer<CustomerUpdatedMessage>,
           IConsumer<CustomerDeletedMessage>
@@ -29,25 +28,28 @@ namespace CustomersTask4.Consumers
         {
             var msg = context.Message;
             var collection = GetCollection();
+            var res=mapper.Map<Customer>(msg);
 
-            var customer = new Customer
-            {
-                Id = msg.Id,
-                Name = msg.Name,
-                Phone = msg.Phone,
-                CreatedAt = msg.CreatedAt,
-                CreatedBy = msg.CreatedBy,
-                Addresses = msg.Addresses
-                    .Select(a => new Address
-                    {
-                        AddressName = a.AddressName,
-                        AddressType = Enum.Parse<AddressType>(a.AddressType)
-                    }).ToList()
-            };
-
-            await collection.InsertOneAsync(customer);
-            logger.LogInformation("Customer {Name} created in MongoDB", customer.Name);
+            await collection.InsertOneAsync(res);
+            logger.LogInformation("Customer {Name} created in MongoDB", res.Name);
         }
+
+        //DELETE
+        public async Task Consume(ConsumeContext<CustomerDeletedMessage> context)
+        {
+            var msg = context.Message;
+            var collection = GetCollection();
+            if (msg.Id != null)
+            {
+                var result = await collection.DeleteOneAsync(c => c.Id == msg.Id);
+
+                if (result.DeletedCount == 0)
+                    logger.LogWarning("CustomerDeletedMessage — customer id={Phone} not found in MongoDB", msg.Id);
+                else
+                    logger.LogInformation("Customer {Phone} deleted from MongoDB", msg.Id);
+            }
+        }
+
 
         //UPDATE
         public async Task Consume(ConsumeContext<CustomerUpdatedMessage> context)
@@ -75,24 +77,9 @@ namespace CustomersTask4.Consumers
                     logger.LogWarning("CustomerUpdatedMessage — customer {Phone} not found in MongoDB", msg.Phone);
                 else
                     logger.LogInformation("Customer {Phone} updated in MongoDB", msg.Phone);
-
             }
         }
 
-        //DELETE
-        public async Task Consume(ConsumeContext<CustomerDeletedMessage> context)
-        {
-            var msg = context.Message;
-            var collection = GetCollection();
-
-            var result = await collection.DeleteOneAsync(c => c.Id==msg.Id);
-
-            if (result.DeletedCount == 0)
-                logger.LogWarning("CustomerDeletedMessage — customer id={Phone} not found in MongoDB", msg.Id);
-            else
-                logger.LogInformation("Customer {Phone} deleted from MongoDB", msg.Id);
-        }
-
-     
+       
     }
 }

@@ -7,7 +7,7 @@ using System.Windows.Input;
 
 namespace CustomersTask4.CustomerHandler.Command.CreateCustomer
 {
-    public class CreateCustomerCommand: ICustomRequest
+    public class CreateCustomerCommand: IRequest
     {
         public string Name { get; set; }
         public string Phone { get; set; }

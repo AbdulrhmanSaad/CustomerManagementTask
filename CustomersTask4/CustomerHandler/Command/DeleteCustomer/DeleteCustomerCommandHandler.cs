@@ -3,9 +3,7 @@ using CustomersTask4.Exceptions;
 using CustomersTask4.Messages;
 using CustomersTask4.Repository;
 using MassTransit;
-using MassTransit.Transports;
 using MediatR;
-using System.Security.Cryptography;
 
 namespace CustomersTask4.CustomerHandler.Command.DeleteCustomerCommand
 {
@@ -22,6 +20,7 @@ namespace CustomersTask4.CustomerHandler.Command.DeleteCustomerCommand
                 throw new NotFoundException($"Customer With Id={request.Id} not found");
 
             await db.Delete(customer);
+
             if (!configuration["DatabaseProvidor"]!.Equals("Mongo"))
             {
                 await bus.Publish(new CustomerDeletedMessage

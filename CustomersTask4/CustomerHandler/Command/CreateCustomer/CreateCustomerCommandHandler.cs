@@ -6,7 +6,6 @@ using CustomersTask4.Repository;
 using CustomersTask4.Users;
 using MapsterMapper;
 using MassTransit;
-using MassTransit.Transports;
 using MediatR;
 
 namespace CustomersTask4.CustomerHandler.Command.CreateCustomer
@@ -16,9 +15,9 @@ namespace CustomersTask4.CustomerHandler.Command.CreateCustomer
         , IMapper mapper,
         IUserContext userContext,
         IConfiguration configuration,
-        IBus bus) : ICustomRequestHandler<CreateCustomerCommand>
+        IBus bus) : IRequestHandler<CreateCustomerCommand>
     {
-        public async Task<Unit> Handle(CreateCustomerCommand request, CancellationToken cancellationToken)
+        public async Task Handle(CreateCustomerCommand request, CancellationToken cancellationToken)
         {
             logger.LogInformation("Creating a new customer with Data: {Data}", request);
 
@@ -35,6 +34,8 @@ namespace CustomersTask4.CustomerHandler.Command.CreateCustomer
                 customer.CreatedBy = user.Name;
 
             await db.Add(customer);
+
+            //Publish CustomerCreatedMessage to RabbitMQ 
             if (!configuration["DatabaseProvidor"]!.Equals("Mongo"))
             {
                 var CreatedCustomer = mapper.Map<CustomerCreatedMessage>(customer);
@@ -43,7 +44,6 @@ namespace CustomersTask4.CustomerHandler.Command.CreateCustomer
 
                 logger.LogInformation("CustomerCreatedMessage published for {Name}", customer.Name);
             }
-            return Unit.Value;
         }
     }
 }
