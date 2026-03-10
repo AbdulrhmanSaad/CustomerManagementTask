@@ -1,12 +1,15 @@
-﻿using MapsterMapper;
-using Castle.Core.Resource;
+﻿using Castle.Core.Resource;
 using CustomersTask4.Domain;
 using CustomersTask4.Exceptions;
+using CustomersTask4.Hubs;
+using CustomersTask4.Messages;
 using CustomersTask4.Repository;
 using CustomersTask4.Users;
-using MediatR;
+using MapsterMapper;
 using MassTransit;
-using CustomersTask4.Messages;
+using MediatR;
+using Microsoft.AspNetCore.SignalR;
+using System.Text.Json;
 
 namespace CustomersTask4.CustomerHandler.Command.UpdateCustomer
 {
@@ -16,6 +19,7 @@ namespace CustomersTask4.CustomerHandler.Command.UpdateCustomer
         IMapper mapper,
         IUserContext userContext,
         IConfiguration configuration,
+       IHubContext<MessageHub> hubContext,
         IBus bus) : IRequestHandler<UpdateCustomerCommand>
     {
         public async Task Handle(UpdateCustomerCommand request, CancellationToken cancellationToken)
@@ -37,9 +41,15 @@ namespace CustomersTask4.CustomerHandler.Command.UpdateCustomer
             customer.ChangedAt = DateTime.UtcNow;
 
             await db.Update(customer);
+
+            
+
             if (!configuration["DatabaseProvidor"]!.Equals("Mongo"))
             {
                 var updatedCustomer = mapper.Map<CustomerUpdatedMessage>(customer);
+                var obj = JsonSerializer.Serialize(updatedCustomer);
+                await hubContext.Clients.All.SendAsync("ReceiveMessage", obj,"Update Customer", cancellationToken);
+
                 await bus.Publish(updatedCustomer,cancellationToken);
 
                 logger.LogInformation("CustomerUpdatedMessage published for {Id}", customer.Id);

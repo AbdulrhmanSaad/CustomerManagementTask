@@ -2,6 +2,7 @@ using CustomersTask4.Abstraction;
 using CustomersTask4.Consumers;
 using CustomersTask4.Data;
 using CustomersTask4.Domain;
+using CustomersTask4.Hubs;
 using CustomersTask4.IServiceExtentions;
 using CustomersTask4.Mapping;
 using CustomersTask4.Middleware;
@@ -24,6 +25,8 @@ using System.Reflection;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
+builder.Services.AddSignalR();
+
 
 MapsterConfig.Register();
 builder.Services.AddSingleton(Mapster.TypeAdapterConfig.GlobalSettings);
@@ -108,6 +111,7 @@ builder.Services.AddSingleton<IMongoClient>(sp =>
 builder.Services.AddMediatR(cfg =>
     cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 
+
 builder.Services.AddScoped<IAppMeditor, AppMediator>();
 builder.Services.AddScoped<RequestLoggingMiddleware>();
 builder.Services.AddScoped<ErrorHandelingMiddleware>();
@@ -171,7 +175,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.UseMiddleware<RequestLoggingMiddleware>();
 app.UseMiddleware<ErrorHandelingMiddleware>();
-
 app.MapControllers();
+app.MapHub<MessageHub>("/messagehub");
 
 app.Run();

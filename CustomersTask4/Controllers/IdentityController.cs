@@ -48,7 +48,7 @@ namespace CustomersTask4.Controllers
         [HttpPost("loginUser")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Login(LoginUserCommand request)
+        public async Task<ActionResult<LoginDto>> Login(LoginUserCommand request)
         {
            var token= await mediator.Send(request);
             return Ok(token);

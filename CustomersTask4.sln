@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomersTask4", "Customers
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomerTaskUnitTest", "CustomerTaskUnitTest\CustomerTaskUnitTest.csproj", "{87505344-3561-4864-84A6-3DF3CFBC92E4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SinglR Client", "SinglR Client\SinglR Client.csproj", "{D46DCDBD-4848-4B31-8E5C-ED94C33CADDD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{87505344-3561-4864-84A6-3DF3CFBC92E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{87505344-3561-4864-84A6-3DF3CFBC92E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{87505344-3561-4864-84A6-3DF3CFBC92E4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D46DCDBD-4848-4B31-8E5C-ED94C33CADDD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D46DCDBD-4848-4B31-8E5C-ED94C33CADDD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D46DCDBD-4848-4B31-8E5C-ED94C33CADDD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D46DCDBD-4848-4B31-8E5C-ED94C33CADDD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
