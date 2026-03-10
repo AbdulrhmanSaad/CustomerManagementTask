@@ -3,14 +3,15 @@ using CustomersTask4.CustomerHandler.Command.CreateCustomer;
 using CustomersTask4.CustomerHandler.Command.DeleteCustomerCommand;
 using CustomersTask4.CustomerHandler.Command.MigrateToMongo;
 using CustomersTask4.CustomerHandler.Command.UpdateCustomer;
-using CustomersTask4.CustomerHandler.Query.GetCustomerAddressesHistory;
 using CustomersTask4.CustomerHandler.Query.GetAllCustomers;
+using CustomersTask4.CustomerHandler.Query.GetCustomerAddressesHistory;
 using CustomersTask4.CustomerHandler.Query.GetCustomerById;
 using CustomersTask4.CustomerHandler.Query.GetCustomerHistory;
 using CustomersTask4.DTO;
 using CustomersTask4.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Wolverine;
 
 namespace CustomersTask4.Controllers
 {
@@ -27,7 +28,7 @@ namespace CustomersTask4.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<ActionResult<IEnumerable<CustomerDto>>> GetAll()
         {
-            var customers = await mediator.Send(new GetAllCustomerQuery());
+            var customers = await mediator.Send<IEnumerable<CustomerDto>>(new GetAllCustomerQuery());
             return Ok(customers);
         }
 
@@ -37,7 +38,7 @@ namespace CustomersTask4.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<ActionResult<CustomerDto>> GetCustomerById(string id)
         {
-            var customer = await mediator.Send(new GetCustomerByIdQuery(id));
+            var customer = await mediator.Send<CustomerDto>(new GetCustomerByIdQuery(id));
             return Ok(customer);
         }
 
@@ -58,6 +59,7 @@ namespace CustomersTask4.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<ActionResult> AddCustomer(CreateCustomerCommand command)
         {
+            //await mediator.Send(command);
             await mediator.Send(command);
             return Ok("Customer Added");
         }
@@ -79,7 +81,7 @@ namespace CustomersTask4.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<ActionResult<CustomerHistoryResponse>> GetCustomerHistory(string id)
         {
-            var customer = await mediator.Send(new GetCustomerHistoryQuery(id));
+            var customer = await mediator.Send<CustomerHistoryResponse>(new GetCustomerHistoryQuery(id));
             return Ok(customer);
         }
 
@@ -89,7 +91,7 @@ namespace CustomersTask4.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<ActionResult<CustomerHistoryResponse>> GetCustomerAddressHistory(string id)
         {
-            var customer = await mediator.Send(new GetCustomerAddressesHistoryQuery(id));
+            var customer = await mediator.Send<CustomerHistoryResponse>(new GetCustomerAddressesHistoryQuery(id));
             return Ok(customer);
         }
 
@@ -99,26 +101,28 @@ namespace CustomersTask4.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public ActionResult Migrate(MigrateToMongoCommand request)
         {
-            _ = Task.Run(async () =>
             {
-                using var scope = scopeFactory.CreateScope();
-                var backgroundMediator = scope.ServiceProvider.GetRequiredService<IAppMeditor>();
-
-                try
+                _ = Task.Run(async () =>
                 {
-                    logger.LogInformation("Background migration started");
-                    var result = await backgroundMediator.Send(request);
-                    logger.LogInformation(
-                        "Background migration complete — Migrated: {Migrated}, Skipped: {Skipped}",
-                        result.MigratedCount, result.SkippedCount);
-                }
-                catch (Exception ex)
-                {
-                    logger.LogError(ex, "Background migration failed");
-                }
-            });
+                    using var scope = scopeFactory.CreateScope();
+                    var backgroundMediator = scope.ServiceProvider.GetRequiredService<IAppMeditor>();
 
-            return Ok("Migration started in background. Check logs for progress.");
+                    try
+                    {
+                        logger.LogInformation("Background migration started");
+                        var result = await backgroundMediator.Send<MigrateToMongoResult>(request);
+                        logger.LogInformation(
+                            "Background migration complete — Migrated: {Migrated}, Skipped: {Skipped}",
+                            result.MigratedCount, result.SkippedCount);
+                    }
+                    catch (Exception ex)
+                    {
+                        logger.LogError(ex, "Background migration failed");
+                    }
+                });
+
+                return Ok("Migration started in background. Check logs for progress.");
+            }
         }
     }
 }

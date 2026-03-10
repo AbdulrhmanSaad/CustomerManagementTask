@@ -8,7 +8,7 @@ namespace CustomersTask4.CustomerHandler.Query.GetAllCustomers
 {
     public class GetAllCustomerQueryHandler(IGenericRepository<Customer>repository,
         ILogger<GetAllCustomerQueryHandler>logger,
-        IMapper mapper) : ICustomRequestHandler<GetAllCustomerQuery, IEnumerable<CustomerDto>>
+        IMapper mapper)
     {
         public async Task<IEnumerable<CustomerDto>> Handle(GetAllCustomerQuery request, CancellationToken cancellationToken)
         {

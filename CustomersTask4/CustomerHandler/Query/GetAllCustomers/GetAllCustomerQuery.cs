@@ -4,7 +4,7 @@ using CustomersTask4.DTO;
 
 namespace CustomersTask4.CustomerHandler.Query.GetAllCustomers
 {
-    public class GetAllCustomerQuery:ICustomRequest<IEnumerable<CustomerDto>>
+    public class GetAllCustomerQuery
     {
 
     }

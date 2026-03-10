@@ -1,22 +1,12 @@
 ﻿using CustomersTask4.Abstraction;
-using CustomersTask4.Domain;
 using CustomersTask4.DTO;
 using CustomersTask4.UserHandler.Command;
 using CustomersTask4.UserHandler.Command.AssignUserRole;
 using CustomersTask4.UserHandler.Command.LoginUser;
 using CustomersTask4.UserHandler.Command.RefreshToken;
 using CustomersTask4.Users;
-using Mediator;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Security.Cryptography;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace CustomersTask4.Controllers
 {
@@ -31,7 +21,6 @@ namespace CustomersTask4.Controllers
             await mediator.Send(command);
             return NoContent();
         }
-
 
         [HttpPost("registerNew")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -50,7 +39,7 @@ namespace CustomersTask4.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<LoginDto>> Login(LoginUserCommand request)
         {
-           var token= await mediator.Send(request);
+            var token = await mediator.Send<LoginDto>(request);
             return Ok(token);
         }
 
@@ -63,10 +52,8 @@ namespace CustomersTask4.Controllers
             if (string.IsNullOrWhiteSpace(request.RefreshToken))
                 return Unauthorized(new { error = "Refresh token is required" });
 
-            var token=await mediator.Send(request);
+            var token = await mediator.Send<LoginDto>(request);
             return Ok(token);
         }
-       
-        
     }
 }

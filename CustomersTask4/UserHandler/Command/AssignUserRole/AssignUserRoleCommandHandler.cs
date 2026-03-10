@@ -1,7 +1,6 @@
 ﻿using CustomersTask4.Domain;
 using CustomersTask4.Exceptions;
 using CustomersTask4.Services;
-using MediatR;
 using Microsoft.AspNetCore.Identity;
 
 namespace CustomersTask4.UserHandler.Command.AssignUserRole
@@ -9,7 +8,7 @@ namespace CustomersTask4.UserHandler.Command.AssignUserRole
     public class AssignUserRoleCommandHandler
         (ILogger<AssignUserRoleCommandHandler> logger,
         IAppUserManager userManager
-        ) : IRequestHandler<AssignUserRoleCommand>
+        ) 
     {
         public async Task Handle(AssignUserRoleCommand request, CancellationToken cancellationToken)
         {

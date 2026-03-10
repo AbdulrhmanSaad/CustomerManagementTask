@@ -1,26 +1,22 @@
 using CustomersTask4.Abstraction;
-using CustomersTask4.Consumers;
 using CustomersTask4.Data;
 using CustomersTask4.Domain;
 using CustomersTask4.Hubs;
 using CustomersTask4.IServiceExtentions;
 using CustomersTask4.Mapping;
 using CustomersTask4.Middleware;
-using CustomersTask4.Repository;
 using CustomersTask4.Services;
 using CustomersTask4.Users;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using MapsterMapper;
-using MassTransit;
-using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using MongoDB.Driver;
 using Serilog;
-using System.Reflection;
+using Wolverine;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -106,12 +102,6 @@ builder.Services.AddSingleton<IMongoClient>(sp =>
         .Get<MongoDbSetting>();
     return new MongoClient(s?.ConnectionString);
 });
-
-// MediatR — scoped handlers, no source generator restrictions
-builder.Services.AddMediatR(cfg =>
-    cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
-
-
 builder.Services.AddScoped<IAppMeditor, AppMediator>();
 builder.Services.AddScoped<RequestLoggingMiddleware>();
 builder.Services.AddScoped<ErrorHandelingMiddleware>();
@@ -132,7 +122,7 @@ builder.Services.AddIdentityCore<User>(options =>
     .AddSignInManager();
 
 builder.AddQuartzConfig();
-builder.AddMassTransitConfig();
+builder.AddWolverineConfig();
 
 
 string provider = builder.Configuration["DatabaseProvidor"] ?? "Sql";

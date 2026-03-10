@@ -1,11 +1,10 @@
 using CustomersTask4.Exceptions;
 using CustomersTask4.Services;
-using MediatR;
 
 namespace CustomersTask4.CustomerHandler.Command.MigrateToMongo
 {
     public class MigrateToMongoCommandHandler(IMigrateDatabases migratetoMongo)
-        : IRequestHandler<MigrateToMongoCommand, MigrateToMongoResult>
+     
     {
         public async Task<MigrateToMongoResult> Handle(
             MigrateToMongoCommand request,

@@ -1,9 +1,7 @@
 
-using MediatR;
-
 namespace CustomersTask4.CustomerHandler.Command.MigrateToMongo
 {
-    public class MigrateToMongoCommand(string from,string to) : IRequest<MigrateToMongoResult>
+    public class MigrateToMongoCommand(string from,string to)
     {
         public string From { get; set; } = from;
         public string To { get; set; } = to;

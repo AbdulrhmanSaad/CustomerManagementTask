@@ -2,12 +2,11 @@
 using CustomersTask4.Exceptions;
 using CustomersTask4.Repository;
 using MapsterMapper;
-using MediatR;
 
 namespace CustomersTask4.CustomerHandler.Query.GetCustomerAddressesHistory
 {
     public class GetCustomerAddressesHistoryQueryHandler(ICustomerHistoryRepository repository, IMapper mapper)
-        :IRequestHandler<GetCustomerAddressesHistoryQuery, IEnumerable<AddressDto>>
+        
     {
         
         public async Task<IEnumerable<AddressDto>> Handle(GetCustomerAddressesHistoryQuery request, CancellationToken cancellationToken)

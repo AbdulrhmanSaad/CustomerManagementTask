@@ -2,7 +2,6 @@
 using CustomersTask4.DTO;
 using CustomersTask4.Exceptions;
 using CustomersTask4.Services;
-using MediatR;
 using Microsoft.AspNetCore.Identity;
 
 namespace CustomersTask4.UserHandler.Command.LoginUser
@@ -10,7 +9,7 @@ namespace CustomersTask4.UserHandler.Command.LoginUser
     public class LoginUserCommandHandler(
         IAppUserManager userManager,
         IUserTokenMangerService userTokenManger)
-        : IRequestHandler<LoginUserCommand, LoginDto>
+        
     {
         public async Task<LoginDto> Handle(LoginUserCommand request, CancellationToken cancellationToken)
         {

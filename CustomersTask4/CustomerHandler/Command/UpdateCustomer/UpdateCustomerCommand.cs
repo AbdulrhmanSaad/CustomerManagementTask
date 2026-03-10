@@ -1,10 +1,9 @@
 ﻿using CustomersTask4.Domain;
 using CustomersTask4.DTO;
-using MediatR;
 
 namespace CustomersTask4.CustomerHandler.Command.UpdateCustomer
 {
-    public class UpdateCustomerCommand:IRequest
+    public class UpdateCustomerCommand
     {
         public string Id { get; set; }
         public string Name { get; set; }

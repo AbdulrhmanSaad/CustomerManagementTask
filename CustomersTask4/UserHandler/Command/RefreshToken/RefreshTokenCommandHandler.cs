@@ -1,7 +1,6 @@
 ﻿using CustomersTask4.DTO;
 using CustomersTask4.Exceptions;
 using CustomersTask4.Services;
-using MediatR;
 using System.Security.Claims;
 
 namespace CustomersTask4.UserHandler.Command.RefreshToken
@@ -9,7 +8,7 @@ namespace CustomersTask4.UserHandler.Command.RefreshToken
     public class RefreshTokenCommandHandler(
         IAppUserManager userManager,
         IUserTokenMangerService userTokenManger)
-        : IRequestHandler<RefreshTokenCommand, LoginDto>
+        
     {
         public async Task<LoginDto> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
         {

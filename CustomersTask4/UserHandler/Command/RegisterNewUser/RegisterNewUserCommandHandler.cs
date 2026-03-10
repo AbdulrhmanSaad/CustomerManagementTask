@@ -1,12 +1,11 @@
 ﻿using CustomersTask4.Exceptions;
 using CustomersTask4.Services;
 using CustomersTask4.Users;
-using MediatR;
 
 namespace CustomersTask4.UserHandler.Command
 {
     public class RegisterNewUserCommandHandler(IAppUserManager userManager)
-        : IRequestHandler<RegisterNewUserCommand>
+       
     {
         public async Task Handle(RegisterNewUserCommand request, CancellationToken cancellationToken)
         {

@@ -10,7 +10,7 @@ namespace CustomersTask4.CustomerHandler.Query.GetCustomerHistory
     public class GetCustomerHistoryQueryHandler(ILogger<GetCustomerHistoryQueryHandler>logger,
         ICustomerHistoryRepository repository,
         IMapper mapper
-        ) : IRequestHandler<GetCustomerHistoryQuery,IEnumerable<CustomerHistoryResponse>>
+            ) 
     {
         public async Task<IEnumerable<CustomerHistoryResponse>> Handle(GetCustomerHistoryQuery request, CancellationToken cancellationToken)
         {

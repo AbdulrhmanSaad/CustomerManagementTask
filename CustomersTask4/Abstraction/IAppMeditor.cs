@@ -1,55 +1,29 @@
-﻿using Azure;
-using Azure.Core;
-using MediatR;
+﻿using Wolverine;
 
 namespace CustomersTask4.Abstraction
 {
     public interface IAppMeditor
     {
-        Task<TResponse> Send<TResponse>(IRequest<TResponse> request, CancellationToken cancellationToken = default);
-
-        Task Send(IRequest request, CancellationToken cancellationToken = default);
-
+        Task<TResponse> Send<TResponse>(object command, CancellationToken cancellationToken = default);
+        Task PublishAsync<T>(T message);
+        Task Send(object command, CancellationToken cancellationToken = default);
     }
 
-
-
-    public class AppMediator : IAppMeditor
+    public class AppMediator(IMessageBus bus) : IAppMeditor
     {
-        private readonly IMediator _mediator;
-
-        public AppMediator(IMediator mediator)
+        public async Task PublishAsync<T>(T message)
         {
-            _mediator = mediator;
+            await bus.PublishAsync(message);
         }
 
-        public Task<TResponse> Send<TResponse>(IRequest<TResponse> request, CancellationToken cancellationToken = default)
+        public Task<TResponse> Send<TResponse>(object command, CancellationToken cancellationToken = default)
         {
-            return _mediator.Send(request, cancellationToken);
+            return bus.InvokeAsync<TResponse>(command, cancellationToken);
         }
 
-        public Task Send(IRequest request, CancellationToken cancellationToken = default)
+        public Task Send(object command, CancellationToken cancellationToken = default)
         {
-            return _mediator.Send(request, cancellationToken);
+            return bus.InvokeAsync(command, cancellationToken);
         }
     }
-
-
-
-
-    public interface ICustomRequest : IRequest<Unit> { }
-    public interface ICustomRequest<out TResponse> : IRequest<TResponse> { }
-
-    public interface ICustomRequestHandler<TRequest, TResponse> : IRequestHandler<TRequest, TResponse>
-        where TRequest : IRequest<TResponse>
-    { }
-
-    public interface ICustomRequestHandler<TRequest> : IRequestHandler<TRequest, Unit>
-        where TRequest : IRequest<Unit>
-    { }
-
-
-
-
-
 }

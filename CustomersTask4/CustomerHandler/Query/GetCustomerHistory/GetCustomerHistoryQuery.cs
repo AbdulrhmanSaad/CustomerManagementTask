@@ -4,7 +4,7 @@ using MediatR;
 
 namespace CustomersTask4.CustomerHandler.Query.GetCustomerHistory
 {
-    public class GetCustomerHistoryQuery(string customerId) : IRequest<IEnumerable<CustomerHistoryResponse>>
+    public class GetCustomerHistoryQuery(string customerId)
     {
         public string CustomerId { get; } = customerId;
     }
