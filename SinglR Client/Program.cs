@@ -1,20 +1,21 @@
 ﻿using CustomersTask4.NswagClient;
 using Microsoft.AspNetCore.SignalR.Client;
+using SinglR_Client.Data;
+
+
+var credentials = Helper.GetLoginDataFromDataProtection();
+
+
+if (string.IsNullOrEmpty(credentials.Email) || string.IsNullOrEmpty(credentials.Password))
+{
+    Console.WriteLine("Error in Reading Email and Password.");
+    return;
+}
 
 var httpClient = new HttpClient();
 var apiClient = new Client(httpClient);
 
-Console.WriteLine("Enter Email:");
-var email=Console.ReadLine();
-Console.WriteLine("Enter Password:");
-var pass=Console.ReadLine();
-
-if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(pass))
-{
-    Console.WriteLine("Email and Password cannot be empty.");
-    return;
-}
-var token = await Authenticate(email, pass, apiClient);
+var token = await Helper.Authenticate(credentials.Email, credentials.Password, apiClient);
 
 if (string.IsNullOrEmpty(token))
 {
@@ -22,7 +23,7 @@ if (string.IsNullOrEmpty(token))
     return;
 }
 
-var Url = "https://localhost:7120/messagehub";
+    var Url = "https://localhost:7120/messagehub";
 var connection = new HubConnectionBuilder()
     .WithUrl(Url, options =>
     {
@@ -54,41 +55,4 @@ Console.ReadLine();
 
 
 
-static async Task<string?> Authenticate(string email,string pass,Client apiClient)
-{
-    string token=null;
-    var loginRequest = new LoginUserCommand
-    {
-        Email = email,
-        Password = pass
-    };
-    try
-    {
-        var loginResponse = await apiClient.LoginUserAsync(loginRequest);
 
-        token = loginResponse.AccessToken;
-
-        if (!string.IsNullOrEmpty(token))
-        {
-            Console.WriteLine("Login successful.");
-            return token;
-        }
-    }
-    catch (ApiException ex)
-    {
-        if (ex.StatusCode == 404)
-        {
-            Console.WriteLine("Invalid Email Or Password");
-        }
-        else
-        {
-            Console.WriteLine($"API Error: {ex.StatusCode}");
-            Console.WriteLine(ex.Response);
-        }
-    }
-    catch (Exception ex)
-    {
-        Console.WriteLine($"Unexpected error: {ex.Message}");
-    }
-    return null;
-} 

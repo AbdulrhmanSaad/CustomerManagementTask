@@ -14,9 +14,9 @@ namespace CustomersTask4.IServiceExtentions
         {
             builder.Host.UseWolverine(opts =>
             {
-                    opts.UseRabbitMq("amqp://localhost")
-                        .AutoProvision()
-                        .UseConventionalRouting();
+                //opts.UseRabbitMq("amqp://localhost")
+                //    .AutoProvision()
+                //    .UseConventionalRouting();
             });
         }
     }
