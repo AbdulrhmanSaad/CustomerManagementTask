@@ -13,10 +13,5 @@ namespace CustomersTask4.DTO
         public string ChangedBy { get; set; }
         public List<AddressDto> Addresses { get; set; } = new();
 
-        //public string AddressType { get; set; }
-        //public string HomeAddressLocation { get; set; }
-        //public string AddressType2 { get; set; }
-        //public string WorkAddressLocation { get; set; }
-
     }
 }

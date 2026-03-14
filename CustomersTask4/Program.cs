@@ -15,6 +15,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using MongoDB.Driver;
+using QuestPDF.Infrastructure;
 using Serilog;
 using Wolverine;
 
@@ -23,6 +24,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddSignalR();
 
+QuestPDF.Settings.License = LicenseType.Community;
 
 MapsterConfig.Register();
 builder.Services.AddSingleton(Mapster.TypeAdapterConfig.GlobalSettings);
@@ -108,7 +110,6 @@ builder.Services.AddScoped<ErrorHandelingMiddleware>();
 builder.Services.AddScoped<IUserContext, UserContext>();
 builder.Services.AddScoped<IMigrateDatabases, MigrateToMongo>();
 builder.Services.AddHttpContextAccessor();
-
 builder.Services.AddIdentityCore<User>(options =>
     {
         options.Password.RequireDigit = false;
@@ -123,7 +124,6 @@ builder.Services.AddIdentityCore<User>(options =>
 
 builder.AddQuartzConfig();
 builder.AddWolverineConfig();
-
 
 string provider = builder.Configuration["DatabaseProvidor"] ?? "Sql";
 
@@ -153,6 +153,7 @@ if (provider == "Mongo")
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+
     app.UseSwaggerUI(options =>
     {
         options.SwaggerEndpoint("/openapi/v1.json", "My API v1");

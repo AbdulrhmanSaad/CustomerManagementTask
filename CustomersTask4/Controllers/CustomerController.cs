@@ -3,6 +3,7 @@ using CustomersTask4.CustomerHandler.Command.CreateCustomer;
 using CustomersTask4.CustomerHandler.Command.DeleteCustomerCommand;
 using CustomersTask4.CustomerHandler.Command.MigrateToMongo;
 using CustomersTask4.CustomerHandler.Command.UpdateCustomer;
+using CustomersTask4.CustomerHandler.Query.GenerateCustomerPDF;
 using CustomersTask4.CustomerHandler.Query.GetAllCustomers;
 using CustomersTask4.CustomerHandler.Query.GetCustomerAddressesHistory;
 using CustomersTask4.CustomerHandler.Query.GetCustomerById;
@@ -11,6 +12,8 @@ using CustomersTask4.DTO;
 using CustomersTask4.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using NSwag.Annotations;
+using System.Threading.Tasks;
 using Wolverine;
 
 namespace CustomersTask4.Controllers
@@ -95,8 +98,21 @@ namespace CustomersTask4.Controllers
             return Ok(customer);
         }
 
+        [AllowAnonymous]
+        [HttpPost("CustomerReport")]
+        public async Task<ActionResult> GetCustomerPdf(GenerateCustomerPDFQuery query)
+        {
+            var pdf =await mediator.Send<byte[]>(query);
+
+            if (pdf == null || pdf.Length == 0)
+                return BadRequest("Failed to generate report");
+
+            return File(pdf, "application/pdf", "CustomersReport.pdf");
+        }
+
+
         [HttpPost("migrate")]
-        //[Authorize(Roles = UserRoles.Admin)]
+        [Authorize(Roles = UserRoles.Admin)]
         [ProducesResponseType(StatusCodes.Status202Accepted)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public ActionResult Migrate(MigrateToMongoCommand request)
