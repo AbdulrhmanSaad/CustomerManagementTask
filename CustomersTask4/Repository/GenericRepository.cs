@@ -25,9 +25,12 @@ namespace CustomersTask4.Repository
             await db.SaveChangesAsync();
         }
 
-        public List<T> GetAll(params Expression<Func<T, object>>[] includes)
+        public List<T> GetAll(Expression<Func<T, bool>> filter=null,params Expression<Func<T, object>>[] includes)
         {
             IQueryable<T> query = db.Set<T>();
+
+            if(filter!=null)
+                query = query.Where(filter);
 
             foreach (var include in includes)
             {

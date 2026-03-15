@@ -70,34 +70,46 @@ namespace CustomersTask4.Services
 
             void ComposeTable(IContainer container)
             {
-                container.Table(table =>
+                if (!customers.Any())
                 {
-                    table.ColumnsDefinition(columns =>
+                    container
+                        .Height(250)
+                        .Background(Colors.Grey.Lighten3)
+                        .AlignCenter()
+                        .AlignMiddle()
+                        .Text($"There is No Customers Created from {from} to {to}").FontSize(16);
+                }
+                else
+                {
+                    container.Table(table =>
                     {
-                        columns.ConstantColumn(25);
-                        columns.RelativeColumn();
-                        columns.RelativeColumn();
-                        columns.RelativeColumn();
-                    });
+                        table.ColumnsDefinition(columns =>
+                        {
+                            columns.ConstantColumn(25);
+                            columns.RelativeColumn();
+                            columns.RelativeColumn();
+                            columns.RelativeColumn();
+                        });
 
-                    table.Header(header =>
-                    {
-                        header.Cell().Element(CellStyle).Text("#").Bold();
-                        header.Cell().Element(CellStyle).Text("ID").Bold();
-                        header.Cell().Element(CellStyle).Text("Name").Bold();
-                        header.Cell().Element(CellStyle).Text("Phone Number").Bold();  
-                    });
-                    var number = 0;
-                    foreach (var customer in customers)
-                    {
-                        table.Cell().Element(CellStyle).Text((++number).ToString());  
-                        table.Cell().Element(CellStyle).Text(customer.Id);  
-                        table.Cell().Element(CellStyle).Text(customer.Name);
-                        table.Cell().Element(CellStyle).Text(customer.Phone);
+                        table.Header(header =>
+                        {
+                            header.Cell().Element(CellStyle).Text("#").Bold();
+                            header.Cell().Element(CellStyle).Text("ID").Bold();
+                            header.Cell().Element(CellStyle).Text("Name").Bold();
+                            header.Cell().Element(CellStyle).Text("Phone Number").Bold();
+                        });
+                        var number = 0;
+                        foreach (var customer in customers)
+                        {
+                            table.Cell().Element(CellStyle).Text((++number).ToString());
+                            table.Cell().Element(CellStyle).Text(customer.Id);
+                            table.Cell().Element(CellStyle).Text(customer.Name);
+                            table.Cell().Element(CellStyle).Text(customer.Phone);
 
-                        
-                    }
-                });
+
+                        }
+                    });
+                }
             }
             static IContainer CellStyle(IContainer container)
             {

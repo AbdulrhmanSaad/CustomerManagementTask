@@ -12,12 +12,14 @@ namespace CustomersTask4.CustomerHandler.Query.GenerateCustomerPDF
         public byte[] Handle(GenerateCustomerPDFQuery request,
           CancellationToken cancellationToken)
         {
-            var customers = repository.GetAll().Select(c => new CustomerPDFDto()
-            {
-               Id = c.Id,
-                Name = c.Name,
-                Phone = c.Phone
-           }).ToList();
+            var customers = repository.
+                GetAll(c=>DateOnly.FromDateTime(c.CreatedAt)>=request.From && DateOnly.FromDateTime(c.CreatedAt)<=request.To)
+                .Select(c => new CustomerPDFDto()
+                 {
+                   Id = c.Id,
+                   Name = c.Name,
+                   Phone = c.Phone
+                 }).ToList();
             logger.LogInformation($"Get Customers From {request.From} to {request.To}");
             var pdfService = new GenerateCustomerPDFService(customers, request.From, request.To);
             return pdfService.GeneratePdf();

@@ -85,7 +85,7 @@ namespace CustomersTask4.Repository
             await _customers.DeleteOneAsync(c => c.Id == entity.Id);
         }
 
-        public List<Customer> GetAll(params Expression<Func<Customer, object>>[] includes)
+        public List<Customer> GetAll(Expression<Func<Customer, bool>> filter = null,params Expression<Func<Customer, object>>[] includes)
         {
             return _customers.Find(_ => true).ToList();
         }

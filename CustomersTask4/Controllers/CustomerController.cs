@@ -100,7 +100,7 @@ namespace CustomersTask4.Controllers
 
         [AllowAnonymous]
         [HttpPost("CustomerReport")]
-        public async Task<ActionResult> GetCustomerPdf(GenerateCustomerPDFQuery query)
+        public async Task<ActionResult> GenerateCustomerReportPdf(GenerateCustomerPDFQuery query)
         {
             var pdf =await mediator.Send<byte[]>(query);
 
