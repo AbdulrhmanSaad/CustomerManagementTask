@@ -1,10 +1,14 @@
+using CustomersTask4.Abstraction;
 using CustomersTask4.CustomerHandler.Command.UpdateCustomer;
 using CustomersTask4.Domain;
 using CustomersTask4.DTO;
 using CustomersTask4.Exceptions;
+using CustomersTask4.Hubs;
 using CustomersTask4.Repository;
 using CustomersTask4.Users;
 using MapsterMapper;
+using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
@@ -20,6 +24,9 @@ namespace CustomerTaskUnitTest
         private readonly IMapper _mapper;
         private readonly ILogger<UpdateCustomerCommandHandler> _logger;
         private readonly IUserContext _userContext;
+        private readonly IConfiguration configuration;
+        private readonly IHubContext<MessageHub> hubContext;
+        private readonly IAppMeditor bus;
 
         private static readonly UpdateCustomerCommand _validCommand = new()
         {
@@ -47,8 +54,10 @@ namespace CustomerTaskUnitTest
             _mapper = Substitute.For<IMapper>();
             _logger = Substitute.For<ILogger<UpdateCustomerCommandHandler>>();
             _userContext = Substitute.For<IUserContext>();
-
-            _handler = new UpdateCustomerCommandHandler(_repository, _logger, _mapper,_userContext);
+            configuration = Substitute.For<IConfiguration>();
+            hubContext = Substitute.For<IHubContext<MessageHub>>();
+            bus = Substitute.For<IAppMeditor>();
+            _handler = new UpdateCustomerCommandHandler(_repository, _logger, _mapper,_userContext,configuration,hubContext,bus);
         }
 
         #region Success Cases
@@ -191,7 +200,7 @@ namespace CustomerTaskUnitTest
 
             // Act & Assert
             var exception = await Assert.ThrowsAsync<NotFoundException>(
-                () => _handler.Handle(command, CancellationToken.None).AsTask()
+                () => _handler.Handle(command, CancellationToken.None)
             );
 
             Assert.Equal($"Customer with id {command.Id} not found.", exception.Message);
@@ -226,7 +235,7 @@ namespace CustomerTaskUnitTest
 
             // Act & Assert
             var exception = await Assert.ThrowsAsync<NotFoundException>(
-                () => _handler.Handle(command, CancellationToken.None).AsTask()
+                () => _handler.Handle(command, CancellationToken.None)
             );
 
             Assert.Equal($"Phone Number: {command.Phone} aleardy exists.", exception.Message);

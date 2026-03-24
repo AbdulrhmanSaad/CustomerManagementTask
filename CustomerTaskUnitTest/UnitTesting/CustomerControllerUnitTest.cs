@@ -11,6 +11,8 @@ using CustomersTask4.Domain;
 using CustomersTask4.DTO;
 using Mediator;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using NSubstitute;
 using Xunit;
 
@@ -20,11 +22,15 @@ namespace CustomersTaskUnitTest.UnitTesting
     {
         private readonly IAppMeditor _mediator;
         private readonly CustomerController _controller;
+        private readonly IServiceScopeFactory scopeFactory;
+        private readonly ILogger<CustomerController> logger;
 
         public CustomerControllerUnitTest()
         {
             _mediator = Substitute.For<IAppMeditor>();
-            _controller = new CustomerController(_mediator);
+            scopeFactory = Substitute.For<IServiceScopeFactory>();
+            logger = Substitute.For<ILogger<CustomerController>>();
+            _controller = new CustomerController(_mediator,scopeFactory,logger);
         }
 
         #region GetAll
@@ -38,7 +44,7 @@ namespace CustomersTaskUnitTest.UnitTesting
                 new CustomerDto { Id = "1", Name = "Alice",Phone="01013513652",CreatedAt=DateTime.UtcNow,CreatedBy="abdo@gmail.com" },
                 new CustomerDto { Id = "2", Name = "Bob",Phone="01013513656",CreatedAt=DateTime.UtcNow,CreatedBy="abdo@gmail.com"  }
             };
-            _mediator.Send(Arg.Any<GetAllCustomerQuery>()).Returns(customers);
+            _mediator.Send(Arg.Any<GetAllCustomerQuery>()).Returns(Task.FromResult((object)customers));
 
             // Act
             var result = await _controller.GetAll();
@@ -52,7 +58,7 @@ namespace CustomersTaskUnitTest.UnitTesting
         public async Task GetAll_ReturnsEmptyList_WhenNoCustomers()
         {
             // Arrange
-            _mediator.Send(Arg.Any<GetAllCustomerQuery>()).Returns(new List<CustomerDto>());
+            _mediator.Send(Arg.Any<GetAllCustomerQuery>()).Returns(Task.FromResult((object)new List<CustomerDto>()));
 
             // Act
             var result = await _controller.GetAll();
@@ -72,7 +78,7 @@ namespace CustomersTaskUnitTest.UnitTesting
         {
             // Arrange
             var customer = new CustomerDto { Id = "1", Name = "Alice", Phone = "01013513652", CreatedAt = DateTime.UtcNow, CreatedBy = "abdo@gmail.com" };
-            _mediator.Send(Arg.Any<GetCustomerByIdQuery>()).Returns(customer);
+            _mediator.Send(Arg.Any<GetCustomerByIdQuery>()).Returns(Task.FromResult((object)customer));
 
             // Act
             var result = await _controller.GetCustomerById("1");
@@ -87,7 +93,7 @@ namespace CustomersTaskUnitTest.UnitTesting
         {
             // Arrange
             var customer = new CustomerDto { Id = "32", Name = "Charlie" };
-            _mediator.Send(Arg.Any<GetCustomerByIdQuery>()).Returns(customer);
+            _mediator.Send(Arg.Any<GetCustomerByIdQuery>()).Returns(Task.FromResult((object)customer));
 
             // Act
             await _controller.GetCustomerById("32");
@@ -206,7 +212,7 @@ namespace CustomersTaskUnitTest.UnitTesting
                 new CustomerHistoryResponse { Name = "Abdo Saad" },
                 new CustomerHistoryResponse { Name = "Abdo" },
             };
-            _mediator.Send(Arg.Any<GetCustomerHistoryQuery>()).Returns(history);
+            _mediator.Send(Arg.Any<GetCustomerHistoryQuery>()).Returns(Task.FromResult((object)history));
 
             // Act
             var result = await _controller.GetCustomerHistory("1");
@@ -220,7 +226,7 @@ namespace CustomersTaskUnitTest.UnitTesting
         public async Task GetCustomerHistory_SendsQueryWithCorrectId()
         {
             // Arrange
-            _mediator.Send(Arg.Any<GetCustomerHistoryQuery>()).Returns(new List<CustomerHistoryResponse>());
+            _mediator.Send(Arg.Any<GetCustomerHistoryQuery>()).Returns(Task.FromResult((object)new List<CustomerHistoryResponse>()));
 
             // Act
             await _controller.GetCustomerHistory("69a5ab9bfe4b58bfdfcf9836");
@@ -241,7 +247,7 @@ namespace CustomersTaskUnitTest.UnitTesting
                 new AddressDto { AddressType =AddressType.Work.ToString() ,AddressName="Cairo" },
                 new AddressDto { AddressType =AddressType.Home.ToString() ,AddressName="Cairo" },
             };
-            _mediator.Send(Arg.Any<GetCustomerAddressesHistoryQuery>()).Returns(history);
+            _mediator.Send(Arg.Any<GetCustomerAddressesHistoryQuery>()).Returns(Task.FromResult((object)history));
 
             // Act
             var result = await _controller.GetCustomerAddressHistory("3");
@@ -255,7 +261,7 @@ namespace CustomersTaskUnitTest.UnitTesting
         public async Task GetCustomerAddressHistory_SendsQueryWithCorrectId()
         {
             // Arrange
-            _mediator.Send(Arg.Any<GetCustomerAddressesHistoryQuery>()).Returns(new List<AddressDto>());
+           _mediator.Send(Arg.Any<GetCustomerAddressesHistoryQuery>()).Returns(Task.FromResult((object)new List<AddressDto>()));
 
             // Act
             await _controller.GetCustomerAddressHistory("15");

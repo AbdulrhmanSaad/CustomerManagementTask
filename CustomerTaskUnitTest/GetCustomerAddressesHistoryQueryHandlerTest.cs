@@ -204,8 +204,7 @@ namespace CustomerTaskUnitTest
 
             // Act & Assert
             var exception = await Assert.ThrowsAsync<NotFoundException>(
-                () => _handler.Handle(query, CancellationToken.None).AsTask()
-            );
+                () => _handler.Handle(query, CancellationToken.None));
 
             Assert.Equal($"Customer with id {customerId} not found.", exception.Message);
 

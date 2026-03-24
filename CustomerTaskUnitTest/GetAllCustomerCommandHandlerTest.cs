@@ -93,7 +93,7 @@ namespace CustomerTaskUnitTest
                 }
             };
 
-                _repository.GetAll(Arg.Any<Expression<Func<Customer, object>>>())
+               _repository.GetAll()
                     .Returns(customers);
 
                 _mapper.Map<IEnumerable<CustomerDto>>(customers)
@@ -115,7 +115,7 @@ namespace CustomerTaskUnitTest
                 var emptyCustomers = new List<Customer>();
                 var emptyDtos = new List<CustomerDto>();
 
-                _repository.GetAll(Arg.Any<Expression<Func<Customer, object>>>())
+                _repository.GetAll()
                     .Returns(emptyCustomers);
 
                 _mapper.Map<IEnumerable<CustomerDto>>(emptyCustomers)
@@ -165,7 +165,7 @@ namespace CustomerTaskUnitTest
                 }
             };
 
-                _repository.GetAll(Arg.Any<Expression<Func<Customer, object>>>())
+                _repository.GetAll()
                     .Returns(customers);
 
                 _mapper.Map<IEnumerable<CustomerDto>>(customers)

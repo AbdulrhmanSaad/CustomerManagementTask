@@ -81,7 +81,7 @@ public class RefreshTokenCommandHandlerTests
         _tokenService.GetPrincipalFromExpiredToken(command.AccessToken).Returns((ClaimsPrincipal)null);
 
         await Assert.ThrowsAsync<NotFoundException>(() =>
-            _handler.Handle(command, CancellationToken.None).AsTask());
+            _handler.Handle(command, CancellationToken.None));
     }
 
     [Fact]
@@ -110,7 +110,7 @@ public class RefreshTokenCommandHandlerTests
         _userManager.FindByEmailAsync("test@gmail.com").Returns(user);
 
         await Assert.ThrowsAsync<NotFoundException>(() =>
-            _handler.Handle(command, CancellationToken.None).AsTask());
+            _handler.Handle(command, CancellationToken.None));
     }
 
     [Fact]
@@ -139,6 +139,6 @@ public class RefreshTokenCommandHandlerTests
         _userManager.FindByEmailAsync("test@gmail.com").Returns(user);
 
         await Assert.ThrowsAsync<NotFoundException>(() =>
-            _handler.Handle(command, CancellationToken.None).AsTask());
+            _handler.Handle(command, CancellationToken.None));
     }
 }

@@ -91,9 +91,21 @@ builder.Services.AddOpenApi(options =>
     });
 });
 
-builder.Services.AddDbContext<ApplicationDbContext>(option =>
-    option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
-          .EnableSensitiveDataLogging());
+//builder.Services.AddDbContext<ApplicationDbContext>(option =>
+//    option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
+//          .EnableSensitiveDataLogging());
+
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("DefaultConnection"),
+        sqlOptions =>
+        {
+            sqlOptions.EnableRetryOnFailure(
+                maxRetryCount: 5,            // number of retries
+                maxRetryDelay: TimeSpan.FromSeconds(10), // delay between retries
+                errorNumbersToAdd: null      // default SQL error numbers
+            );
+        }));
 
 builder.Services.Configure<MongoDbSetting>(
     builder.Configuration.GetSection("MongoDbSetting"));

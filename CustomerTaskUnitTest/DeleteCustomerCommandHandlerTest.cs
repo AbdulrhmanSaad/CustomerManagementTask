@@ -1,10 +1,14 @@
 ﻿using Azure.Core;
 using Castle.Core.Logging;
+using CustomersTask4.Abstraction;
 using CustomersTask4.CustomerHandler.Command.DeleteCustomerCommand;
 using CustomersTask4.CustomerHandler.Command.UpdateCustomer;
 using CustomersTask4.Domain;
 using CustomersTask4.Exceptions;
+using CustomersTask4.Hubs;
 using CustomersTask4.Repository;
+using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using System;
@@ -20,13 +24,19 @@ namespace CustomerTaskUnitTest
         private readonly IGenericRepository<Customer> repository; 
         private readonly ILogger<DeleteCustomerCommandHandler> logger;
         private readonly DeleteCustomerCommandHandler _handler;
+        private readonly IConfiguration configuration;
+        private readonly IHubContext<MessageHub> hubContext;
+        private readonly IAppMeditor bus;
 
 
         public DeleteCustomerCommandHandlerTest()
         {
-            this.repository = Substitute.For<IGenericRepository<Customer>>();
-            this.logger = Substitute.For<ILogger<DeleteCustomerCommandHandler>>();
-             _handler = new DeleteCustomerCommandHandler(repository, logger);
+            repository = Substitute.For<IGenericRepository<Customer>>();
+            configuration = Substitute.For<IConfiguration>();
+            hubContext = Substitute.For<IHubContext<MessageHub>>();
+            bus = Substitute.For<IAppMeditor>();
+            logger = Substitute.For<ILogger<DeleteCustomerCommandHandler>>();
+             _handler = new DeleteCustomerCommandHandler(repository, logger,configuration,hubContext,bus);
         }
         [Fact]
         public async Task Handler_ShouldDeleteCustomerSuccessfully()
@@ -71,7 +81,7 @@ namespace CustomerTaskUnitTest
 
             // Act & Assert
             var exception = await Assert.ThrowsAsync<NotFoundException>(
-                () => _handler.Handle(command, CancellationToken.None).AsTask()
+                () => _handler.Handle(command, CancellationToken.None)
             );
 
             Assert.Equal($"Customer With Id={command.Id} not found", exception.Message);

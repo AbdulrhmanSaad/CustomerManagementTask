@@ -76,7 +76,7 @@ public class LoginUserCommandHandlerTests
 
         // Act & Assert
         await Assert.ThrowsAsync<NotFoundException>(() =>
-            _handler.Handle(command, CancellationToken.None).AsTask());
+            _handler.Handle(command, CancellationToken.None));
     }
 
     [Fact]
@@ -96,6 +96,6 @@ public class LoginUserCommandHandlerTests
 
         // Act & Assert
         await Assert.ThrowsAsync<NotFoundException>(() =>
-            _handler.Handle(command, CancellationToken.None).AsTask());
+            _handler.Handle(command, CancellationToken.None));
     }
 }

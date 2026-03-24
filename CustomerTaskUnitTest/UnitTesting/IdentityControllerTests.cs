@@ -57,7 +57,7 @@ namespace CustomersTask4.Tests.Controllers
         {
             var command = new LoginUserCommand() { Email="abdo@gmail.com",Password="Test@12"};
             var res = new LoginDto() { AccessToken = "fake-jwt-token", ExpiresIn = 3600, RefreshToken = "fake-jwt-token", tokenType = "Bearer" };
-            _mediator.Send(command).Returns(res);
+            _mediator.Send(command).Returns(Task.FromResult((object)res));
 
             var result = await _controller.Login(command);
 
@@ -74,7 +74,7 @@ namespace CustomersTask4.Tests.Controllers
             };
 
             var res = new LoginDto() { AccessToken = "fake-jwt-token", ExpiresIn = 3600, RefreshToken = "fake-jwt-token", tokenType = "Bearer" };
-            _mediator.Send(command).Returns(res);
+            _mediator.Send(command).Returns(Task.FromResult((object)res));
 
             var result = await _controller.RefreshToken(command);
 

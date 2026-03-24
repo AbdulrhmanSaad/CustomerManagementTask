@@ -1,11 +1,16 @@
-﻿using CustomersTask4.CustomerHandler.Command.CreateCustomer;
+﻿using CustomersTask4.Abstraction;
+using CustomersTask4.CustomerHandler.Command.CreateCustomer;
 using CustomersTask4.Domain;
 using CustomersTask4.DTO;
 using CustomersTask4.Exceptions;
+using CustomersTask4.Hubs;
 using CustomersTask4.Repository;
 using CustomersTask4.Users;
 using MapsterMapper;
+using MassTransit;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using System;
@@ -38,6 +43,9 @@ namespace CustomerTaskUnitTest
         private readonly IMapper mapper;
         private readonly ILogger<CreateCustomerCommandHandler> logger;
         private readonly IUserContext userContext;
+        private readonly IConfiguration configuration;
+        private readonly IHubContext<MessageHub> hubContext;
+        private readonly IAppMeditor bus;
 
         public CreateCustomerCommandTest()
         {
@@ -45,8 +53,11 @@ namespace CustomerTaskUnitTest
             mapper=Substitute.For<IMapper>();
             logger = Substitute.For<ILogger<CreateCustomerCommandHandler>>();
             userContext = Substitute.For<CustomersTask4.Users.IUserContext>();
+            configuration = Substitute.For<IConfiguration>();
+            hubContext = Substitute.For<IHubContext<MessageHub>>();
+            bus = Substitute.For<IAppMeditor>();
 
-            _handler =new CreateCustomerCommandHandler(repository,logger,mapper, userContext);
+            _handler =new CreateCustomerCommandHandler(repository,logger,mapper, userContext,configuration,hubContext,bus);
         }
         [Fact]
         public async Task Handle_WithDuplicatePhone_ShouldThrowNotFoundException()
@@ -57,7 +68,7 @@ namespace CustomerTaskUnitTest
             //Act &&
             //assert
             var ex = await Assert.ThrowsAsync<NotFoundException>(() =>
-            _handler.Handle(command, CancellationToken.None).AsTask());
+            _handler.Handle(command, CancellationToken.None));
 
             Assert.Equal("this phone number already exists", ex.Message);
             await repository.DidNotReceive().Add(Arg.Any<Customer>());

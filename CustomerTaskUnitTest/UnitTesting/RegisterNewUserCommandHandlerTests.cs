@@ -41,10 +41,9 @@ public class RegisterNewUserCommandHandlerTests
             .Returns(Task.CompletedTask);
 
         // Act
-        var result = await _handler.Handle(command, CancellationToken.None);
+        await _handler.Handle(command, CancellationToken.None);
 
         // Assert
-        Assert.Equal(Mediator.Unit.Value, result);
         await _userManager.Received(1).CreateAsync(Arg.Any<IAppUser>(), command.Password);
         await _userManager.Received(1).AddToRoleAsync(Arg.Any<IAppUser>(), UserRoles.User);
     }
@@ -64,7 +63,7 @@ public class RegisterNewUserCommandHandlerTests
 
         // Act & Assert
         var ex = await Assert.ThrowsAsync<NotFoundException>(() =>
-            _handler.Handle(command, CancellationToken.None).AsTask());
+            _handler.Handle(command, CancellationToken.None));
 
         Assert.Equal("Username Already Exists", ex.Message);
         await _userManager.DidNotReceive().CreateAsync(Arg.Any<User>(), command.Password);
