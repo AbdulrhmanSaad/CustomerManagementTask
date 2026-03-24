@@ -1,0 +1,63 @@
+services:
+  customerstask4:
+    image: ${DOCKER_REGISTRY-}customerstask4
+    build:
+      context: .
+      dockerfile: CustomersTask4/Dockerfile
+    container_name: customerstask4-app
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - ConnectionStrings__DefaultConnection=Server=db,1433;Database=CustomersManagmentDb;User Id=sa;Password=Password123!;TrustServerCertificate=true;Encrypt=false
+      - ConnectionStrings__MongoConnection=mongodb://admin:Password123!@mongo:27017
+      - MongoSettings__DatabaseName=CustomersDB
+      - MongoSettings__CollectionName=Customers
+    ports:
+      - "8080:80"
+    depends_on:
+      - db
+      - mongo
+    networks:
+      - customersnetwork
+    restart: unless-stopped
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-CU14-ubuntu-22.04
+    platform: linux/amd64
+    container_name: customerstask4-mssql
+    environment:
+    - ACCEPT_EULA=Y
+    - SA_PASSWORD=Password123!
+    - MSSQL_PID=Express
+    #- MSSQL_MEMORY_LIMIT_MB=1024
+    ports:
+     - "1433:1433"
+    volumes:
+    - sqlserver_data:/var/opt/mssql
+    networks:
+    - customersnetwork
+    restart: unless-stopped
+
+  mongo:
+    image: mongo
+    container_name: customerstask4-mongo
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=Password123!
+      - MONGO_INITDB_DATABASE=CustomersDB
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+      - mongodb_config:/data/configdb
+    networks:
+      - customersnetwork
+    restart: unless-stopped
+
+volumes:
+  sqlserver_data:
+  mongodb_data:
+  mongodb_config:
+
+networks:
+  customersnetwork:
+    driver: bridge

@@ -150,15 +150,15 @@ if (provider == "Mongo")
     await app.SeedMongoRolesAsync();
 }
 
-if (app.Environment.IsDevelopment())
-{
+//if (app.Environment.IsDevelopment())
+//{
     app.MapOpenApi();
 
     app.UseSwaggerUI(options =>
     {
         options.SwaggerEndpoint("/openapi/v1.json", "My API v1");
     });
-}
+//}
 
 app.UseSerilogRequestLogging();
 app.UseHttpsRedirection();
