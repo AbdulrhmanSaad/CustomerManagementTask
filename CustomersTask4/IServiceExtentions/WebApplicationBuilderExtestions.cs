@@ -75,6 +75,20 @@ namespace CustomersTask4.IServiceExtentions
                     await roleManager.CreateAsync(new MongoRole { Name = role });
             }
         }
+
+        public static async Task SeedSqlRolesAsync(this IApplicationBuilder app)
+        {
+            using var scope = app.ApplicationServices.CreateScope();
+            var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+
+            string[] roles = [UserRoles.Admin, UserRoles.User];
+
+            foreach (var role in roles)
+            {
+                if (!await roleManager.RoleExistsAsync(role))
+                    await roleManager.CreateAsync(new IdentityRole { Name = role });
+            }
+        }
     }
 }
 

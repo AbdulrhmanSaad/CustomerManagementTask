@@ -157,9 +157,21 @@ builder.Host.UseSerilog((context, config) =>
 
 var app = builder.Build();
 
+// Apply database migrations
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    dbContext.Database.Migrate();
+}
+
+// Seed roles based on provider
 if (provider == "Mongo")
 {
     await app.SeedMongoRolesAsync();
+}
+else
+{
+    await app.SeedSqlRolesAsync();
 }
 
 //if (app.Environment.IsDevelopment())

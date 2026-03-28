@@ -8,33 +8,17 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
-      - ConnectionStrings__DefaultConnection=Server=db,1433;Database=CustomersManagmentDb;User Id=sa;Password=Password123!;TrustServerCertificate=true;Encrypt=false
-      - ConnectionStrings__MongoConnection=mongodb://admin:Password123!@mongo:27017
-      - MongoSettings__DatabaseName=CustomersDB
-      - MongoSettings__CollectionName=Customers
+      - ConnectionStrings__DefaultConnection=Server=host.docker.internal,1433;Database=CustomersManagmentDb;User Id=sa;Password=StrongPassword123!;TrustServerCertificate=true;Encrypt=false;Connection Timeout=30
+      - ConnectionStrings__key=this is my secret key abdo saad key
+      - MongoDbSetting__ConnectionString=mongodb://admin:Password123!@mongo:27017
+      - MongoDbSetting__DatabaseName=CustomersManagment
+      - DatabaseProvidor=sql
     ports:
       - "8080:80"
     depends_on:
-      - db
       - mongo
     networks:
       - customersnetwork
-    restart: unless-stopped
-  db:
-    image: mcr.microsoft.com/mssql/server:2022-CU14-ubuntu-22.04
-    platform: linux/amd64
-    container_name: customerstask4-mssql
-    environment:
-    - ACCEPT_EULA=Y
-    - SA_PASSWORD=Password123!
-    - MSSQL_PID=Express
-    #- MSSQL_MEMORY_LIMIT_MB=1024
-    ports:
-     - "1433:1433"
-    volumes:
-    - sqlserver_data:/var/opt/mssql
-    networks:
-    - customersnetwork
     restart: unless-stopped
 
   mongo:
@@ -54,7 +38,6 @@ services:
     restart: unless-stopped
 
 volumes:
-  sqlserver_data:
   mongodb_data:
   mongodb_config:
 
