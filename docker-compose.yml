@@ -6,7 +6,7 @@ services:
       dockerfile: CustomersTask4/Dockerfile
     container_name: customerstask4-app
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_ENVIRONMENT=Production
       - ASPNETCORE_URLS=http://+:80
       - ConnectionStrings__DefaultConnection=Server=host.docker.internal,1433;Database=CustomersManagmentDb;User Id=sa;Password=StrongPassword123!;TrustServerCertificate=true;Encrypt=false;Connection Timeout=30
       - ConnectionStrings__key=this is my secret key abdo saad key

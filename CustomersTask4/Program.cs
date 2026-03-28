@@ -23,6 +23,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddSignalR();
+builder.Services.AddHealthChecks();
 
 QuestPDF.Settings.License = LicenseType.Community;
 
@@ -192,5 +193,7 @@ app.UseMiddleware<RequestLoggingMiddleware>();
 app.UseMiddleware<ErrorHandelingMiddleware>();
 app.MapControllers();
 app.MapHub<MessageHub>("/messagehub");
+app.MapHealthChecks("/health");
+
 
 app.Run();
