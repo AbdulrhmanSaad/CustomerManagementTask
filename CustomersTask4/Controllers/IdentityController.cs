@@ -7,11 +7,14 @@ using CustomersTask4.UserHandler.Command.RefreshToken;
 using CustomersTask4.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace CustomersTask4.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [EnableRateLimiting("fixed")]
+
     public class IdentityController(IAppMeditor mediator) : ControllerBase
     {
         [HttpPost("AssignRoleTo")]

@@ -11,12 +11,14 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using MapsterMapper;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using MongoDB.Driver;
 using QuestPDF.Infrastructure;
 using Serilog;
+using System.Threading.RateLimiting;
 using Wolverine;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -138,6 +140,18 @@ builder.Services.AddIdentityCore<User>(options =>
 builder.AddQuartzConfig();
 builder.AddWolverineConfig();
 
+builder.Services.AddRateLimiter(options =>
+{
+    options.AddFixedWindowLimiter("fixed", limiterOptions =>
+    {
+        limiterOptions.PermitLimit = 5;
+        limiterOptions.Window = TimeSpan.FromMilliseconds(5);
+       // limiterOptions.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+        limiterOptions.QueueLimit = 0;
+    });
+    options.RejectionStatusCode=StatusCodes.Status429TooManyRequests;
+});
+
 string provider = builder.Configuration["DatabaseProvidor"] ?? "Sql";
 
 switch (provider)
@@ -187,6 +201,7 @@ else
 
 app.UseSerilogRequestLogging();
 app.UseHttpsRedirection();
+app.UseRateLimiter();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseMiddleware<RequestLoggingMiddleware>();
@@ -194,6 +209,5 @@ app.UseMiddleware<ErrorHandelingMiddleware>();
 app.MapControllers();
 app.MapHub<MessageHub>("/messagehub");
 app.MapHealthChecks("/health");
-
 
 app.Run();
