@@ -1,4 +1,5 @@
 using Asp.Versioning;
+using Asp.Versioning.ApiExplorer;
 using CustomersTask4.Abstraction;
 using CustomersTask4.Data;
 using CustomersTask4.Domain;
@@ -10,15 +11,18 @@ using CustomersTask4.Services;
 using CustomersTask4.Users;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using ImTools;
 using MapsterMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using MongoDB.Driver;
 using QuestPDF.Infrastructure;
 using Serilog;
+using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Threading.RateLimiting;
 using Wolverine;
 
@@ -28,7 +32,6 @@ builder.AddServiceDefaults();
 
 builder.Services.AddControllers();
 builder.Services.AddSignalR();
-//builder.Services.AddHealthChecks();
 QuestPDF.Settings.License = LicenseType.Community;
 
 MapsterConfig.Register();
@@ -58,7 +61,7 @@ builder.Services.AddAuthentication(op =>
             IssuerSigningKey = secretKey,
         };
     });
-
+builder.Services.AddOpenApi("v2");
 builder.Services.AddOpenApi(options =>
 {
     options.AddDocumentTransformer((document, context, ct) =>
@@ -95,7 +98,6 @@ builder.Services.AddOpenApi(options =>
         return Task.CompletedTask;
     });
 });
-
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     var connectionString = builder.Configuration.GetConnectionString("CustomersManagmentDb");
@@ -111,17 +113,17 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
         sqlOptions.MinBatchSize(1);
     });
 });
-builder.AddMongoDBClient("mongo-db");
+//builder.AddMongoDBClient("mongo-db");
 
-//builder.Services.Configure<MongoDbSetting>(
-//    builder.Configuration.GetSection("MongoDbSetting"));
-//builder.Services.AddSingleton<IMongoClient>(sp =>
-//{
-//    var s = builder.Configuration
-//        .GetSection("MongoDbSetting")
-//        .Get<MongoDbSetting>();
-//    return new MongoClient(s?.ConnectionString);
-//});
+builder.Services.Configure<MongoDbSetting>(
+    builder.Configuration.GetSection("MongoDbSetting"));
+builder.Services.AddSingleton<IMongoClient>(sp =>
+{
+    var s = builder.Configuration
+        .GetSection("MongoDbSetting")
+        .Get<MongoDbSetting>();
+    return new MongoClient(s?.ConnectionString);
+});
 
 
 builder.Services.AddApiVersioning(opt =>
@@ -135,8 +137,6 @@ builder.Services.AddApiVersioning(opt =>
 {
     opt.GroupNameFormat = "'v'VVV";
     opt.SubstituteApiVersionInUrl = true;
-    opt.DefaultApiVersion=new ApiVersion(1);
-    opt.AssumeDefaultVersionWhenUnspecified= true;
 });
 
 
@@ -195,7 +195,6 @@ var app = builder.Build();
 
 app.MapDefaultEndpoints();
 
-// Apply database migrations with error handling
 try
 {
     using (var scope = app.Services.CreateScope())
@@ -223,7 +222,10 @@ catch (Exception ex)
 app.MapOpenApi();
 app.UseSwaggerUI(options =>
 {
-    options.SwaggerEndpoint("/openapi/v1.json", "My API v1");
+    options.SwaggerEndpoint("/openapi/v2.json", "My API v2");
+
+    //options.SwaggerEndpoint("/openapi/v1.json", "My API v1");
+
 });
 
 app.UseSerilogRequestLogging();
@@ -235,6 +237,5 @@ app.UseMiddleware<RequestLoggingMiddleware>();
 app.UseMiddleware<ErrorHandelingMiddleware>();
 app.MapControllers();
 app.MapHub<MessageHub>("/messagehub");
-//app.MapHealthChecks("/health");
 
 app.Run();
