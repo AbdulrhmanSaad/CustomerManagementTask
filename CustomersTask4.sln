@@ -11,6 +11,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SinglR Client", "SinglR Cli
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{81DDED9D-158B-E303-5F62-77A2896D2A5A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomersTask4.AppHost", "CustomersTask4.AppHost\CustomersTask4.AppHost.csproj", "{BE8E03C7-109F-4FC4-82E4-178CEC7D26A3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomersTask4.ServiceDefaults", "CustomersTask4.ServiceDefaults\CustomersTask4.ServiceDefaults.csproj", "{9C7D7AD3-0914-C6BD-A884-B77D93AFBACE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +37,14 @@ Global
 		{81DDED9D-158B-E303-5F62-77A2896D2A5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{81DDED9D-158B-E303-5F62-77A2896D2A5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{81DDED9D-158B-E303-5F62-77A2896D2A5A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BE8E03C7-109F-4FC4-82E4-178CEC7D26A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE8E03C7-109F-4FC4-82E4-178CEC7D26A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE8E03C7-109F-4FC4-82E4-178CEC7D26A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE8E03C7-109F-4FC4-82E4-178CEC7D26A3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9C7D7AD3-0914-C6BD-A884-B77D93AFBACE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9C7D7AD3-0914-C6BD-A884-B77D93AFBACE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9C7D7AD3-0914-C6BD-A884-B77D93AFBACE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9C7D7AD3-0914-C6BD-A884-B77D93AFBACE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

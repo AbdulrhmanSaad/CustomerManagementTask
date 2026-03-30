@@ -23,10 +23,11 @@ using Wolverine;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.AddServiceDefaults();
+
 builder.Services.AddControllers();
 builder.Services.AddSignalR();
-builder.Services.AddHealthChecks();
-
+//builder.Services.AddHealthChecks();
 QuestPDF.Settings.License = LicenseType.Community;
 
 MapsterConfig.Register();
@@ -94,37 +95,41 @@ builder.Services.AddOpenApi(options =>
     });
 });
 
-//builder.Services.AddDbContext<ApplicationDbContext>(option =>
-//    option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
-//          .EnableSensitiveDataLogging());
-
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(
-        builder.Configuration.GetConnectionString("DefaultConnection"),
-        sqlOptions =>
-        {
-            sqlOptions.EnableRetryOnFailure(
-                maxRetryCount: 5,            // number of retries
-                maxRetryDelay: TimeSpan.FromSeconds(10), // delay between retries
-                errorNumbersToAdd: null      // default SQL error numbers
-            );
-        }));
-
-builder.Services.Configure<MongoDbSetting>(
-    builder.Configuration.GetSection("MongoDbSetting"));
-builder.Services.AddSingleton<IMongoClient>(sp =>
 {
-    var s = builder.Configuration
-        .GetSection("MongoDbSetting")
-        .Get<MongoDbSetting>();
-    return new MongoClient(s?.ConnectionString);
+    var connectionString = builder.Configuration.GetConnectionString("CustomersManagmentDb");
+    
+    options.UseSqlServer(connectionString, sqlOptions =>
+    {
+        sqlOptions.EnableRetryOnFailure(
+            maxRetryCount: 20,
+            maxRetryDelay: TimeSpan.FromSeconds(30),
+            errorNumbersToAdd: null
+        );
+        sqlOptions.CommandTimeout(120);
+        sqlOptions.MinBatchSize(1);
+    });
 });
+builder.AddMongoDBClient("mongo-db");
+
+//builder.Services.Configure<MongoDbSetting>(
+//    builder.Configuration.GetSection("MongoDbSetting"));
+//builder.Services.AddSingleton<IMongoClient>(sp =>
+//{
+//    var s = builder.Configuration
+//        .GetSection("MongoDbSetting")
+//        .Get<MongoDbSetting>();
+//    return new MongoClient(s?.ConnectionString);
+//});
+
+
 builder.Services.AddScoped<IAppMeditor, AppMediator>();
 builder.Services.AddScoped<RequestLoggingMiddleware>();
 builder.Services.AddScoped<ErrorHandelingMiddleware>();
 builder.Services.AddScoped<IUserContext, UserContext>();
 builder.Services.AddScoped<IMigrateDatabases, MigrateToMongo>();
 builder.Services.AddHttpContextAccessor();
+
 builder.Services.AddIdentityCore<User>(options =>
     {
         options.Password.RequireDigit = false;
@@ -146,10 +151,9 @@ builder.Services.AddRateLimiter(options =>
     {
         limiterOptions.PermitLimit = 5;
         limiterOptions.Window = TimeSpan.FromMilliseconds(5);
-       // limiterOptions.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
         limiterOptions.QueueLimit = 0;
     });
-    options.RejectionStatusCode=StatusCodes.Status429TooManyRequests;
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
 });
 
 string provider = builder.Configuration["DatabaseProvidor"] ?? "Sql";
@@ -172,32 +176,38 @@ builder.Host.UseSerilog((context, config) =>
 
 var app = builder.Build();
 
-// Apply database migrations
-using (var scope = app.Services.CreateScope())
-{
-    var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-    dbContext.Database.Migrate();
-}
+app.MapDefaultEndpoints();
 
-// Seed roles based on provider
-if (provider == "Mongo")
+// Apply database migrations with error handling
+try
 {
-    await app.SeedMongoRolesAsync();
-}
-else
-{
-    await app.SeedSqlRolesAsync();
-}
-
-//if (app.Environment.IsDevelopment())
-//{
-    app.MapOpenApi();
-
-    app.UseSwaggerUI(options =>
+    using (var scope = app.Services.CreateScope())
     {
-        options.SwaggerEndpoint("/openapi/v1.json", "My API v1");
-    });
-//}
+        var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        await dbContext.Database.MigrateAsync();
+    }
+
+    // Seed roles based on provider
+    if (provider == "Mongo")
+    {
+        await app.SeedMongoRolesAsync();
+    }
+    else
+    {
+        await app.SeedSqlRolesAsync();
+    }
+}
+catch (Exception ex)
+{
+    var logger = app.Services.GetRequiredService<ILogger<Program>>();
+    logger.LogError(ex, "An error occurred while migrating or seeding the database");
+}
+
+app.MapOpenApi();
+app.UseSwaggerUI(options =>
+{
+    options.SwaggerEndpoint("/openapi/v1.json", "My API v1");
+});
 
 app.UseSerilogRequestLogging();
 app.UseHttpsRedirection();
@@ -208,6 +218,6 @@ app.UseMiddleware<RequestLoggingMiddleware>();
 app.UseMiddleware<ErrorHandelingMiddleware>();
 app.MapControllers();
 app.MapHub<MessageHub>("/messagehub");
-app.MapHealthChecks("/health");
+//app.MapHealthChecks("/health");
 
 app.Run();
