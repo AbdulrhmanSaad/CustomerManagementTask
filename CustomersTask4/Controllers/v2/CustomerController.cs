@@ -17,12 +17,12 @@ using NSwag.Annotations;
 using System.Threading.Tasks;
 using Wolverine;
 
-namespace CustomersTask4.Controllers
+namespace CustomersTask4.Controllers.v2
 {
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    [ApiVersion("1")]
+    [ApiVersion("2")]
     public class CustomerController(
         IAppMeditor mediator,
         IServiceScopeFactory scopeFactory,
@@ -66,7 +66,7 @@ namespace CustomersTask4.Controllers
         {
             //await mediator.Send(command);
             await mediator.Send(command);
-            return Ok("Customer Added from version 1");
+            return Ok("Customer Added from version 2");
         }
 
         [HttpPut("{id}")]

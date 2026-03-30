@@ -1,4 +1,5 @@
-﻿using CustomersTask4.Abstraction;
+﻿using Asp.Versioning;
+using CustomersTask4.Abstraction;
 using CustomersTask4.DTO;
 using CustomersTask4.UserHandler.Command;
 using CustomersTask4.UserHandler.Command.AssignUserRole;
@@ -14,7 +15,8 @@ namespace CustomersTask4.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [EnableRateLimiting("fixed")]
-
+    [ApiVersion("1")]
+    [ApiVersion("2")]
     public class IdentityController(IAppMeditor mediator) : ControllerBase
     {
         [HttpPost("AssignRoleTo")]

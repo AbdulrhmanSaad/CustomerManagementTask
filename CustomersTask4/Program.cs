@@ -1,3 +1,4 @@
+using Asp.Versioning;
 using CustomersTask4.Abstraction;
 using CustomersTask4.Data;
 using CustomersTask4.Domain;
@@ -121,6 +122,22 @@ builder.AddMongoDBClient("mongo-db");
 //        .Get<MongoDbSetting>();
 //    return new MongoClient(s?.ConnectionString);
 //});
+
+
+builder.Services.AddApiVersioning(opt =>
+{
+    opt.DefaultApiVersion = new ApiVersion(1);
+    opt.AssumeDefaultVersionWhenUnspecified = true;
+    opt.ReportApiVersions = true;
+    opt.ApiVersionReader = new HeaderApiVersionReader("api-version");
+}).AddMvc()
+.AddApiExplorer(opt=>
+{
+    opt.GroupNameFormat = "'v'VVV";
+    opt.SubstituteApiVersionInUrl = true;
+    opt.DefaultApiVersion=new ApiVersion(1);
+    opt.AssumeDefaultVersionWhenUnspecified= true;
+});
 
 
 builder.Services.AddScoped<IAppMeditor, AppMediator>();
