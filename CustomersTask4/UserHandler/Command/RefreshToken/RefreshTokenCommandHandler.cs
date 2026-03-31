@@ -7,25 +7,27 @@ namespace CustomersTask4.UserHandler.Command.RefreshToken
 {
     public class RefreshTokenCommandHandler(
         IAppUserManager userManager,
-        IUserTokenMangerService userTokenManger)
+        IUserTokenMangerService userTokenManger,
+        LocalizationService localization
+          )
         
     {
         public async Task<LoginDto> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
         {
             var principal = userTokenManger.GetPrincipalFromExpiredToken(request.AccessToken);
             if (principal == null)
-                throw new NotFoundException("Invalid access token");
+                throw new NotFoundException(localization.Localize("Invalid access token"));
 
             var email = principal.FindFirst(ClaimTypes.Email)?.Value;
             if (string.IsNullOrEmpty(email))
-                throw new NotFoundException("Invalid token claim");
+                throw new NotFoundException(localization.Localize("Invalid token claim"));
 
             var user = await userManager.FindByEmailAsync(email);
             if (user == null || user.RefreshToken != request.RefreshToken)
-                throw new NotFoundException("Invalid refresh token");
+                throw new NotFoundException(localization.Localize("Invalid refresh token"));
 
             if (user.RefreshTokenExpiryTime < DateTime.UtcNow)
-                throw new NotFoundException("Refresh token has expired");
+                throw new NotFoundException(localization.Localize("Refresh token has expired"));
 
             var roles = await userManager.GetRolesAsync(user);
             var newAccessToken = userTokenManger.GenerateJwtToken(user, roles);

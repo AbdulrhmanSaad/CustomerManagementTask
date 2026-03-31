@@ -4,6 +4,7 @@ using CustomersTask4.Exceptions;
 using CustomersTask4.Hubs;
 using CustomersTask4.Messages;
 using CustomersTask4.Repository;
+using CustomersTask4.Services;
 using CustomersTask4.Users;
 using MapsterMapper;
 using Microsoft.AspNetCore.SignalR;
@@ -19,17 +20,18 @@ namespace CustomersTask4.CustomerHandler.Command.UpdateCustomer
         IUserContext userContext,
         IConfiguration configuration,
         IHubContext<MessageHub> hubContext,
-        IAppMeditor bus)
+        IAppMeditor bus,
+        ILocalizationService localization)
     {
         public async Task Handle(UpdateCustomerCommand request, CancellationToken cancellationToken)
         {
             var customer = await db.GetByIdAsync(request.Id, c => c.Addresses);
 
             if (customer == null)
-                throw new NotFoundException($"Customer with id {request.Id} not found.");
+                throw new NotFoundException(localization.Localize($"Customer with id {request.Id} not found."));
 
             if (db.PhoneExistsAsync(request.Phone) && customer.Phone != request.Phone)
-                throw new NotFoundException($"Phone Number: {request.Phone} already exists.");
+                throw new NotFoundException(localization.Localize("CustomerPhoneExist",request.Phone));
 
             mapper.Map(request, customer);
 

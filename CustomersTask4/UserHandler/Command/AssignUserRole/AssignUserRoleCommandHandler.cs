@@ -7,7 +7,8 @@ namespace CustomersTask4.UserHandler.Command.AssignUserRole
 {
     public class AssignUserRoleCommandHandler
         (ILogger<AssignUserRoleCommandHandler> logger,
-        IAppUserManager userManager
+        IAppUserManager userManager,
+        LocalizationService localization
         ) 
     {
         public async Task Handle(AssignUserRoleCommand request, CancellationToken cancellationToken)
@@ -16,11 +17,11 @@ namespace CustomersTask4.UserHandler.Command.AssignUserRole
 
             var user=await userManager.FindByEmailAsync(request.Email);
             if (user == null) 
-                throw new NotFoundException("User Not Found");
+                throw new NotFoundException(localization.Localize("User Not Found"));
 
             var roleExists=await userManager.RoleExistsAsync(request.RoleName);
             if (!roleExists)
-                throw new NotFoundException("Role Not Found");
+                throw new NotFoundException(localization.Localize("Role Not Found"));
 
             await userManager.AddToRoleAsync(user, request.RoleName);
         }

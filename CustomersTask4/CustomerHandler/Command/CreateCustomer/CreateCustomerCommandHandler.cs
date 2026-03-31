@@ -4,6 +4,7 @@ using CustomersTask4.Exceptions;
 using CustomersTask4.Hubs;
 using CustomersTask4.Messages;
 using CustomersTask4.Repository;
+using CustomersTask4.Services;
 using CustomersTask4.Users;
 using MapsterMapper;
 using Microsoft.AspNetCore.SignalR;
@@ -19,7 +20,8 @@ namespace CustomersTask4.CustomerHandler.Command.CreateCustomer
         IUserContext userContext,
         IConfiguration configuration,
         IHubContext<MessageHub> hubContext,
-        IAppMeditor bus)
+        IAppMeditor bus,
+        ILocalizationService localization)
     {
         public async Task Handle(CreateCustomerCommand request, CancellationToken cancellationToken)
         {
@@ -27,7 +29,7 @@ namespace CustomersTask4.CustomerHandler.Command.CreateCustomer
 
             bool exist = db.PhoneExistsAsync(request.Phone);
             if (exist)
-                throw new NotFoundException("this phone number already exists");
+                throw new NotFoundException(localization.Localize("this phone number already exists"));
 
             var customer = mapper.Map<Customer>(request);
 

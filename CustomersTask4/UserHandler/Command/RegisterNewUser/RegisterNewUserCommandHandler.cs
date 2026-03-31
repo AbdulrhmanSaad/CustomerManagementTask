@@ -4,7 +4,7 @@ using CustomersTask4.Users;
 
 namespace CustomersTask4.UserHandler.Command
 {
-    public class RegisterNewUserCommandHandler(IAppUserManager userManager)
+    public class RegisterNewUserCommandHandler(IAppUserManager userManager, ILocalizationService localization)
        
     {
         public async Task Handle(RegisterNewUserCommand request, CancellationToken cancellationToken)
@@ -14,7 +14,7 @@ namespace CustomersTask4.UserHandler.Command
             var succeeded = await userManager.CreateAsync(user, request.Password);
 
             if (!succeeded)
-                throw new NotFoundException("Username Already Exists");
+                throw new NotFoundException(localization.Localize("Username Already Exists"));
 
             await userManager.AddToRoleAsync(user, UserRoles.User);
 

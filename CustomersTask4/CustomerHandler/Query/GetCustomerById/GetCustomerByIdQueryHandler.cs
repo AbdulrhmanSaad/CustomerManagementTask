@@ -4,6 +4,7 @@ using CustomersTask4.Domain;
 using CustomersTask4.DTO;
 using CustomersTask4.Exceptions;
 using CustomersTask4.Repository;
+using CustomersTask4.Services;
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Components.Forms.Mapping;
@@ -12,7 +13,8 @@ namespace CustomersTask4.CustomerHandler.Query
 {
     public class GetCustomerByIdQueryHandler(IGenericRepository<Customer>db,
         ILogger<GetAllCustomerQueryHandler>logger,
-        IMapper mapper)
+        IMapper mapper,
+        LocalizationService localization)
     {
         public async Task<CustomerDto?> Handle(GetCustomerByIdQuery request, CancellationToken cancellationToken)
         {
@@ -21,7 +23,7 @@ namespace CustomersTask4.CustomerHandler.Query
             
             if(customer == null)
             {
-                throw new NotFoundException($"Customer with id {request.id} not found.");
+                throw new NotFoundException(localization.Localize($"Customer with id {request.id} not found."));
             }
             return mapper.Map<CustomerDto>(customer);
         }

@@ -2,6 +2,7 @@
 using CustomersTask4.DTO;
 using CustomersTask4.Exceptions;
 using CustomersTask4.Repository;
+using CustomersTask4.Services;
 using MapsterMapper;
 using MediatR;
 
@@ -9,7 +10,8 @@ namespace CustomersTask4.CustomerHandler.Query.GetCustomerHistory
 {
     public class GetCustomerHistoryQueryHandler(ILogger<GetCustomerHistoryQueryHandler>logger,
         ICustomerHistoryRepository repository,
-        IMapper mapper
+        IMapper mapper,
+        LocalizationService localization
             ) 
     {
         public async Task<IEnumerable<CustomerHistoryResponse>> Handle(GetCustomerHistoryQuery request, CancellationToken cancellationToken)
@@ -18,7 +20,7 @@ namespace CustomersTask4.CustomerHandler.Query.GetCustomerHistory
             var customer =await repository.GetByIdAsync(request.CustomerId);
 
             if (customer == null)
-                throw new NotFoundException($"Customer with id {request.CustomerId} not found.");
+                throw new NotFoundException(localization.Localize($"Customer with id {request.CustomerId} not found."));
 
             var CustomerUpdates=await repository.GetAllCustomerHistory(request.CustomerId);
 

@@ -14,6 +14,7 @@ using FluentValidation.AspNetCore;
 using ImTools;
 using MapsterMapper;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -29,7 +30,6 @@ using Wolverine;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
-
 builder.Services.AddControllers();
 builder.Services.AddSignalR();
 QuestPDF.Settings.License = LicenseType.Community;
@@ -100,7 +100,8 @@ builder.Services.AddOpenApi(options =>
 });
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
-    var connectionString = builder.Configuration.GetConnectionString("CustomersManagmentDb");
+    //var connectionString = builder.Configuration.GetConnectionString("CustomersManagmentDb");
+    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
     
     options.UseSqlServer(connectionString, sqlOptions =>
     {
@@ -126,25 +127,15 @@ builder.Services.AddSingleton<IMongoClient>(sp =>
 });
 
 
-builder.Services.AddApiVersioning(opt =>
-{
-    opt.DefaultApiVersion = new ApiVersion(1);
-    opt.AssumeDefaultVersionWhenUnspecified = true;
-    opt.ReportApiVersions = true;
-    opt.ApiVersionReader = new HeaderApiVersionReader("api-version");
-}).AddMvc()
-.AddApiExplorer(opt=>
-{
-    opt.GroupNameFormat = "'v'VVV";
-    opt.SubstituteApiVersionInUrl = true;
-});
 
 
+builder.Services.AddLocalization(opt => { opt.ResourcesPath = "Resource"; });
 builder.Services.AddScoped<IAppMeditor, AppMediator>();
 builder.Services.AddScoped<RequestLoggingMiddleware>();
 builder.Services.AddScoped<ErrorHandelingMiddleware>();
 builder.Services.AddScoped<IUserContext, UserContext>();
 builder.Services.AddScoped<IMigrateDatabases, MigrateToMongo>();
+builder.Services.AddScoped<ILocalizationService, LocalizationService>();
 builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddIdentityCore<User>(options =>
@@ -161,17 +152,10 @@ builder.Services.AddIdentityCore<User>(options =>
 
 builder.AddQuartzConfig();
 builder.AddWolverineConfig();
+builder.AddRateLimiting();
+builder.ApiVersioning();
 
-builder.Services.AddRateLimiter(options =>
-{
-    options.AddFixedWindowLimiter("fixed", limiterOptions =>
-    {
-        limiterOptions.PermitLimit = 5;
-        limiterOptions.Window = TimeSpan.FromMilliseconds(5);
-        limiterOptions.QueueLimit = 0;
-    });
-    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
-});
+
 
 string provider = builder.Configuration["DatabaseProvidor"] ?? "Sql";
 
@@ -194,6 +178,14 @@ builder.Host.UseSerilog((context, config) =>
 var app = builder.Build();
 
 app.MapDefaultEndpoints();
+var supportedCultures = new[] {"ar", "en", "ar-eg","ar-sa" };
+var localizationOptions = new RequestLocalizationOptions()
+    .SetDefaultCulture(supportedCultures[0])
+    .AddSupportedCultures(supportedCultures)
+    .AddSupportedUICultures(supportedCultures);
+localizationOptions.RequestCultureProviders.Insert(0, new AcceptLanguageHeaderRequestCultureProvider());
+
+app.UseRequestLocalization(localizationOptions);
 
 try
 {

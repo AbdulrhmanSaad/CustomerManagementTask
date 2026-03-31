@@ -2,6 +2,7 @@
 using CustomersTask4.Controllers;
 using CustomersTask4.Domain;
 using CustomersTask4.DTO;
+using CustomersTask4.Services;
 using CustomersTask4.UserHandler.Command;
 using CustomersTask4.UserHandler.Command.AssignUserRole;
 using CustomersTask4.UserHandler.Command.LoginUser;
@@ -18,14 +19,16 @@ namespace CustomersTask4.Tests.Controllers
     public class IdentityControllerTests
     {
         private readonly IAppMeditor _mediator;
+        private readonly ILocalizationService locaize;
         private readonly IdentityController _controller;
 
         public IdentityControllerTests()
         {
             _mediator = Substitute.For<IAppMeditor>();
+            locaize = Substitute.For<ILocalizationService>();
 
           
-            _controller = new IdentityController(_mediator);
+            _controller = new IdentityController(_mediator,locaize);
         }
 
         [Fact]

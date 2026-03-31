@@ -1,6 +1,7 @@
 ﻿using Asp.Versioning;
 using CustomersTask4.Abstraction;
 using CustomersTask4.DTO;
+using CustomersTask4.Services;
 using CustomersTask4.UserHandler.Command;
 using CustomersTask4.UserHandler.Command.AssignUserRole;
 using CustomersTask4.UserHandler.Command.LoginUser;
@@ -17,7 +18,7 @@ namespace CustomersTask4.Controllers
     [EnableRateLimiting("fixed")]
     [ApiVersion("1")]
     [ApiVersion("2")]
-    public class IdentityController(IAppMeditor mediator) : ControllerBase
+    public class IdentityController(IAppMeditor mediator, ILocalizationService locaizer) : ControllerBase
     {
         [HttpPost("AssignRoleTo")]
         [Authorize(Roles = UserRoles.Admin)]
@@ -36,7 +37,7 @@ namespace CustomersTask4.Controllers
                 return BadRequest(ModelState);
 
             await mediator.Send(request);
-            return Ok(new { message = "User registered successfully" });
+            return Ok(locaizer.Localize("User registered successfully"));
         }
 
         [HttpPost("loginUser")]
@@ -55,7 +56,7 @@ namespace CustomersTask4.Controllers
         public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenCommand request)
         {
             if (string.IsNullOrWhiteSpace(request.RefreshToken))
-                return Unauthorized(new { error = "Refresh token is required" });
+                return Unauthorized(new { error = locaizer.Localize("Refresh token is required") });
 
             var token = await mediator.Send<LoginDto>(request);
             return Ok(token);

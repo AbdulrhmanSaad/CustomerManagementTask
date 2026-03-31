@@ -8,7 +8,8 @@ namespace CustomersTask4.UserHandler.Command.LoginUser
 {
     public class LoginUserCommandHandler(
         IAppUserManager userManager,
-        IUserTokenMangerService userTokenManger)
+        IUserTokenMangerService userTokenManger,
+        ILocalizationService localization)
         
     {
         public async Task<LoginDto> Handle(LoginUserCommand request, CancellationToken cancellationToken)
@@ -16,12 +17,12 @@ namespace CustomersTask4.UserHandler.Command.LoginUser
             var user = await userManager.FindByEmailAsync(request.Email);
 
             if (user == null)
-                throw new NotFoundException("Invalid Email Or Password");
+                throw new NotFoundException(localization.Localize("Invalid Email Or Password"));
 
             var isValid = await userManager.CheckPasswordAsync(user, request.Password);
 
             if (!isValid)
-                throw new NotFoundException("Invalid Email Or Password");
+                throw new NotFoundException(localization.Localize("Invalid Email Or Password"));
 
             var roles = await userManager.GetRolesAsync(user);
             var accessToken = userTokenManger.GenerateJwtToken(user, roles);

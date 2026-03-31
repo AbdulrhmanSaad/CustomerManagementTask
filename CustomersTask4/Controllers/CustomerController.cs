@@ -10,6 +10,7 @@ using CustomersTask4.CustomerHandler.Query.GetCustomerAddressesHistory;
 using CustomersTask4.CustomerHandler.Query.GetCustomerById;
 using CustomersTask4.CustomerHandler.Query.GetCustomerHistory;
 using CustomersTask4.DTO;
+using CustomersTask4.Services;
 using CustomersTask4.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -26,7 +27,9 @@ namespace CustomersTask4.Controllers
     public class CustomerController(
         IAppMeditor mediator,
         IServiceScopeFactory scopeFactory,
-        ILogger<CustomerController> logger) : ControllerBase
+        ILogger<CustomerController> logger,
+        ILocalizationService localization
+        ) : ControllerBase
     {
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -55,7 +58,7 @@ namespace CustomersTask4.Controllers
         public async Task<ActionResult> DeleteCustomer(string id)
         {
             await mediator.Send(new DeleteCustomerCommand(id));
-            return Ok("Customer Deleted Successfully");
+            return Ok(localization.Localize("Customer Deleted Successfully"));
         }
 
         [HttpPost]
@@ -66,7 +69,7 @@ namespace CustomersTask4.Controllers
         {
             //await mediator.Send(command);
             await mediator.Send(command);
-            return Ok("Customer Added from version 1");
+            return Ok(localization.Localize("Customer Added from version 1"));
         }
 
         [HttpPut("{id}")]
@@ -77,7 +80,7 @@ namespace CustomersTask4.Controllers
         {
             command.Id = id;
             await mediator.Send(command);
-            return Ok("Customer Updated");
+            return Ok(localization.Localize("Customer Updated"));
         }
 
         [HttpGet("history/{id}")]
@@ -107,7 +110,7 @@ namespace CustomersTask4.Controllers
             var pdf =await mediator.Send<byte[]>(query);
 
             if (pdf == null || pdf.Length == 0)
-                return BadRequest("Failed to generate report");
+                return BadRequest(localization.Localize("Failed to generate report"));
 
             return File(pdf, "application/pdf", "CustomersReport.pdf");
         }
@@ -139,7 +142,7 @@ namespace CustomersTask4.Controllers
                     }
                 });
 
-                return Ok("Migration started in background. Check logs for progress.");
+                return Ok(localization.Localize("Migration started in background. Check logs for progress."));
             }
         }
     }

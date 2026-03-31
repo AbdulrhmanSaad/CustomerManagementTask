@@ -4,6 +4,7 @@ using CustomersTask4.Exceptions;
 using CustomersTask4.Hubs;
 using CustomersTask4.Messages;
 using CustomersTask4.Repository;
+using CustomersTask4.Services;
 using Microsoft.AspNetCore.SignalR;
 using System.Text.Json;
 using Wolverine;
@@ -15,7 +16,8 @@ namespace CustomersTask4.CustomerHandler.Command.DeleteCustomerCommand
         ILogger<DeleteCustomerCommandHandler> logger,
         IConfiguration configuration,
         IHubContext<MessageHub> hubContext,
-        IAppMeditor bus)
+        IAppMeditor bus,
+        ILocalizationService localization)
     {
         public async Task Handle(DeleteCustomerCommand request, CancellationToken cancellationToken)
         {
@@ -23,7 +25,7 @@ namespace CustomersTask4.CustomerHandler.Command.DeleteCustomerCommand
 
             var customer = await db.GetByIdAsync(request.Id);
             if (customer == null)
-                throw new NotFoundException($"Customer With Id={request.Id} not found");
+                throw new NotFoundException(localization.Localize("CustomerNotFound",request.Id));
 
             await db.Delete(customer);
 

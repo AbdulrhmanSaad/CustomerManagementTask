@@ -1,40 +1,43 @@
 ﻿using CustomersTask4.CustomerHandler.Command.UpdateCustomer;
 using CustomersTask4.Domain;
+using CustomersTask4.Services;
 using FluentValidation;
 
 namespace CustomersTask4.Validator
 {
     public class UpdateCustomerCommandValidator : AbstractValidator<UpdateCustomerCommand>
     {
-        public UpdateCustomerCommandValidator()
-        {
+        private readonly ILocalizationService localization;
 
+        public UpdateCustomerCommandValidator(ILocalizationService localization)
+        {
+            this.localization=localization;
 
             RuleFor(x => x.Name)
-                .NotEmpty().WithMessage("Name is required.")
-                .MaximumLength(150).WithMessage("Name must not exceed 150 characters.");
+                .NotEmpty().WithMessage(localization.Localize("Name is required."))
+                .MaximumLength(150).WithMessage(localization.Localize("Name must not exceed 150 characters."));
 
             RuleFor(c => c.Phone)
                    .NotEmpty()
                    .Matches(@"^(010|011|012|015)\d{8}$")
-                   .WithMessage("Invalid Egyptian phone number");
+                   .WithMessage(localization.Localize("Invalid Egyptian phone number"));
 
             RuleFor(x => x.Addresses)
                .NotEmpty()
-               .WithMessage("At least one address is required.")
+               .WithMessage(localization.Localize("Addresses cannot be null."))
                .Must(addresses => addresses != null)
-               .WithMessage("Addresses cannot be null.");
+               .WithMessage(localization.Localize("Addresses cannot be null."));
 
             RuleForEach(x => x.Addresses)
                 .ChildRules(address =>
                 {
                     address.RuleFor(a => a.AddressName)
                         .NotEmpty()
-                        .WithMessage("Address name/location is required.")
+                        .WithMessage(localization.Localize("Address name/location is required."))
                         .MaximumLength(500)
-                        .WithMessage("Address name must not exceed 500 characters.")
+                        .WithMessage(localization.Localize("Address name must not exceed 500 characters."))
                         .MinimumLength(3)
-                        .WithMessage("Address name must be at least 3 characters long.");
+                        .WithMessage(localization.Localize("Address name must be at least 3 characters long."));
 
                     address.RuleFor(a => a.AddressType)
                         .IsInEnum()
@@ -43,7 +46,7 @@ namespace CustomersTask4.Validator
                 });
             RuleFor(x => x.Addresses)
                .Must(addresses => addresses.Count <= 2)
-               .WithMessage("Maximum of 2 addresses allowed.");
+               .WithMessage(localization.Localize("Maximum of 2 addresses allowed."));
 
 
             RuleFor(x => x.Addresses)
@@ -57,7 +60,7 @@ namespace CustomersTask4.Validator
 
                    return uniqueTypes == addressTypes.Count;
                })
-               .WithMessage("Cannot have duplicate address types. Each address must have a unique type.");
+               .WithMessage(localization.Localize("Cannot have duplicate address types. Each address must have a unique type."));
 
         }
     }
