@@ -1,10 +1,8 @@
-﻿using CustomersTask4.Domain;
-using CustomersTask4.DTO;
+﻿using CustomersTask4.DTO;
 using CustomersTask4.Exceptions;
 using CustomersTask4.Repository;
 using CustomersTask4.Services;
 using MapsterMapper;
-using MediatR;
 
 namespace CustomersTask4.CustomerHandler.Query.GetCustomerHistory
 {

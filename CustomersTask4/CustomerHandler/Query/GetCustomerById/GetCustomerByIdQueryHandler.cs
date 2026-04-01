@@ -6,8 +6,6 @@ using CustomersTask4.Exceptions;
 using CustomersTask4.Repository;
 using CustomersTask4.Services;
 using MapsterMapper;
-using MediatR;
-using Microsoft.AspNetCore.Components.Forms.Mapping;
 
 namespace CustomersTask4.CustomerHandler.Query
 {
