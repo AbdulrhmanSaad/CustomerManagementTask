@@ -1,15 +1,16 @@
-﻿using Mapster;
-using CustomersTask4.CustomerHandler.Query;
+﻿using CustomersTask4.CustomerHandler.Query;
 using CustomersTask4.CustomerHandler.Query.GetAllCustomers;
 using CustomersTask4.CustomerHandler.Query.GetCustomerById;
 using CustomersTask4.Domain;
 using CustomersTask4.DTO;
 using CustomersTask4.Exceptions;
 using CustomersTask4.Repository;
+using CustomersTask4.Services;
+using Mapster;
+using MapsterMapper;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using System.Linq.Expressions;
-using MapsterMapper;
 
 
 namespace CustomerTaskUnitTest
@@ -19,6 +20,7 @@ namespace CustomerTaskUnitTest
             private readonly IGenericRepository<Customer> _repository;
             private readonly ILogger<GetAllCustomerQueryHandler> _logger;
             private readonly IMapper _mapper;
+            private readonly ILocalizationService localization;
             private readonly GetCustomerByIdQueryHandler _handler;
 
             public GetCustomerByIdCommandHandlerTest()
@@ -26,8 +28,9 @@ namespace CustomerTaskUnitTest
                 _repository = Substitute.For<IGenericRepository<Customer>>();
                 _logger = Substitute.For<ILogger<GetAllCustomerQueryHandler>>();
                 _mapper = Substitute.For<IMapper>();
+                localization = Substitute.For<ILocalizationService>();
 
-                _handler = new GetCustomerByIdQueryHandler(_repository, _logger, _mapper);
+                _handler = new GetCustomerByIdQueryHandler(_repository, _logger, _mapper,localization);
             }
 
             [Fact]

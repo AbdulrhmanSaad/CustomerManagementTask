@@ -8,7 +8,7 @@ namespace CustomersTask4.UserHandler.Command.RefreshToken
     public class RefreshTokenCommandHandler(
         IAppUserManager userManager,
         IUserTokenMangerService userTokenManger,
-        LocalizationService localization
+        ILocalizationService localization
           )
         
     {

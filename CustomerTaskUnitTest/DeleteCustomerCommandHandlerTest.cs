@@ -7,6 +7,7 @@ using CustomersTask4.Domain;
 using CustomersTask4.Exceptions;
 using CustomersTask4.Hubs;
 using CustomersTask4.Repository;
+using CustomersTask4.Services;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -27,6 +28,7 @@ namespace CustomerTaskUnitTest
         private readonly IConfiguration configuration;
         private readonly IHubContext<MessageHub> hubContext;
         private readonly IAppMeditor bus;
+        private readonly ILocalizationService localization;
 
 
         public DeleteCustomerCommandHandlerTest()
@@ -35,8 +37,9 @@ namespace CustomerTaskUnitTest
             configuration = Substitute.For<IConfiguration>();
             hubContext = Substitute.For<IHubContext<MessageHub>>();
             bus = Substitute.For<IAppMeditor>();
+            localization = Substitute.For<ILocalizationService>();
             logger = Substitute.For<ILogger<DeleteCustomerCommandHandler>>();
-             _handler = new DeleteCustomerCommandHandler(repository, logger,configuration,hubContext,bus);
+             _handler = new DeleteCustomerCommandHandler(repository, logger,configuration,hubContext,bus,localization);
         }
         [Fact]
         public async Task Handler_ShouldDeleteCustomerSuccessfully()

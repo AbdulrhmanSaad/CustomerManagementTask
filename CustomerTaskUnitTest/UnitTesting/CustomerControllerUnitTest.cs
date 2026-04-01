@@ -9,6 +9,7 @@ using CustomersTask4.CustomerHandler.Query.GetCustomerById;
 using CustomersTask4.CustomerHandler.Query.GetCustomerHistory;
 using CustomersTask4.Domain;
 using CustomersTask4.DTO;
+using CustomersTask4.Services;
 using Mediator;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,13 +25,15 @@ namespace CustomersTaskUnitTest.UnitTesting
         private readonly CustomerController _controller;
         private readonly IServiceScopeFactory scopeFactory;
         private readonly ILogger<CustomerController> logger;
+        private readonly ILocalizationService localization;
 
         public CustomerControllerUnitTest()
         {
             _mediator = Substitute.For<IAppMeditor>();
             scopeFactory = Substitute.For<IServiceScopeFactory>();
             logger = Substitute.For<ILogger<CustomerController>>();
-            _controller = new CustomerController(_mediator,scopeFactory,logger);
+            localization = Substitute.For<ILocalizationService>();
+            _controller = new CustomerController(_mediator,scopeFactory,logger,localization);
         }
 
         #region GetAll

@@ -11,7 +11,7 @@ namespace CustomersTask4.CustomerHandler.Query.GetCustomerHistory
     public class GetCustomerHistoryQueryHandler(ILogger<GetCustomerHistoryQueryHandler>logger,
         ICustomerHistoryRepository repository,
         IMapper mapper,
-        LocalizationService localization
+        ILocalizationService localization
             ) 
     {
         public async Task<IEnumerable<CustomerHistoryResponse>> Handle(GetCustomerHistoryQuery request, CancellationToken cancellationToken)
