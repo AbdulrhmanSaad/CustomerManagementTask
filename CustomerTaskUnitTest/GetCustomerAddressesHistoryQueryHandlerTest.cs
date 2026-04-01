@@ -3,6 +3,7 @@ using CustomersTask4.Domain;
 using CustomersTask4.DTO;
 using CustomersTask4.Exceptions;
 using CustomersTask4.Repository;
+using CustomersTask4.Services;
 using MapsterMapper;
 using NSubstitute;
 using System.Linq.Expressions;
@@ -14,14 +15,16 @@ namespace CustomerTaskUnitTest
     {
         private readonly ICustomerHistoryRepository _repository;
         private readonly IMapper _mapper;
+        private readonly ILocalizationService localization;
         private readonly GetCustomerAddressesHistoryQueryHandler _handler;
 
         public GetCustomerAddressesHistoryQueryHandlerTest()
         {
             _repository = Substitute.For<ICustomerHistoryRepository>();
             _mapper = Substitute.For<IMapper>();
+            localization = Substitute.For<ILocalizationService>();
 
-            _handler = new GetCustomerAddressesHistoryQueryHandler(_repository, _mapper);
+            _handler = new GetCustomerAddressesHistoryQueryHandler(_repository, _mapper,localization);
         }
 
         #region Success Cases

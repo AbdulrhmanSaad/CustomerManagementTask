@@ -8,7 +8,7 @@ namespace CustomersTask4.CustomerHandler.Query.GetCustomerAddressesHistory
 {
     public class GetCustomerAddressesHistoryQueryHandler(ICustomerHistoryRepository repository,
         IMapper mapper,
-        LocalizationService localization)
+        ILocalizationService localization)
         
     {
         

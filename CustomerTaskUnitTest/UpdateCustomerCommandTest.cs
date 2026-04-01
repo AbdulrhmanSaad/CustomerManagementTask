@@ -5,6 +5,7 @@ using CustomersTask4.DTO;
 using CustomersTask4.Exceptions;
 using CustomersTask4.Hubs;
 using CustomersTask4.Repository;
+using CustomersTask4.Services;
 using CustomersTask4.Users;
 using MapsterMapper;
 using Microsoft.AspNetCore.SignalR;
@@ -27,6 +28,7 @@ namespace CustomerTaskUnitTest
         private readonly IConfiguration configuration;
         private readonly IHubContext<MessageHub> hubContext;
         private readonly IAppMeditor bus;
+        private readonly ILocalizationService localize;
 
         private static readonly UpdateCustomerCommand _validCommand = new()
         {
@@ -57,7 +59,8 @@ namespace CustomerTaskUnitTest
             configuration = Substitute.For<IConfiguration>();
             hubContext = Substitute.For<IHubContext<MessageHub>>();
             bus = Substitute.For<IAppMeditor>();
-            _handler = new UpdateCustomerCommandHandler(_repository, _logger, _mapper,_userContext,configuration,hubContext,bus);
+            localize = Substitute.For<ILocalizationService>();
+            _handler = new UpdateCustomerCommandHandler(_repository, _logger, _mapper,_userContext,configuration,hubContext,bus,localize);
         }
 
         #region Success Cases

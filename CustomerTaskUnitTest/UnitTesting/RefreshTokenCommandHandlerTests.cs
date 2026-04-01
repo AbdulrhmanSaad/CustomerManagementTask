@@ -18,16 +18,18 @@ public class RefreshTokenCommandHandlerTests
 {
     private readonly IAppUserManager _userManager;
     private readonly IUserTokenMangerService _tokenService;
+    private readonly ILocalizationService localize;
     private readonly RefreshTokenCommandHandler _handler;
 
     public RefreshTokenCommandHandlerTests()
     {
         var userStore = Substitute.For<Microsoft.AspNetCore.Identity.IUserStore<User>>();
         _userManager = Substitute.For<IAppUserManager>();
+        localize = Substitute.For<ILocalizationService>();
 
         _tokenService = Substitute.For<IUserTokenMangerService>();
 
-        _handler = new RefreshTokenCommandHandler(_userManager, _tokenService);
+        _handler = new RefreshTokenCommandHandler(_userManager, _tokenService,localize);
     }
 
     [Fact]

@@ -12,7 +12,7 @@ namespace CustomersTask4.CustomerHandler.Query
     public class GetCustomerByIdQueryHandler(IGenericRepository<Customer>db,
         ILogger<GetAllCustomerQueryHandler>logger,
         IMapper mapper,
-        LocalizationService localization)
+        ILocalizationService localization)
     {
         public async Task<CustomerDto?> Handle(GetCustomerByIdQuery request, CancellationToken cancellationToken)
         {

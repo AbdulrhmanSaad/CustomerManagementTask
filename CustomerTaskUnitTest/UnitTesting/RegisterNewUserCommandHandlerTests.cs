@@ -13,6 +13,7 @@ namespace CustomersTaskUnitTest.UnitTesting;
 public class RegisterNewUserCommandHandlerTests
 {
     private readonly IAppUserManager _userManager;
+    private readonly ILocalizationService localize;
     private readonly RegisterNewUserCommandHandler _handler;
 
     public RegisterNewUserCommandHandlerTests()
@@ -20,8 +21,9 @@ public class RegisterNewUserCommandHandlerTests
         var userStore = Substitute.For<IUserStore<User>>();
 
         _userManager = Substitute.For<IAppUserManager>();
+        localize = Substitute.For<ILocalizationService>();
 
-        _handler = new RegisterNewUserCommandHandler(_userManager);
+        _handler = new RegisterNewUserCommandHandler(_userManager,localize);
     }
 
     [Fact]

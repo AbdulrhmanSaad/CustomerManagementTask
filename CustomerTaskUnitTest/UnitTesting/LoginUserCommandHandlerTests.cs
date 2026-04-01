@@ -15,16 +15,19 @@ public class LoginUserCommandHandlerTests
 {
     private readonly IAppUserManager _userManager;
     private readonly IUserTokenMangerService _tokenService;
+    private readonly ILocalizationService localization;
     private readonly LoginUserCommandHandler _handler;
 
     public LoginUserCommandHandlerTests()
     {
         _userManager = Substitute.For<IAppUserManager>();
         _tokenService = Substitute.For<IUserTokenMangerService>();
+        localization = Substitute.For<ILocalizationService>();
 
         _handler = new LoginUserCommandHandler(
             _userManager,
-            _tokenService
+            _tokenService,
+            localization
         );
     }
 

@@ -3,16 +3,10 @@ using CustomersTask4.Domain;
 using CustomersTask4.DTO;
 using CustomersTask4.Exceptions;
 using CustomersTask4.Repository;
+using CustomersTask4.Services;
 using MapsterMapper;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace CustomerTaskUnitTest
 {
@@ -22,14 +16,16 @@ namespace CustomerTaskUnitTest
             private readonly ICustomerHistoryRepository _repository;
             private readonly GetCustomerHistoryQueryHandler _handler;
             private readonly IMapper _mapper;
+            private readonly ILocalizationService localization;
 
             public GetCustomerHistoryQueryHandlerTest()
             {
                 _logger = Substitute.For<ILogger<GetCustomerHistoryQueryHandler>>();
                 _repository = Substitute.For<ICustomerHistoryRepository>();
                 _mapper = Substitute.For<IMapper>();
+                localization = Substitute.For<ILocalizationService>();
 
-            _handler = new GetCustomerHistoryQueryHandler(_logger, _repository,_mapper);
+            _handler = new GetCustomerHistoryQueryHandler(_logger, _repository,_mapper,localization);
             }
 
             #region Success Cases
