@@ -1,16 +1,9 @@
 ﻿using CustomersTask4.Domain;
-using CustomersTask4.DTO;
 using CustomersTask4.Exceptions;
 using CustomersTask4.Services;
 using CustomersTask4.UserHandler.Command.RefreshToken;
-using Mediator;
-using Microsoft.AspNetCore.Identity;
 using NSubstitute;
-using System;
 using System.Security.Claims;
-using System.Threading;
-using System.Threading.Tasks;
-using Xunit;
 
 namespace CustomersTaskUnitTest.UnitTesting;
 

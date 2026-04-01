@@ -10,7 +10,6 @@ using CustomersTask4.CustomerHandler.Query.GetCustomerHistory;
 using CustomersTask4.Domain;
 using CustomersTask4.DTO;
 using CustomersTask4.Services;
-using Mediator;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -113,7 +112,7 @@ namespace CustomersTaskUnitTest.UnitTesting
         public async Task DeleteCustomer_ReturnsOkWithMessage()
         {
             // Arrange
-            _mediator.Send(Arg.Any<DeleteCustomerCommand>()).Returns(Task.FromResult(Unit.Value));
+            _mediator.Send(Arg.Any<DeleteCustomerCommand>()).Returns(Task.FromResult(Task.CompletedTask));
 
             // Act
             var result = await _controller.DeleteCustomer("1");
@@ -127,7 +126,7 @@ namespace CustomersTaskUnitTest.UnitTesting
         public async Task DeleteCustomer_SendsCommandWithCorrectId()
         {
             // Arrange
-            _mediator.Send(Arg.Any<DeleteCustomerCommand>()).Returns(Task.FromResult(Unit.Value));
+            _mediator.Send(Arg.Any<DeleteCustomerCommand>()).Returns(Task.CompletedTask);
 
             // Act
             await _controller.DeleteCustomer("42");
@@ -145,7 +144,7 @@ namespace CustomersTaskUnitTest.UnitTesting
         {
             // Arrange
             var command = new CreateCustomerCommand { Name = "Dave" };
-            _mediator.Send(Arg.Any<CreateCustomerCommand>()).Returns(Task.FromResult(Unit.Value));
+            _mediator.Send(Arg.Any<CreateCustomerCommand>()).Returns(Task.FromResult(Task.CompletedTask));
 
             // Act
             var result = await _controller.AddCustomer(command);
@@ -160,7 +159,7 @@ namespace CustomersTaskUnitTest.UnitTesting
         {
             // Arrange
             var command = new CreateCustomerCommand { Name = "Eve" };
-            _mediator.Send(Arg.Any<CreateCustomerCommand>()).Returns(Task.FromResult(Unit.Value));
+            _mediator.Send(Arg.Any<CreateCustomerCommand>()).Returns(Task.FromResult(Task.CompletedTask));
 
             // Act
             await _controller.AddCustomer(command);
@@ -178,7 +177,7 @@ namespace CustomersTaskUnitTest.UnitTesting
         {
             // Arrange
             var command = new UpdateCustomerCommand { Name = "Frank" };
-            _mediator.Send(Arg.Any<UpdateCustomerCommand>()).Returns(Task.FromResult(Unit.Value));
+            _mediator.Send(Arg.Any<UpdateCustomerCommand>()).Returns(Task.FromResult(Task.CompletedTask));
 
             // Act
             var result = await _controller.UpdateCustomer(command, "10");
@@ -193,7 +192,7 @@ namespace CustomersTaskUnitTest.UnitTesting
         {
             // Arrange
             var command = new UpdateCustomerCommand { Name = "Grace" };
-            _mediator.Send(Arg.Any<UpdateCustomerCommand>()).Returns(Task.FromResult(Unit.Value));
+            _mediator.Send(Arg.Any<UpdateCustomerCommand>()).Returns(Task.FromResult(Task.CompletedTask));
 
             // Act
             await _controller.UpdateCustomer(command, "99");
