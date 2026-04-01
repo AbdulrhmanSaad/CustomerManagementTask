@@ -1,5 +1,3 @@
-using Asp.Versioning;
-using Asp.Versioning.ApiExplorer;
 using CustomersTask4.Abstraction;
 using CustomersTask4.Data;
 using CustomersTask4.Domain;
@@ -11,20 +9,15 @@ using CustomersTask4.Services;
 using CustomersTask4.Users;
 using FluentValidation;
 using FluentValidation.AspNetCore;
-using ImTools;
 using MapsterMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
-using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using MongoDB.Driver;
 using QuestPDF.Infrastructure;
 using Serilog;
-using Swashbuckle.AspNetCore.SwaggerGen;
-using System.Threading.RateLimiting;
 using Wolverine;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -101,7 +94,7 @@ builder.Services.AddOpenApi(options =>
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     //var connectionString = builder.Configuration.GetConnectionString("CustomersManagmentDb");
-    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+    var connectionString = builder.Configuration["ConnectionStrings:DefaultConnection"];
     
     options.UseSqlServer(connectionString, sqlOptions =>
     {
@@ -216,7 +209,7 @@ app.UseSwaggerUI(options =>
 {
     options.SwaggerEndpoint("/openapi/v2.json", "My API v2");
 
-    //options.SwaggerEndpoint("/openapi/v1.json", "My API v1");
+    options.SwaggerEndpoint("/openapi/v1.json", "My API v1");
 
 });
 
