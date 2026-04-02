@@ -3,7 +3,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace CustomersTask4.Domain
 {
-    public class Customer
+    public class Customer: IMustHaveTenant
     {
         [BsonId]
         [BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)]
@@ -16,10 +16,7 @@ namespace CustomersTask4.Domain
         public DateTime? ChangedAt { get; set; } = DateTime.UtcNow;
         public string? ChangedBy { get; set; } = default!;
         public  List<Address> Addresses { get; set; }=new List<Address>();
-
-
-        
-
+        public string TenantId { get; set; } = null!;
     }
     
 }

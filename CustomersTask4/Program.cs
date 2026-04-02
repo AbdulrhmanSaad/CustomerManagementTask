@@ -6,6 +6,7 @@ using CustomersTask4.IServiceExtentions;
 using CustomersTask4.Mapping;
 using CustomersTask4.Middleware;
 using CustomersTask4.Services;
+using CustomersTask4.Setting;
 using CustomersTask4.Users;
 using FluentValidation;
 using FluentValidation.AspNetCore;
@@ -21,6 +22,13 @@ using Serilog;
 using Wolverine;
 
 var builder = WebApplication.CreateBuilder(args);
+
+//MultiTenancy
+builder.Services.Configure<TenantSetting>(
+    builder.Configuration.GetSection("TenantSetting"));
+TenantSetting options=new();
+builder.Configuration.GetSection("TenantSetting").Bind(options);
+
 
 builder.AddServiceDefaults();
 builder.Services.AddControllers();
@@ -91,22 +99,37 @@ builder.Services.AddOpenApi(options =>
         return Task.CompletedTask;
     });
 });
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
+
+builder.Services.AddScoped<ITenantService, TenantService>();
+builder.Services.AddHttpContextAccessor();
+
+
+var defualProvider =options.Defaults.DBProvider;
+if (defualProvider.ToLower() == "sql")
 {
-    //var connectionString = builder.Configuration.GetConnectionString("CustomersManagmentDb");
-    var connectionString = builder.Configuration["ConnectionStrings:DefaultConnection"];
-    
-    options.UseSqlServer(connectionString, sqlOptions =>
+    builder.Services.AddDbContext<ApplicationDbContext>(m => m.UseSqlServer());
+}
+    foreach (var tenant in options.Tenants)
     {
-        sqlOptions.EnableRetryOnFailure(
-            maxRetryCount: 20,
-            maxRetryDelay: TimeSpan.FromSeconds(30),
-            errorNumbersToAdd: null
-        );
-        sqlOptions.CommandTimeout(120);
-        sqlOptions.MinBatchSize(1);
-    });
-});
+        var connectionString = tenant.ConnectionString ?? options.Defaults.ConnectionString;
+
+        using var scoped = builder.Services.BuildServiceProvider().CreateScope();
+        var dbcontext = scoped.ServiceProvider.GetService<ApplicationDbContext>();
+
+        dbcontext?.Database.SetConnectionString(connectionString);
+        if (dbcontext.Database.GetPendingMigrations().Any())
+        {
+            dbcontext.Database.Migrate();
+        }
+    }
+
+
+
+
+
+
+
+
 //builder.AddMongoDBClient("mongo-db");
 
 builder.Services.Configure<MongoDbSetting>(
@@ -126,10 +149,10 @@ builder.Services.AddLocalization(opt => { opt.ResourcesPath = "Resource"; });
 builder.Services.AddScoped<IAppMeditor, AppMediator>();
 builder.Services.AddScoped<RequestLoggingMiddleware>();
 builder.Services.AddScoped<ErrorHandelingMiddleware>();
+builder.Services.AddScoped<TenantMiddleware>();
 builder.Services.AddScoped<IUserContext, UserContext>();
 builder.Services.AddScoped<IMigrateDatabases, MigrateToMongo>();
 builder.Services.AddScoped<ILocalizationService, LocalizationService>();
-builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddIdentityCore<User>(options =>
     {
@@ -142,6 +165,10 @@ builder.Services.AddIdentityCore<User>(options =>
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders()
     .AddSignInManager();
+
+
+
+
 
 builder.AddQuartzConfig();
 builder.AddWolverineConfig();
@@ -171,14 +198,9 @@ builder.Host.UseSerilog((context, config) =>
 var app = builder.Build();
 
 app.MapDefaultEndpoints();
-var supportedCultures = new[] {"ar", "en", "ar-eg","ar-sa" };
-var localizationOptions = new RequestLocalizationOptions()
-    .SetDefaultCulture(supportedCultures[0])
-    .AddSupportedCultures(supportedCultures)
-    .AddSupportedUICultures(supportedCultures);
-localizationOptions.RequestCultureProviders.Insert(0, new AcceptLanguageHeaderRequestCultureProvider());
 
-app.UseRequestLocalization(localizationOptions);
+
+app.AddLocalization();
 
 try
 {
@@ -220,6 +242,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.UseMiddleware<RequestLoggingMiddleware>();
 app.UseMiddleware<ErrorHandelingMiddleware>();
+app.UseMiddleware<TenantMiddleware>();
 app.MapControllers();
 app.MapHub<MessageHub>("/messagehub");
 

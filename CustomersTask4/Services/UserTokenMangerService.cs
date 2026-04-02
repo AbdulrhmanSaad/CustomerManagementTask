@@ -9,14 +9,14 @@ namespace CustomersTask4.Services
 {
     public interface IUserTokenMangerService
     {
-        string GenerateJwtToken(IAppUser user, IEnumerable<string> roles);
+        string GenerateJwtToken(IAppUser user, IEnumerable<string> roles,string tenantId);
         string GenerateRefreshToken();
         ClaimsPrincipal? GetPrincipalFromExpiredToken(string token);
     }
 
     public class UserTokenMangerService : IUserTokenMangerService
     {
-        public string GenerateJwtToken(IAppUser user, IEnumerable<string> roles)
+        public string GenerateJwtToken(IAppUser user, IEnumerable<string> roles,string tenantId)
         {
             var role = roles.FirstOrDefault() ?? "no role";
 
@@ -24,7 +24,8 @@ namespace CustomersTask4.Services
             {
                 new Claim(ClaimTypes.Email, user.Email ?? string.Empty),
                 new Claim(ClaimTypes.Role, role),
-                new Claim(ClaimTypes.NameIdentifier, user.Id)
+                new Claim(ClaimTypes.NameIdentifier, user.Id),
+                new Claim("tenant",tenantId)
             };
 
             var secretKey = new SymmetricSecurityKey(

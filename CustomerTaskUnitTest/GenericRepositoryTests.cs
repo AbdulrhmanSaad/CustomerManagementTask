@@ -18,7 +18,7 @@ namespace CustomersTaskUnitTest.UnitTesting
                 .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
                 .Options;
 
-            return new ApplicationDbContext(options);
+            return new ApplicationDbContext(options,null);
         }
 
         [Fact]

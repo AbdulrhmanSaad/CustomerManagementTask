@@ -25,8 +25,8 @@ namespace CustomersTask4.Jobs
             try
             {
                 var result = provider == "Mongo"
-                    ? await migrationService.MigrateFromSqlToMongo()
-                    : await migrationService.MigrateFromMongoToSql();
+                    ? await migrationService.MigrateFromMongoToSql()
+                    : await migrationService.MigrateFromSqlToMongo();
 
                 logger.LogInformation(
                     "MigrationJob complete — Migrated: {Migrated}, Skipped: {Skipped}",

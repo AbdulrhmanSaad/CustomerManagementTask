@@ -8,7 +8,8 @@ namespace CustomersTask4.UserHandler.Command.RefreshToken
     public class RefreshTokenCommandHandler(
         IAppUserManager userManager,
         IUserTokenMangerService userTokenManger,
-        ILocalizationService localization
+        ILocalizationService localization,
+        ITenantService tenantService
           )
         
     {
@@ -30,7 +31,7 @@ namespace CustomersTask4.UserHandler.Command.RefreshToken
                 throw new NotFoundException(localization.Localize("Refresh token has expired"));
 
             var roles = await userManager.GetRolesAsync(user);
-            var newAccessToken = userTokenManger.GenerateJwtToken(user, roles);
+            var newAccessToken = userTokenManger.GenerateJwtToken(user, roles,tenantService.GetCurrentTenant().TenantId);
             var newRefreshToken = userTokenManger.GenerateRefreshToken();
 
             user.RefreshToken = newRefreshToken;

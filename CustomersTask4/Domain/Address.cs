@@ -2,7 +2,7 @@
 
 namespace CustomersTask4.Domain
 {
-    public class Address
+    public class Address:IMustHaveTenant
     {
         public int Id { get; set; }
         public AddressType AddressType { get; set; } = AddressType.Home;
@@ -12,7 +12,7 @@ namespace CustomersTask4.Domain
         
         [BsonIgnore]
         public Customer Customer { get; set; } = default!;
-
+        public string TenantId { get; set; } = null!;
     }
     public enum AddressType
     {

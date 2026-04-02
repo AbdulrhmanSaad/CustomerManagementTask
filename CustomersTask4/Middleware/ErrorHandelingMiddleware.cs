@@ -24,9 +24,12 @@ namespace CustomersTask4.Middleware
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, ex.Message);
-                context.Response.StatusCode = 500;
-                await context.Response.WriteAsync("An unexpected error occurred.");
+                if (!context.Response.HasStarted)
+                {
+                    logger.LogError(ex, ex.Message);
+                    context.Response.StatusCode = 500;
+                    await context.Response.WriteAsync(ex.Message);
+                }
             }
         }
     }

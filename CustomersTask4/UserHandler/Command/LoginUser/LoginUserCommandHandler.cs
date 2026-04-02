@@ -9,7 +9,8 @@ namespace CustomersTask4.UserHandler.Command.LoginUser
     public class LoginUserCommandHandler(
         IAppUserManager userManager,
         IUserTokenMangerService userTokenManger,
-        ILocalizationService localization)
+        ILocalizationService localization,
+        ITenantService tenantService)
         
     {
         public async Task<LoginDto> Handle(LoginUserCommand request, CancellationToken cancellationToken)
@@ -25,7 +26,7 @@ namespace CustomersTask4.UserHandler.Command.LoginUser
                 throw new NotFoundException(localization.Localize("Invalid Email Or Password"));
 
             var roles = await userManager.GetRolesAsync(user);
-            var accessToken = userTokenManger.GenerateJwtToken(user, roles);
+            var accessToken = userTokenManger.GenerateJwtToken(user, roles,tenantService.GetCurrentTenant().TenantId);
             var refreshToken = userTokenManger.GenerateRefreshToken();
 
             user.RefreshToken = refreshToken;
