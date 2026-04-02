@@ -6,15 +6,14 @@ using CustomersTask4.IServiceExtentions;
 using CustomersTask4.Mapping;
 using CustomersTask4.Middleware;
 using CustomersTask4.Services;
-using CustomersTask4.Setting;
 using CustomersTask4.Users;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using MapsterMapper;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using MongoDB.Driver;
 using QuestPDF.Infrastructure;
@@ -23,11 +22,7 @@ using Wolverine;
 
 var builder = WebApplication.CreateBuilder(args);
 
-//MultiTenancy
-builder.Services.Configure<TenantSetting>(
-    builder.Configuration.GetSection("TenantSetting"));
-TenantSetting options=new();
-builder.Configuration.GetSection("TenantSetting").Bind(options);
+
 
 
 builder.AddServiceDefaults();
@@ -98,34 +93,26 @@ builder.Services.AddOpenApi(options =>
 
         return Task.CompletedTask;
     });
-});
-
-builder.Services.AddScoped<ITenantService, TenantService>();
-builder.Services.AddHttpContextAccessor();
-
-
-var defualProvider =options.Defaults.DBProvider;
-if (defualProvider.ToLower() == "sql")
-{
-    builder.Services.AddDbContext<ApplicationDbContext>(m => m.UseSqlServer());
-}
-    foreach (var tenant in options.Tenants)
+    //add tenant header to all endpoints in swagger.
+    options.AddOperationTransformer((operation, context, ct) =>
     {
-        var connectionString = tenant.ConnectionString ?? options.Defaults.ConnectionString;
+        operation.Parameters ??= new List<OpenApiParameter>();
 
-        using var scoped = builder.Services.BuildServiceProvider().CreateScope();
-        var dbcontext = scoped.ServiceProvider.GetService<ApplicationDbContext>();
-
-        dbcontext?.Database.SetConnectionString(connectionString);
-        if (dbcontext.Database.GetPendingMigrations().Any())
+        operation.Parameters.Add(new OpenApiParameter
         {
-            dbcontext.Database.Migrate();
-        }
-    }
+            Name = "tenant",
+            In = ParameterLocation.Header,
+            Required = true,
+            Schema = new OpenApiSchema
+            {
+                Type = "string",
+                Default = new OpenApiString("SharedTenant")
+            }
+        });
 
-
-
-
+        return Task.CompletedTask;
+    });
+});
 
 
 
@@ -169,7 +156,7 @@ builder.Services.AddIdentityCore<User>(options =>
 
 
 
-
+builder.Services.AddMultiTenancy(builder.Configuration);
 builder.AddQuartzConfig();
 builder.AddWolverineConfig();
 builder.AddRateLimiting();

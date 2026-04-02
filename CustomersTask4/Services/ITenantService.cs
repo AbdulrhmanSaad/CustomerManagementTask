@@ -7,5 +7,6 @@ namespace CustomersTask4.Services
         string? GetDatabaseProvider();
         string? GetConnectionString();
         Tenant? GetCurrentTenant();
+        void SetCurrentTenant(string tenantId);
     }
 }
