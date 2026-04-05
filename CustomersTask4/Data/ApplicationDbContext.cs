@@ -1,13 +1,8 @@
-﻿using Castle.Components.DictionaryAdapter.Xml;
-using Castle.Core.Resource;
-using CustomersTask4.Domain;
+﻿using CustomersTask4.Domain;
 using CustomersTask4.Services;
-using CustomersTask4.Users;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics.CodeAnalysis;
-using System.Security.AccessControl;
-using System.Text.Json;
 
 namespace CustomersTask4.Data
 {
@@ -70,7 +65,7 @@ namespace CustomersTask4.Data
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             foreach (var entry in ChangeTracker.Entries<IMustHaveTenant>()
-                .Where(e=>e.State==EntityState.Added))
+                .Where(e=>e.State==EntityState.Added||e.State==EntityState.Modified))
             {
                entry.Entity.TenantId = TenantId;
             }

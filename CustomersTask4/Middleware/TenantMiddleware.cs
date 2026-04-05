@@ -14,7 +14,7 @@ namespace CustomersTask4.Middleware
         }
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
-            if (context.Request.Path.StartsWithSegments("/openapi/v1.json", StringComparison.OrdinalIgnoreCase))
+            if (context.Request.Path.StartsWithSegments("/openapi", StringComparison.OrdinalIgnoreCase))
             {
                 await next(context);
                 return;
@@ -26,7 +26,6 @@ namespace CustomersTask4.Middleware
             else  
                 throw new Exception("No Tenant provided in the Request");
 
-            //if user is not authenticated, we will let the authorization middleware handle it, and we will not block the request here.
             if (tokenTenant == null) {
                 await next(context);
                 return;

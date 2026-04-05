@@ -17,6 +17,7 @@ namespace CustomersTask4.IServiceExtentions
             {
                  opt.GroupNameFormat = "'v'VVV";
                  opt.SubstituteApiVersionInUrl = true;
+                opt.DefaultApiVersion= new ApiVersion(1);
             });
         }
     }

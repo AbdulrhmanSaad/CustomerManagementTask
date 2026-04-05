@@ -16,6 +16,7 @@ public class LoginUserCommandHandlerTests
     private readonly IAppUserManager _userManager;
     private readonly IUserTokenMangerService _tokenService;
     private readonly ILocalizationService localization;
+    private readonly ITenantService tenantService;
     private readonly LoginUserCommandHandler _handler;
 
     public LoginUserCommandHandlerTests()
@@ -23,11 +24,13 @@ public class LoginUserCommandHandlerTests
         _userManager = Substitute.For<IAppUserManager>();
         _tokenService = Substitute.For<IUserTokenMangerService>();
         localization = Substitute.For<ILocalizationService>();
+        tenantService = Substitute.For<ITenantService>();
 
         _handler = new LoginUserCommandHandler(
             _userManager,
             _tokenService,
-            localization
+            localization,
+            tenantService
         );
     }
 
@@ -51,7 +54,7 @@ public class LoginUserCommandHandlerTests
 
         _userManager.GetRolesAsync(user).Returns(roles);
 
-        _tokenService.GenerateJwtToken(user, roles).Returns("access-token");
+        _tokenService.GenerateJwtToken(user, roles,"Tenant1").Returns("access-token");
         _tokenService.GenerateRefreshToken().Returns("refresh-token");
 
         // Act

@@ -13,6 +13,8 @@ public class RefreshTokenCommandHandlerTests
     private readonly IUserTokenMangerService _tokenService;
     private readonly ILocalizationService localize;
     private readonly RefreshTokenCommandHandler _handler;
+    private readonly ITenantService tenantService;
+
 
     public RefreshTokenCommandHandlerTests()
     {
@@ -21,8 +23,9 @@ public class RefreshTokenCommandHandlerTests
         localize = Substitute.For<ILocalizationService>();
 
         _tokenService = Substitute.For<IUserTokenMangerService>();
+        tenantService = Substitute.For<ITenantService>();
 
-        _handler = new RefreshTokenCommandHandler(_userManager, _tokenService,localize);
+        _handler = new RefreshTokenCommandHandler(_userManager, _tokenService,localize,tenantService);
     }
 
     [Fact]
@@ -53,7 +56,7 @@ public class RefreshTokenCommandHandlerTests
         var roles = new List<string> { "User" };
         _userManager.GetRolesAsync(user).Returns(roles);
 
-        _tokenService.GenerateJwtToken(user, roles).Returns("new-access-token");
+        _tokenService.GenerateJwtToken(user, roles,"Tenant1").Returns("new-access-token");
         _tokenService.GenerateRefreshToken().Returns("new-refresh-token");
         _userManager.UpdateAsync(user).Returns(Task.CompletedTask);
 

@@ -57,62 +57,8 @@ builder.Services.AddAuthentication(op =>
             IssuerSigningKey = secretKey,
         };
     });
-builder.Services.AddOpenApi("v2");
-builder.Services.AddOpenApi(options =>
-{
-    options.AddDocumentTransformer((document, context, ct) =>
-    {
-        document.Components ??= new OpenApiComponents();
-        document.Components.SecuritySchemes = new Dictionary<string, OpenApiSecurityScheme>
-        {
-            ["bearerAuth"] = new OpenApiSecurityScheme
-            {
-                Type = SecuritySchemeType.Http,
-                Scheme = "bearer",
-                BearerFormat = "JWT"
-            }
-        };
 
-        var securityRequirement = new OpenApiSecurityRequirement
-        {
-            {
-                new OpenApiSecurityScheme
-                {
-                    Reference = new OpenApiReference
-                    {
-                        Type = ReferenceType.SecurityScheme,
-                        Id = "bearerAuth"
-                    }
-                },
-                new List<string>()
-            }
-        };
-
-        document.SecurityRequirements ??= new List<OpenApiSecurityRequirement>();
-        document.SecurityRequirements.Add(securityRequirement);
-
-        return Task.CompletedTask;
-    });
-    //add tenant header to all endpoints in swagger.
-    options.AddOperationTransformer((operation, context, ct) =>
-    {
-        operation.Parameters ??= new List<OpenApiParameter>();
-
-        operation.Parameters.Add(new OpenApiParameter
-        {
-            Name = "tenant",
-            In = ParameterLocation.Header,
-            Required = true,
-            Schema = new OpenApiSchema
-            {
-                Type = "string",
-                Default = new OpenApiString("SharedTenant")
-            }
-        });
-
-        return Task.CompletedTask;
-    });
-});
+builder.Services.AddCustomOpenApi();
 
 
 
