@@ -6,6 +6,7 @@ using CustomersTask4.IServiceExtentions;
 using CustomersTask4.Mapping;
 using CustomersTask4.Middleware;
 using CustomersTask4.Services;
+using CustomersTask4.Services.Caching;
 using CustomersTask4.Users;
 using FluentValidation;
 using FluentValidation.AspNetCore;
@@ -59,21 +60,24 @@ builder.Services.AddAuthentication(op =>
     });
 
 builder.Services.AddCustomOpenApi();
-
-
-
-
-//builder.AddMongoDBClient("mongo-db");
-
-builder.Services.Configure<MongoDbSetting>(
-    builder.Configuration.GetSection("MongoDbSetting"));
-builder.Services.AddSingleton<IMongoClient>(sp =>
+builder.Services.AddStackExchangeRedisCache(options =>
 {
-    var s = builder.Configuration
-        .GetSection("MongoDbSetting")
-        .Get<MongoDbSetting>();
-    return new MongoClient(s?.ConnectionString);
+    options.Configuration = builder.Configuration.GetConnectionString("redis");
 });
+builder.Services.AddScoped<IRedisCachingService, RedisCachingService>();
+
+builder.AddRedisClient("redis");
+builder.AddMongoDBClient("mongo-db");
+
+//builder.Services.Configure<MongoDbSetting>(
+//    builder.Configuration.GetSection("MongoDbSetting"));
+//builder.Services.AddSingleton<IMongoClient>(sp =>
+//{
+//    var s = builder.Configuration
+//        .GetSection("MongoDbSetting")
+//        .Get<MongoDbSetting>();
+//    return new MongoClient(s?.ConnectionString);
+//});
 
 
 

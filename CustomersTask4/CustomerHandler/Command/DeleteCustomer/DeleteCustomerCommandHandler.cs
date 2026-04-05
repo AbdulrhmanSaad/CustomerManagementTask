@@ -5,6 +5,7 @@ using CustomersTask4.Hubs;
 using CustomersTask4.Messages;
 using CustomersTask4.Repository;
 using CustomersTask4.Services;
+using CustomersTask4.Services.Caching;
 using Microsoft.AspNetCore.SignalR;
 using System.Text.Json;
 using Wolverine;
@@ -17,7 +18,8 @@ namespace CustomersTask4.CustomerHandler.Command.DeleteCustomerCommand
         IConfiguration configuration,
         IHubContext<MessageHub> hubContext,
         IAppMeditor bus,
-        ILocalizationService localization)
+        ILocalizationService localization,
+        IRedisCachingService cachingService)
     {
         public async Task Handle(DeleteCustomerCommand request, CancellationToken cancellationToken)
         {
@@ -28,6 +30,7 @@ namespace CustomersTask4.CustomerHandler.Command.DeleteCustomerCommand
                 throw new NotFoundException(localization.Localize("CustomerNotFound",request.Id));
 
             await db.Delete(customer);
+            cachingService.RemoveData("customers");
 
             if (!configuration["DatabaseProvidor"]!.Equals("Mongo"))
             {

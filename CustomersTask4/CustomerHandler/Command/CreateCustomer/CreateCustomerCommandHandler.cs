@@ -5,6 +5,7 @@ using CustomersTask4.Hubs;
 using CustomersTask4.Messages;
 using CustomersTask4.Repository;
 using CustomersTask4.Services;
+using CustomersTask4.Services.Caching;
 using CustomersTask4.Users;
 using MapsterMapper;
 using Microsoft.AspNetCore.SignalR;
@@ -21,7 +22,8 @@ namespace CustomersTask4.CustomerHandler.Command.CreateCustomer
         IConfiguration configuration,
         IHubContext<MessageHub> hubContext,
         IAppMeditor bus,
-        ILocalizationService localization)
+        ILocalizationService localization,
+        IRedisCachingService cachingService)
     {
         public async Task Handle(CreateCustomerCommand request, CancellationToken cancellationToken)
         {
@@ -38,6 +40,7 @@ namespace CustomersTask4.CustomerHandler.Command.CreateCustomer
                 customer.CreatedBy = user.Name;
 
             await db.Add(customer);
+            cachingService.RemoveData("customers");
 
             if (!configuration["DatabaseProvidor"]!.Equals("Mongo"))
             {

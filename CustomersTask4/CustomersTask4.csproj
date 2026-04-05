@@ -15,6 +15,7 @@
     <PackageReference Include="Asp.Versioning.Mvc" Version="8.1.1" />
     <PackageReference Include="Asp.Versioning.Mvc.ApiExplorer" Version="8.1.1" />
     <PackageReference Include="Aspire.MongoDB.Driver" Version="9.5.2" />
+    <PackageReference Include="Aspire.StackExchange.Redis" Version="13.0.2" />
     <PackageReference Include="AspNetCore.Identity.MongoDbCore" Version="7.0.0" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.1" />
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1" />
@@ -30,6 +31,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="10.0.5" />
     <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks" Version="9.0.14" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.22.1-Preview.1" />
     <PackageReference Include="MongoDB.Driver" Version="3.6.0" />
@@ -39,6 +41,7 @@
     <PackageReference Include="Quartz.Extensions.Hosting" Version="3.16.0" />
     <PackageReference Include="QuestPDF" Version="2026.2.3" />
     <PackageReference Include="Serilog.AspNetCore" Version="9.0.0" />
+    <PackageReference Include="StackExchange.Redis" Version="2.12.14" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.6" />
     <PackageReference Include="WolverineFx" Version="5.18.0" />
     <PackageReference Include="WolverineFx.RabbitMQ" Version="5.18.0" />

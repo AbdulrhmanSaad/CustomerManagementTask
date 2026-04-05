@@ -13,12 +13,16 @@ var mongoDb = mongo.AddDatabase("CustomersManagmentsDb");
 var rabbitMq = builder.AddRabbitMQ("CustomersManagmentMq")
     .WithManagementPlugin();
 
+var redis = builder.AddRedis("redis");
+
+
 builder.AddProject<Projects.CustomersTask4>("customerstask4")
     .WaitFor(sqlDb)
     .WaitFor(mongo)
     .WithReference(sqlDb)
     .WithReference(mongoDb)  
     .WithReference(rabbitMq)
+    .WithReference(redis)
     .WithEnvironment("DatabaseProvidor", "Sql");
 
 builder.Build().Run();
