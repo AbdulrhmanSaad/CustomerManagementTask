@@ -1,4 +1,5 @@
 ﻿using CustomersTask4.Abstraction;
+using CustomersTask4.Data;
 using CustomersTask4.Domain;
 using CustomersTask4.Exceptions;
 using CustomersTask4.Hubs;
@@ -13,7 +14,8 @@ using Wolverine;
 namespace CustomersTask4.CustomerHandler.Command.DeleteCustomerCommand
 {
     public class DeleteCustomerCommandHandler(
-        IGenericRepository<Customer> db,
+        IGenericRepository<Customer> repository,
+        ApplicationDbContext db,
         ILogger<DeleteCustomerCommandHandler> logger,
         IConfiguration configuration,
         IHubContext<MessageHub> hubContext,
@@ -25,13 +27,14 @@ namespace CustomersTask4.CustomerHandler.Command.DeleteCustomerCommand
         {
             logger.LogInformation("Handling DeleteCustomerCommand for Customer Id: {CustomerId}", request.Id);
 
-            var customer = await db.GetByIdAsync(request.Id);
+            var customer = await repository.GetByIdAsync(request.Id);
             if (customer == null)
                 throw new NotFoundException(localization.Localize("CustomerNotFound",request.Id));
 
-            await db.Delete(customer);
-            cachingService.RemoveData("customers");
+            customer.IsDeleted=true;
+            db.SaveChanges();
 
+            //cachingService.RemoveData("customers");
             if (!configuration["DatabaseProvidor"]!.Equals("Mongo"))
             {
                 var obj = JsonSerializer.Serialize(customer);

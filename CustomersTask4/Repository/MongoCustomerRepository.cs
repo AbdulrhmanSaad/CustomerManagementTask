@@ -70,7 +70,7 @@ namespace CustomersTask4.Repository
 
         public async Task Delete(Customer entity)
         {
-            var existing = await _customers.Find(c => c.Id == entity.Id).FirstOrDefaultAsync();
+            Customer? existing =(Customer?) await _customers.Find(c => c.Id == entity.Id).FirstOrDefaultAsync();
             if (existing != null)
             {
                 await _history.InsertOneAsync(new CustomerHistoryDocument
@@ -80,9 +80,8 @@ namespace CustomersTask4.Repository
                     PeriodStart = existing.ChangedAt ?? existing.CreatedAt,
                     PeriodEnd = DateTime.UtcNow
                 });
+                existing.IsDeleted = true;
             }
-
-            await _customers.DeleteOneAsync(c => c.Id == entity.Id);
         }
 
         public List<Customer> GetAll(Expression<Func<Customer, bool>> filter = null,params Expression<Func<Customer, object>>[] includes)

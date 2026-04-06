@@ -48,13 +48,15 @@ namespace CustomersTask4.Data
 
             // Global Query Filter for multi-tenancy
             modelBuilder.Entity<Customer>()
-                .HasQueryFilter(c => c.TenantId == TenantId);
+                .HasQueryFilter(c => c.TenantId == TenantId && !c.IsDeleted);
 
             modelBuilder.Entity<User>()
               .HasQueryFilter(u => u.TenantId == TenantId);
 
             modelBuilder.Entity<Address>()
               .HasQueryFilter(a => a.TenantId == TenantId);
+
+ 
 
         }
         

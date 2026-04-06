@@ -34,12 +34,16 @@ namespace CustomersTask4.Consumers
             if (msg.Id is null) return;
 
             var collection = GetCollection();
-            var result = await collection.DeleteOneAsync(c => c.Id == msg.Id);
-
-            if (result.DeletedCount == 0)
+            Customer? result =(Customer?)collection.Find(c => c.Id == msg.Id);
+            if (result is null)
+            {
                 logger.LogWarning("CustomerDeletedMessage — customer id={Id} not found in MongoDB", msg.Id);
+            }
             else
+            {
+                result.IsDeleted = true;
                 logger.LogInformation("Customer {Id} deleted from MongoDB", msg.Id);
+            }
         }
 
         // UPDATE
