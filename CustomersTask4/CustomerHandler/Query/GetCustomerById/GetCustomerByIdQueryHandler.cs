@@ -20,7 +20,7 @@ namespace CustomersTask4.CustomerHandler.Query
         {
             logger.LogInformation($"Getting customer by id {request.id}");
             var customerFromCache = cachingService.GetData<CustomerDto>($"customer:{request.id}");
-            if(customerFromCache != null)
+            if (customerFromCache != null)
             {
                 logger.LogInformation($"Customer with id {request.id} found in cache");
                 return customerFromCache;

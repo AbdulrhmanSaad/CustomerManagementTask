@@ -34,7 +34,7 @@ namespace CustomersTask4.CustomerHandler.Command.DeleteCustomerCommand
             customer.IsDeleted=true;
             db.SaveChanges();
 
-            //cachingService.RemoveData("customers");
+            cachingService?.RemoveData("customers");
             if (!configuration["DatabaseProvidor"]!.Equals("Mongo"))
             {
                 var obj = JsonSerializer.Serialize(customer);

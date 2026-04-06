@@ -29,7 +29,7 @@ namespace CustomersTask4.CustomerHandler.Command.CreateCustomer
         {
             logger.LogInformation("Creating a new customer with Data: {Data}", request);
 
-            bool exist = db.PhoneExistsAsync(request.Phone);
+            bool exist =db.PhoneExistsAsync(request.Phone);
             if (exist)
                 throw new NotFoundException(localization.Localize("this phone number already exists"));
 
@@ -40,8 +40,15 @@ namespace CustomersTask4.CustomerHandler.Command.CreateCustomer
                 customer.CreatedBy = user.Name;
 
             await db.Add(customer);
-            cachingService.RemoveData("customers");
-
+            try
+            {
+                cachingService?.RemoveData("customers");
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Cache remove failed");
+                throw;
+            }
             if (!configuration["DatabaseProvidor"]!.Equals("Mongo"))
             {
                 var createdCustomer = mapper.Map<CustomerCreatedMessage>(customer);

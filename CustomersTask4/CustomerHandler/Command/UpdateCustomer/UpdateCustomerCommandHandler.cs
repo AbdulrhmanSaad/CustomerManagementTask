@@ -44,7 +44,7 @@ namespace CustomersTask4.CustomerHandler.Command.UpdateCustomer
             customer.ChangedAt = DateTime.UtcNow;
 
             await db.Update(customer);
-            cachingService.RemoveData("customers");
+            cachingService?.RemoveData("customers");
 
             if (!configuration["DatabaseProvidor"]!.Equals("Mongo"))
             {

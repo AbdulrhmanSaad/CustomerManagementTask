@@ -16,15 +16,16 @@ namespace CustomersTask4.CustomerHandler.Query.GetAllCustomers
         {
 
             logger.LogInformation("Get All Customer");
-            var customersFromCache=redis.GetData<IEnumerable<CustomerDto>>("customers");
+            var customersFromCache = redis.GetData<IEnumerable<CustomerDto>>("customers");
             if (customersFromCache is not null)
             {
                 logger.LogInformation("Get All Customer From Cache");
                 return customersFromCache;
             }
-            var customers=mapper.Map<IEnumerable<CustomerDto>>(repository.GetAll(includes: c=>c.Addresses));
-            redis.SetData("customers", customers);
-            return customers;
+            var customers = repository.GetAll(includes: c => c.Addresses);
+            var customersmaped=mapper.Map<IEnumerable<CustomerDto>>(customers);
+            redis.SetData("customers", customersmaped);
+            return customersmaped;
         }
     }
 }

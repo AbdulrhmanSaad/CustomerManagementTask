@@ -16,8 +16,8 @@ namespace CustomersTask4.CustomerHandler.Query.GetCustomerHistory
     {
         public async Task<IEnumerable<CustomerHistoryResponse>> Handle(GetCustomerHistoryQuery request, CancellationToken cancellationToken)
         {
-            var customrfromcache= cachingService.GetData<IEnumerable<CustomerHistoryResponse>>($"CustomerHistory_{request.CustomerId}");
-            if(customrfromcache != null)
+            var customrfromcache = cachingService.GetData<IEnumerable<CustomerHistoryResponse>>($"CustomerHistory_{request.CustomerId}");
+            if (customrfromcache != null)
             {
                 logger.LogInformation($"Customer history for customer id {request.CustomerId} retrieved from cache.");
                 return customrfromcache;

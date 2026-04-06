@@ -65,9 +65,9 @@ namespace CustomersTask4.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> AddCustomer(CreateCustomerCommand command)
         {
-            //await mediator.Send(command);
             await mediator.Send(command);
             return Ok(localization.Localize("Customer Added from version 1"));
         }
@@ -97,9 +97,9 @@ namespace CustomersTask4.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public async Task<ActionResult<CustomerHistoryResponse>> GetCustomerAddressHistory(string id)
+        public async Task<ActionResult<IEnumerable<AddressDto>>> GetCustomerAddressHistory(string id)
         {
-            var customer = await mediator.Send<CustomerHistoryResponse>(new GetCustomerAddressesHistoryQuery(id));
+            var customer = await mediator.Send<IEnumerable<AddressDto>>(new GetCustomerAddressesHistoryQuery(id));
             return Ok(customer);
         }
 

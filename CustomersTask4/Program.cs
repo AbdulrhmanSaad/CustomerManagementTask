@@ -67,17 +67,17 @@ builder.Services.AddStackExchangeRedisCache(options =>
 builder.Services.AddScoped<IRedisCachingService, RedisCachingService>();
 
 builder.AddRedisClient("redis");
-builder.AddMongoDBClient("mongo-db");
+//builder.AddMongoDBClient("mongo-db");
 
-//builder.Services.Configure<MongoDbSetting>(
-//    builder.Configuration.GetSection("MongoDbSetting"));
-//builder.Services.AddSingleton<IMongoClient>(sp =>
-//{
-//    var s = builder.Configuration
-//        .GetSection("MongoDbSetting")
-//        .Get<MongoDbSetting>();
-//    return new MongoClient(s?.ConnectionString);
-//});
+builder.Services.Configure<MongoDbSetting>(
+    builder.Configuration.GetSection("MongoDbSetting"));
+builder.Services.AddSingleton<IMongoClient>(sp =>
+{
+    var s = builder.Configuration
+        .GetSection("MongoDbSetting")
+        .Get<MongoDbSetting>();
+    return new MongoClient(s?.ConnectionString);
+});
 
 
 
@@ -174,7 +174,10 @@ app.UseSwaggerUI(options =>
 
 app.UseSerilogRequestLogging();
 app.UseHttpsRedirection();
-app.UseRateLimiter();
+if (!app.Environment.IsEnvironment("Testing"))
+{
+    app.UseRateLimiter();
+}
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseMiddleware<RequestLoggingMiddleware>();
