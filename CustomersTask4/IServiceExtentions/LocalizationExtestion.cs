@@ -6,7 +6,7 @@ namespace CustomersTask4.IServiceExtentions
     {
         public static void AddLocalization(this IApplicationBuilder app)
         {
-            var supportedCultures = new[] { "ar", "en", "ar-eg", "ar-sa" };
+            var supportedCultures = new[] { "en", "ar", "ar-eg", "ar-sa" };
             var localizationOptions = new RequestLocalizationOptions()
                 .SetDefaultCulture(supportedCultures[0])
                 .AddSupportedCultures(supportedCultures)

@@ -23,7 +23,7 @@ namespace CustomersTask4.DTO
         public string CreatedBy { get; set; }
         public DateTime ChangedAt { get; set; }
 
-        public string ChangedBy { get; set; }
+        public string? ChangedBy { get; set; }
     }
 
     public class AddressDtoEnum

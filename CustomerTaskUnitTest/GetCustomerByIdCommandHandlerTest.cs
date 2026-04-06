@@ -6,6 +6,7 @@ using CustomersTask4.DTO;
 using CustomersTask4.Exceptions;
 using CustomersTask4.Repository;
 using CustomersTask4.Services;
+using CustomersTask4.Services.Caching;
 using Mapster;
 using MapsterMapper;
 using Microsoft.Extensions.Logging;
@@ -22,15 +23,17 @@ namespace CustomerTaskUnitTest
             private readonly IMapper _mapper;
             private readonly ILocalizationService localization;
             private readonly GetCustomerByIdQueryHandler _handler;
+            private readonly IRedisCachingService cachingService;
 
-            public GetCustomerByIdCommandHandlerTest()
+        public GetCustomerByIdCommandHandlerTest()
             {
                 _repository = Substitute.For<IGenericRepository<Customer>>();
                 _logger = Substitute.For<ILogger<GetAllCustomerQueryHandler>>();
                 _mapper = Substitute.For<IMapper>();
                 localization = Substitute.For<ILocalizationService>();
+                cachingService = Substitute.For<IRedisCachingService>();
 
-                _handler = new GetCustomerByIdQueryHandler(_repository, _logger, _mapper,localization);
+                _handler = new GetCustomerByIdQueryHandler(_repository, _logger, _mapper,localization,cachingService);
             }
 
             [Fact]
@@ -101,7 +104,7 @@ namespace CustomerTaskUnitTest
                 var exception = await Assert.ThrowsAsync<NotFoundException>(
                     () => _handler.Handle(query, CancellationToken.None));
 
-                Assert.Equal($"Customer with id {customerId} not found.", exception.Message);
+                Assert.Equal(localization.Localize("Customer with id {0} not found.",customerId), exception.Message);
             }
 
            

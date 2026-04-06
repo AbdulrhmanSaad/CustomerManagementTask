@@ -3,18 +3,23 @@ using Castle.Core.Logging;
 using CustomersTask4.Abstraction;
 using CustomersTask4.CustomerHandler.Command.DeleteCustomerCommand;
 using CustomersTask4.CustomerHandler.Command.UpdateCustomer;
+using CustomersTask4.Data;
 using CustomersTask4.Domain;
 using CustomersTask4.Exceptions;
 using CustomersTask4.Hubs;
 using CustomersTask4.Repository;
 using CustomersTask4.Services;
+using CustomersTask4.Services.Caching;
+using CustomersTask4.Setting;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -25,10 +30,13 @@ namespace CustomerTaskUnitTest
         private readonly IGenericRepository<Customer> repository; 
         private readonly ILogger<DeleteCustomerCommandHandler> logger;
         private readonly DeleteCustomerCommandHandler _handler;
+        private readonly ApplicationDbContext db;
         private readonly IConfiguration configuration;
         private readonly IHubContext<MessageHub> hubContext;
         private readonly IAppMeditor bus;
         private readonly ILocalizationService localization;
+        private readonly IRedisCachingService cachingService;
+
 
 
         public DeleteCustomerCommandHandlerTest()
@@ -38,8 +46,25 @@ namespace CustomerTaskUnitTest
             hubContext = Substitute.For<IHubContext<MessageHub>>();
             bus = Substitute.For<IAppMeditor>();
             localization = Substitute.For<ILocalizationService>();
+            cachingService = Substitute.For<IRedisCachingService>();
             logger = Substitute.For<ILogger<DeleteCustomerCommandHandler>>();
-             _handler = new DeleteCustomerCommandHandler(repository, logger,configuration,hubContext,bus,localization);
+
+            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
+               .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
+               .Options;
+
+            var tenantService = Substitute.For<ITenantService>();
+            tenantService.GetCurrentTenant().Returns(new Tenant
+            {
+                TenantId = "Tenant1",
+                Name = "Tenant",
+                ConnectionString = ""
+            });
+
+            db = new ApplicationDbContext(options, tenantService);
+
+            _handler = new DeleteCustomerCommandHandler(repository,db, logger,configuration,hubContext,
+                 bus,localization,cachingService);
         }
         [Fact]
         public async Task Handler_ShouldDeleteCustomerSuccessfully()
@@ -55,13 +80,14 @@ namespace CustomerTaskUnitTest
                 CreatedBy = "admin"
             };
             repository.GetByIdAsync(command.Id).Returns(existingCustomer);
-            repository.Delete(existingCustomer).Returns(Task.CompletedTask);
+            existingCustomer.IsDeleted = true;
+            db.SaveChanges();
 
             //Act
              await _handler.Handle(command,CancellationToken.None);
 
             //assert
-            await repository.Received(1).Delete(Arg.Any<Customer>());
+            await repository.Received(1).GetByIdAsync(command.Id);
 
         }
 
@@ -79,7 +105,7 @@ namespace CustomerTaskUnitTest
                 CreatedBy = "admin"
             };
 
-            repository.GetByIdAsync(command.Id, Arg.Any<System.Linq.Expressions.Expression<System.Func<Customer, object>>>())
+            repository.GetByIdAsync(command.Id, Arg.Any<Expression<Func<Customer, object>>>())
                 .Returns(existingCustomer);
 
             // Act & Assert
@@ -87,7 +113,7 @@ namespace CustomerTaskUnitTest
                 () => _handler.Handle(command, CancellationToken.None)
             );
 
-            Assert.Equal($"Customer With Id={command.Id} not found", exception.Message);
+            Assert.Equal(localization.Localize("Customer With Id={0} not found",command.Id), exception.Message);
             await repository.DidNotReceive().Delete(Arg.Any<Customer>());
         }
 

@@ -1,6 +1,7 @@
 ﻿using CustomersTask4.Domain;
 using CustomersTask4.Exceptions;
 using CustomersTask4.Services;
+using CustomersTask4.Setting;
 using CustomersTask4.UserHandler.Command.RefreshToken;
 using NSubstitute;
 using System.Security.Claims;
@@ -55,7 +56,8 @@ public class RefreshTokenCommandHandlerTests
         _userManager.FindByEmailAsync("test@gmail.com").Returns(user);
         var roles = new List<string> { "User" };
         _userManager.GetRolesAsync(user).Returns(roles);
-
+        var tenant = new Tenant { TenantId = "Tenant1" };
+        tenantService.GetCurrentTenant().Returns(tenant);
         _tokenService.GenerateJwtToken(user, roles,"Tenant1").Returns("new-access-token");
         _tokenService.GenerateRefreshToken().Returns("new-refresh-token");
         _userManager.UpdateAsync(user).Returns(Task.CompletedTask);

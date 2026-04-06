@@ -1,12 +1,15 @@
 ﻿using CustomersTask4.Data;
 using CustomersTask4.Repository;
+using CustomersTask4.Services;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using Xunit;
 using System.Collections.Generic;
 using System.Linq;
 using CustomersTask4.Domain;
-
+using CustomersTask4.Setting;
+using NSubstitute;
+using Microsoft.Extensions.Options;
 
 namespace CustomersTaskUnitTest.UnitTesting
 {
@@ -18,7 +21,19 @@ namespace CustomersTaskUnitTest.UnitTesting
                 .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
                 .Options;
 
-            return new ApplicationDbContext(options,null);
+            // Create a mock ITenantService
+            var tenantService = Substitute.For<ITenantService>();
+            
+            // Mock the required methods
+            tenantService.GetConnectionString().Returns((string)null);
+            tenantService.GetDatabaseProvider().Returns("sql");
+            var tenant = new Tenant
+            {
+                TenantId = "Tenant1"
+            };
+            tenantService.GetCurrentTenant().Returns(tenant);
+
+            return new ApplicationDbContext(options, tenantService);
         }
 
         [Fact]
@@ -27,7 +42,7 @@ namespace CustomersTaskUnitTest.UnitTesting
             var context = GetDbContext();
             var repo = new GenericRepository<Customer>(context);
 
-            var entity = new Customer { Name = "Test", Phone = "123", CreatedBy="abdo@gmail.com" };
+            var entity = new Customer { Name = "Test", Phone = "123", CreatedBy = "abdo@gmail.com" };
 
             await repo.Add(entity);
 
@@ -53,6 +68,7 @@ namespace CustomersTaskUnitTest.UnitTesting
         public void GetAll_ShouldReturnAllEntities()
         {
             var context = GetDbContext();
+
             var repo = new GenericRepository<Customer>(context);
 
             context.AddRange(new List<Customer>
@@ -60,7 +76,7 @@ namespace CustomersTaskUnitTest.UnitTesting
             new Customer { Name = "Test", Phone = "123", CreatedBy="abdo@gmail.com" },
             new Customer { Name = "Test", Phone = "123", CreatedBy="abdo@gmail.com" }
         });
-            context.SaveChanges();
+            context.SaveChangesAsync();
 
             var result = repo.GetAll();
 
@@ -117,9 +133,10 @@ namespace CustomersTaskUnitTest.UnitTesting
         {
             var context = GetDbContext();
             var repo = new GenericRepository<Customer>(context);
+            var customer = new Customer { Name = "Test", Phone = "123", CreatedBy = "abdo@gmail.com" };
 
             context.Add(new Customer { Name = "Test", Phone = "123" , CreatedBy = "abdo@gmail.com" });
-            context.SaveChanges();
+            context.SaveChangesAsync();
 
             var result = repo.PhoneExistsAsync("123");
 

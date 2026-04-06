@@ -67,7 +67,7 @@ public class RegisterNewUserCommandHandlerTests
         var ex = await Assert.ThrowsAsync<NotFoundException>(() =>
             _handler.Handle(command, CancellationToken.None));
 
-        Assert.Equal("Username Already Exists", ex.Message);
+        Assert.Equal(localize.Localize("Username Already Exists"), ex.Message);
         await _userManager.DidNotReceive().CreateAsync(Arg.Any<User>(), command.Password);
         await _userManager.DidNotReceive().AddToRoleAsync(Arg.Any<User>(), Arg.Any<string>());
     }

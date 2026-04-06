@@ -6,6 +6,7 @@ using CustomersTask4.Exceptions;
 using CustomersTask4.Hubs;
 using CustomersTask4.Repository;
 using CustomersTask4.Services;
+using CustomersTask4.Services.Caching;
 using CustomersTask4.Users;
 using MapsterMapper;
 using MassTransit;
@@ -48,6 +49,8 @@ namespace CustomerTaskUnitTest
         private readonly IHubContext<MessageHub> hubContext;
         private readonly IAppMeditor bus;
         private readonly ILocalizationService localization;
+        private readonly IRedisCachingService cachingService;
+
 
         public CreateCustomerCommandTest()
         {
@@ -59,10 +62,11 @@ namespace CustomerTaskUnitTest
             hubContext = Substitute.For<IHubContext<MessageHub>>();
             bus = Substitute.For<IAppMeditor>();
             localization = Substitute.For<ILocalizationService>();
+            cachingService = Substitute.For<IRedisCachingService>();
 
             _handler =new CreateCustomerCommandHandler(repository,
                 logger,mapper, userContext,
-                configuration,hubContext,bus,localization);
+                configuration,hubContext,bus,localization,cachingService);
         }
         [Fact]
         public async Task Handle_WithDuplicatePhone_ShouldThrowNotFoundException()
@@ -75,7 +79,7 @@ namespace CustomerTaskUnitTest
             var ex = await Assert.ThrowsAsync<NotFoundException>(() =>
             _handler.Handle(command, CancellationToken.None));
 
-            Assert.Equal("this phone number already exists",localization.Localize(ex.Message));
+            Assert.Equal(localization.Localize("this phone number already exists"),ex.Message);
             await repository.DidNotReceive().Add(Arg.Any<Customer>());
         }
 

@@ -2,6 +2,7 @@
 using CustomersTask4.DTO;
 using CustomersTask4.Exceptions;
 using CustomersTask4.Services;
+using CustomersTask4.Setting;
 using CustomersTask4.UserHandler.Command.LoginUser;
 using Microsoft.AspNetCore.Identity;
 using NSubstitute;
@@ -53,7 +54,8 @@ public class LoginUserCommandHandlerTests
         _userManager.CheckPasswordAsync(user, command.Password).Returns(true);
 
         _userManager.GetRolesAsync(user).Returns(roles);
-
+        var tenant = new Tenant { TenantId = "Tenant1" };
+        tenantService.GetCurrentTenant().Returns(tenant);
         _tokenService.GenerateJwtToken(user, roles,"Tenant1").Returns("access-token");
         _tokenService.GenerateRefreshToken().Returns("refresh-token");
 

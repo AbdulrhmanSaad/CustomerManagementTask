@@ -1,9 +1,11 @@
-﻿using CustomersTask4.CustomerHandler.Query.GetCustomerHistory;
+﻿using Azure.Core;
+using CustomersTask4.CustomerHandler.Query.GetCustomerHistory;
 using CustomersTask4.Domain;
 using CustomersTask4.DTO;
 using CustomersTask4.Exceptions;
 using CustomersTask4.Repository;
 using CustomersTask4.Services;
+using CustomersTask4.Services.Caching;
 using MapsterMapper;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
@@ -17,15 +19,18 @@ namespace CustomerTaskUnitTest
             private readonly GetCustomerHistoryQueryHandler _handler;
             private readonly IMapper _mapper;
             private readonly ILocalizationService localization;
+            private readonly IRedisCachingService cachingService;
 
-            public GetCustomerHistoryQueryHandlerTest()
+
+        public GetCustomerHistoryQueryHandlerTest()
             {
                 _logger = Substitute.For<ILogger<GetCustomerHistoryQueryHandler>>();
                 _repository = Substitute.For<ICustomerHistoryRepository>();
                 _mapper = Substitute.For<IMapper>();
                 localization = Substitute.For<ILocalizationService>();
+                cachingService = Substitute.For<IRedisCachingService>();
 
-            _handler = new GetCustomerHistoryQueryHandler(_logger, _repository,_mapper,localization);
+            _handler = new GetCustomerHistoryQueryHandler(_logger, _repository,_mapper,localization,cachingService);
             }
 
             #region Success Cases
@@ -63,6 +68,7 @@ namespace CustomerTaskUnitTest
             _repository.GetAllCustomerHistory(customerId)
                     .Returns(historyRecords);
 
+
             _mapper.Map<IEnumerable<CustomerHistoryResponse>>(historyRecords)
                     .Returns(historyRecords.Select(c => new CustomerHistoryResponse
                     {
@@ -71,7 +77,9 @@ namespace CustomerTaskUnitTest
                         CreatedAt = c.CreatedAt,
                         CreatedBy = c.CreatedBy
                     }));
-            
+            cachingService.GetData<IEnumerable<CustomerHistoryResponse>>($"CustomerHistory_{customerId}")
+               .Returns(x => null);
+
             // Act
             var result = await _handler.Handle(query, CancellationToken.None);
 
@@ -143,6 +151,8 @@ namespace CustomerTaskUnitTest
                         CreatedAt = c.CreatedAt,
                         CreatedBy = c.CreatedBy
                     }));
+            cachingService.GetData<IEnumerable<CustomerHistoryResponse>>($"CustomerHistory_{customerId}")
+               .Returns(x => null);
 
             // Act
             var result = await _handler.Handle(query, CancellationToken.None);
@@ -172,11 +182,15 @@ namespace CustomerTaskUnitTest
              _repository.GetByIdAsync(customerId)
                 .Returns((Customer)null);
 
+           cachingService.GetData<IEnumerable<CustomerHistoryResponse>>($"CustomerHistory_{customerId}")
+                .Returns(x=>null);
+
+
             // Act & Assert
             var exception = await Assert.ThrowsAsync<NotFoundException>(
                 () => _handler.Handle(query, CancellationToken.None));
 
-            Assert.Equal($"Customer with id {customerId} not found.", exception.Message);
+            Assert.Equal(localization.Localize("Customer with id {0} not found.",customerId), exception.Message);
             await _repository.DidNotReceive().GetAllCustomerHistory(Arg.Any<string>());
 
             }
