@@ -35,7 +35,7 @@ namespace CustomersTask4.Services.Caching
         }
         public void RemoveData(string key)
         {
-            _cache?.Remove(key);
+            //_cache?.Remove(key);
         }
     }
 }

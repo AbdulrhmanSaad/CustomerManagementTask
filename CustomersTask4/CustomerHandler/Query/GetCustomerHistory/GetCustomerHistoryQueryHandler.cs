@@ -4,6 +4,7 @@ using CustomersTask4.Repository;
 using CustomersTask4.Services;
 using CustomersTask4.Services.Caching;
 using MapsterMapper;
+using Microsoft.Extensions.Caching.Hybrid;
 
 namespace CustomersTask4.CustomerHandler.Query.GetCustomerHistory
 {
@@ -11,29 +12,28 @@ namespace CustomersTask4.CustomerHandler.Query.GetCustomerHistory
         ICustomerHistoryRepository repository,
         IMapper mapper,
         ILocalizationService localization,
-        IRedisCachingService cachingService
+        HybridCache cachingService
             ) 
     {
         public async Task<IEnumerable<CustomerHistoryResponse>> Handle(GetCustomerHistoryQuery request, CancellationToken cancellationToken)
         {
-            var customrfromcache = cachingService.GetData<IEnumerable<CustomerHistoryResponse>>($"CustomerHistory_{request.CustomerId}");
-            if (customrfromcache != null)
+            var caching = await cachingService.GetOrCreateAsync($"customer:{request.CustomerId} History", async ct =>
             {
-                logger.LogInformation($"Customer history for customer id {request.CustomerId} retrieved from cache.");
-                return customrfromcache;
-            }
-            var customer =await repository.GetByIdAsync(request.CustomerId);
 
-            if (customer == null)
-                throw new NotFoundException(localization.Localize($"Customer with id {request.CustomerId} not found."));
+                var customer = await repository.GetByIdAsync(request.CustomerId);
 
-            var CustomerUpdates=await repository.GetAllCustomerHistory(request.CustomerId);
+                if (customer == null)
+                    throw new NotFoundException(localization.Localize($"Customer with id {request.CustomerId} not found."));
+
+                var CustomerUpdates = await repository.GetAllCustomerHistory(request.CustomerId);
 
 
-            var res =mapper.Map<IEnumerable<CustomerHistoryResponse >>(CustomerUpdates);
-            cachingService.SetData($"CustomerHistory_{request.CustomerId}", res);
-
-            return res;
+                var res = mapper.Map<IEnumerable<CustomerHistoryResponse>>(CustomerUpdates);
+                logger.LogInformation("Getting Customer History for customer with id {CustomerId} from Database", request.CustomerId);
+                return res;
+            }, tags: ["GetCustomerTag"], cancellationToken: cancellationToken);
+            logger.LogInformation("Getting Customer History for customer with id {CustomerId} from caching", request.CustomerId);
+            return caching;
         }
     }
 }

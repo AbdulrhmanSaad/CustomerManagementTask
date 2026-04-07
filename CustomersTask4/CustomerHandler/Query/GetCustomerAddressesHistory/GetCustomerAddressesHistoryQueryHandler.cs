@@ -4,33 +4,34 @@ using CustomersTask4.Repository;
 using CustomersTask4.Services;
 using CustomersTask4.Services.Caching;
 using MapsterMapper;
+using Microsoft.Extensions.Caching.Hybrid;
 
 namespace CustomersTask4.CustomerHandler.Query.GetCustomerAddressesHistory
 {
     public class GetCustomerAddressesHistoryQueryHandler(ICustomerHistoryRepository repository,
         IMapper mapper,
+        ILogger<GetCustomerAddressesHistoryQueryHandler> logger,
         ILocalizationService localization,
-        IRedisCachingService cachingService)
+        HybridCache cachingService)
         
     {
         
         public async Task<IEnumerable<AddressDto>> Handle(GetCustomerAddressesHistoryQuery request, CancellationToken cancellationToken)
         {
-            var customerAddressesHistoryFromCache = cachingService.GetData<IEnumerable<AddressDto>>($"CustomerAddressesHistory_{request.CustomerId}");
-            if (customerAddressesHistoryFromCache != null)
+          var cachedCustomerAddress=await cachingService.GetOrCreateAsync($"customer:{request.CustomerId} Addresses History", async ct=>
             {
-                return customerAddressesHistoryFromCache;
-            }
-            var customer = await repository.GetByIdAsync(request.CustomerId);
-            if (customer == null)
-                throw new NotFoundException(localization.Localize($"Customer with id {request.CustomerId} not found."));
+                var customer =await repository.GetByIdAsync(request.CustomerId);
+                if (customer == null)
+                    throw new NotFoundException(localization.Localize($"Customer with id {request.CustomerId} not found."));
 
+                var CustomerUpdates = await repository.GetAllCustomerAddressHistory(request.CustomerId);
+                logger.LogInformation("Fetch customer Addresses History from Database");
+                return CustomerUpdates;
+            }, tags: ["GetCustomerTag"], cancellationToken: cancellationToken);
 
-            var CustomerUpdates = await repository.GetAllCustomerAddressHistory(request.CustomerId);
-
-            cachingService.SetData($"CustomerAddressesHistory_{request.CustomerId}", CustomerUpdates);
-
-            return CustomerUpdates;
+            logger.LogInformation("Fetch customer Addresses History from caching");
+            return cachedCustomerAddress;
+            
         }
 
    

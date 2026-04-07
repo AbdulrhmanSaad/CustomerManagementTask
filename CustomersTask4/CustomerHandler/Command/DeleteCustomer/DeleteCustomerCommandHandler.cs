@@ -8,6 +8,7 @@ using CustomersTask4.Repository;
 using CustomersTask4.Services;
 using CustomersTask4.Services.Caching;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Caching.Hybrid;
 using System.Text.Json;
 using Wolverine;
 
@@ -21,7 +22,7 @@ namespace CustomersTask4.CustomerHandler.Command.DeleteCustomerCommand
         IHubContext<MessageHub> hubContext,
         IAppMeditor bus,
         ILocalizationService localization,
-        IRedisCachingService cachingService)
+        HybridCache cachingService)
     {
         public async Task Handle(DeleteCustomerCommand request, CancellationToken cancellationToken)
         {
@@ -34,7 +35,8 @@ namespace CustomersTask4.CustomerHandler.Command.DeleteCustomerCommand
             customer.IsDeleted=true;
             db.SaveChanges();
 
-            cachingService?.RemoveData("customers");
+            await cachingService.RemoveByTagAsync("CustomerTag");
+
             if (!configuration["DatabaseProvidor"]!.Equals("Mongo"))
             {
                 var obj = JsonSerializer.Serialize(customer);

@@ -7,6 +7,7 @@ using CustomersTask4.Repository;
 using CustomersTask4.Services;
 using CustomersTask4.Services.Caching;
 using MapsterMapper;
+using Microsoft.Extensions.Caching.Hybrid;
 
 namespace CustomersTask4.CustomerHandler.Query
 {
@@ -14,27 +15,25 @@ namespace CustomersTask4.CustomerHandler.Query
         ILogger<GetAllCustomerQueryHandler>logger,
         IMapper mapper,
         ILocalizationService localization,
-        IRedisCachingService cachingService)
+        HybridCache cachingService)
     {
         public async Task<CustomerDto?> Handle(GetCustomerByIdQuery request, CancellationToken cancellationToken)
         {
             logger.LogInformation($"Getting customer by id {request.id}");
-            var customerFromCache = cachingService.GetData<CustomerDto>($"customer:{request.id}");
-            if (customerFromCache != null)
+            var caching=await cachingService.GetOrCreateAsync($"customer:{request.id}", async ct =>
             {
-                logger.LogInformation($"Customer with id {request.id} found in cache");
-                return customerFromCache;
-            }
-            var customer = await db.GetByIdAsync(request.id, c => c.Addresses);
+                var customer = await db.GetByIdAsync(request.id, c => c.Addresses);
 
-            if (customer == null)
-            {
-                throw new NotFoundException(localization.Localize($"Customer with id {request.id} not found."));
-            }
-            var customerDto = mapper.Map<CustomerDto>(customer);
-            cachingService.SetData($"customer:{request.id}", customerDto);
+                if (customer == null)
+                {
+                    throw new NotFoundException(localization.Localize($"Customer with id {request.id} not found."));
+                }
+                var customerDto = mapper.Map<CustomerDto>(customer);
+                return customerDto;
 
-            return customerDto;
+            }, tags: ["GetCustomerTag"],cancellationToken: cancellationToken);
+            logger.LogInformation($"Getting customer{request.id} from cache");
+            return caching;
         }
     }
 }

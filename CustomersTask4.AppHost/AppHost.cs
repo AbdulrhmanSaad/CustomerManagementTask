@@ -10,19 +10,27 @@ var builder = DistributedApplication.CreateBuilder(args);
 
 //var mongoDb = mongo.AddDatabase("CustomersManagmentsDb");
 
+
+var sqlDb = builder.AddConnectionString("DefaultConnection");
+var mongo = builder.AddConnectionString("mongoDb");
+
+
 var rabbitMq = builder.AddRabbitMQ("CustomersManagmentMq")
     .WithManagementPlugin();
 
-var redis = builder.AddRedis("redis");
+var redis = builder.AddRedis("redis",port:6379)
+    .WithDataVolume("redisData");
 
 
 builder.AddProject<Projects.CustomersTask4>("customerstask4")
     //.WaitFor(sqlDb)
     //.WaitFor(mongo)
-    //.WithReference(sqlDb)
-    //.WithReference(mongoDb)  
+    .WithReference(sqlDb)
+    .WithReference(mongo)
     .WithReference(rabbitMq)
     .WithReference(redis)
+    .WaitFor(redis)
+    .WaitFor(rabbitMq)
     .WithEnvironment("DatabaseProvidor", "Sql");
 
 builder.Build().Run();

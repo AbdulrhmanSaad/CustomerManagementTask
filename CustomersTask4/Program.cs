@@ -13,6 +13,7 @@ using FluentValidation.AspNetCore;
 using MapsterMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Hybrid;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
@@ -25,10 +26,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 
 
-
 builder.AddServiceDefaults();
 builder.Services.AddControllers();
 builder.Services.AddSignalR();
+builder.Services.AddMemoryCache();
+
 QuestPDF.Settings.License = LicenseType.Community;
 
 MapsterConfig.Register();
@@ -59,12 +61,28 @@ builder.Services.AddAuthentication(op =>
         };
     });
 
+builder.Services.AddHybridCache(opt =>
+{
+    opt.DefaultEntryOptions = new HybridCacheEntryOptions
+    {
+        Expiration = TimeSpan.FromMinutes(10),
+        LocalCacheExpiration = TimeSpan.FromSeconds(30)
+    };
+});
+
 builder.Services.AddCustomOpenApi();
 builder.Services.AddStackExchangeRedisCache(options =>
 {
     options.Configuration = builder.Configuration.GetConnectionString("redis");
 });
 builder.Services.AddScoped<IRedisCachingService, RedisCachingService>();
+
+builder.Services.AddDistributedSqlServerCache(option =>
+{
+    option.ConnectionString = builder.Configuration.GetConnectionString("sqlCach");
+    option.SchemaName="dbo";
+    option.TableName = "CachEntries";
+});
 
 builder.AddRedisClient("redis");
 //builder.AddMongoDBClient("mongo-db");

@@ -9,6 +9,7 @@ using CustomersTask4.Services.Caching;
 using CustomersTask4.Users;
 using MapsterMapper;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Caching.Hybrid;
 using System.Text.Json;
 using Wolverine;
 
@@ -23,7 +24,7 @@ namespace CustomersTask4.CustomerHandler.Command.UpdateCustomer
         IHubContext<MessageHub> hubContext,
         IAppMeditor bus,
         ILocalizationService localization,
-        IRedisCachingService cachingService)
+        HybridCache cachingService)
     {
         public async Task Handle(UpdateCustomerCommand request, CancellationToken cancellationToken)
         {
@@ -44,7 +45,7 @@ namespace CustomersTask4.CustomerHandler.Command.UpdateCustomer
             customer.ChangedAt = DateTime.UtcNow;
 
             await db.Update(customer);
-            cachingService?.RemoveData("customers");
+            await cachingService.RemoveByTagAsync("CustomerTag");
 
             if (!configuration["DatabaseProvidor"]!.Equals("Mongo"))
             {
