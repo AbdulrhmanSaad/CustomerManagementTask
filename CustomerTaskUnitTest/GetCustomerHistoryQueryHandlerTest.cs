@@ -7,6 +7,7 @@ using CustomersTask4.Repository;
 using CustomersTask4.Services;
 using CustomersTask4.Services.Caching;
 using MapsterMapper;
+using Microsoft.Extensions.Caching.Hybrid;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 
@@ -19,23 +20,41 @@ namespace CustomerTaskUnitTest
             private readonly GetCustomerHistoryQueryHandler _handler;
             private readonly IMapper _mapper;
             private readonly ILocalizationService localization;
-            private readonly IRedisCachingService cachingService;
+            private readonly HybridCache cachingService;
 
-
+         
         public GetCustomerHistoryQueryHandlerTest()
             {
                 _logger = Substitute.For<ILogger<GetCustomerHistoryQueryHandler>>();
                 _repository = Substitute.For<ICustomerHistoryRepository>();
                 _mapper = Substitute.For<IMapper>();
                 localization = Substitute.For<ILocalizationService>();
-                cachingService = Substitute.For<IRedisCachingService>();
+                cachingService = Substitute.For<HybridCache>();
 
             _handler = new GetCustomerHistoryQueryHandler(_logger, _repository,_mapper,localization,cachingService);
             }
 
-            #region Success Cases
+        private void MockHybridCaching()
+        {
+            cachingService
+            .GetOrCreateAsync(
+                Arg.Any<string>(),
+                Arg.Any<Func<CancellationToken, ValueTask<IEnumerable<CustomerHistoryResponse>>>>(),
+                Arg.Any<HybridCacheEntryOptions>(),
+                Arg.Any<IEnumerable<string>>(),
+                Arg.Any<CancellationToken>())
+            .Returns(callInfo =>
+            {
+                var factory = callInfo
+                    .ArgAt<Func<CancellationToken, ValueTask<IEnumerable<CustomerHistoryResponse>>>>(1);
+                return factory(CancellationToken.None);
+            });
 
-            [Fact]
+        }
+
+        #region Success Cases
+
+        [Fact]
             public async Task Handle_WithValidCustomerId_ShouldReturnCustomerHistory()
             {
                 // Arrange
@@ -77,8 +96,7 @@ namespace CustomerTaskUnitTest
                         CreatedAt = c.CreatedAt,
                         CreatedBy = c.CreatedBy
                     }));
-            cachingService.GetData<IEnumerable<CustomerHistoryResponse>>($"CustomerHistory_{customerId}")
-               .Returns(x => null);
+            MockHybridCaching();
 
             // Act
             var result = await _handler.Handle(query, CancellationToken.None);
@@ -151,11 +169,10 @@ namespace CustomerTaskUnitTest
                         CreatedAt = c.CreatedAt,
                         CreatedBy = c.CreatedBy
                     }));
-            cachingService.GetData<IEnumerable<CustomerHistoryResponse>>($"CustomerHistory_{customerId}")
-               .Returns(x => null);
+             MockHybridCaching();
 
-            // Act
-            var result = await _handler.Handle(query, CancellationToken.None);
+               // Act
+               var result = await _handler.Handle(query, CancellationToken.None);
 
                 // Assert
                 Assert.NotNull(result);
@@ -182,12 +199,10 @@ namespace CustomerTaskUnitTest
              _repository.GetByIdAsync(customerId)
                 .Returns((Customer)null);
 
-           cachingService.GetData<IEnumerable<CustomerHistoryResponse>>($"CustomerHistory_{customerId}")
-                .Returns(x=>null);
+            MockHybridCaching();
 
-
-            // Act & Assert
-            var exception = await Assert.ThrowsAsync<NotFoundException>(
+           // Act & Assert
+           var exception = await Assert.ThrowsAsync<NotFoundException>(
                 () => _handler.Handle(query, CancellationToken.None));
 
             Assert.Equal(localization.Localize("Customer with id {0} not found.",customerId), exception.Message);

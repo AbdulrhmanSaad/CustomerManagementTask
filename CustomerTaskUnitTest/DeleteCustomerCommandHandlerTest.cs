@@ -13,6 +13,7 @@ using CustomersTask4.Services.Caching;
 using CustomersTask4.Setting;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Hybrid;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
@@ -35,7 +36,7 @@ namespace CustomerTaskUnitTest
         private readonly IHubContext<MessageHub> hubContext;
         private readonly IAppMeditor bus;
         private readonly ILocalizationService localization;
-        private readonly IRedisCachingService cachingService;
+        private readonly HybridCache cachingService;
 
 
 
@@ -46,7 +47,7 @@ namespace CustomerTaskUnitTest
             hubContext = Substitute.For<IHubContext<MessageHub>>();
             bus = Substitute.For<IAppMeditor>();
             localization = Substitute.For<ILocalizationService>();
-            cachingService = Substitute.For<IRedisCachingService>();
+            cachingService = Substitute.For<HybridCache>();
             logger = Substitute.For<ILogger<DeleteCustomerCommandHandler>>();
 
             var options = new DbContextOptionsBuilder<ApplicationDbContext>()

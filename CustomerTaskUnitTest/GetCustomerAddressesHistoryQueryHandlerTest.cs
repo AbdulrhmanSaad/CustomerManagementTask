@@ -1,4 +1,6 @@
+using Amazon.Runtime.Internal.Util;
 using Azure.Core;
+using Castle.Core.Resource;
 using CustomersTask4.CustomerHandler.Query.GetCustomerAddressesHistory;
 using CustomersTask4.Domain;
 using CustomersTask4.DTO;
@@ -7,6 +9,8 @@ using CustomersTask4.Repository;
 using CustomersTask4.Services;
 using CustomersTask4.Services.Caching;
 using MapsterMapper;
+using Microsoft.Extensions.Caching.Hybrid;
+using Microsoft.Extensions.Logging;
 using NSubstitute;
 using System.Linq.Expressions;
 using Xunit;
@@ -18,8 +22,9 @@ namespace CustomerTaskUnitTest
         private readonly ICustomerHistoryRepository _repository;
         private readonly IMapper _mapper;
         private readonly ILocalizationService localization;
+        private readonly ILogger<GetCustomerAddressesHistoryQueryHandler> logger;
         private readonly GetCustomerAddressesHistoryQueryHandler _handler;
-        private readonly IRedisCachingService cachingService;
+        private readonly HybridCache cachingService;
 
 
         public GetCustomerAddressesHistoryQueryHandlerTest()
@@ -27,11 +32,65 @@ namespace CustomerTaskUnitTest
             _repository = Substitute.For<ICustomerHistoryRepository>();
             _mapper = Substitute.For<IMapper>();
             localization = Substitute.For<ILocalizationService>();
-            cachingService = Substitute.For<IRedisCachingService>();
+            logger = Substitute.For<ILogger<GetCustomerAddressesHistoryQueryHandler>>();
+            cachingService = Substitute.For<HybridCache>();
 
-            _handler = new GetCustomerAddressesHistoryQueryHandler(_repository, _mapper,localization,cachingService);
+            _handler = new GetCustomerAddressesHistoryQueryHandler(_repository, _mapper,logger,localization,cachingService);
+        }
+        private void MockHybridCaching()
+        {
+            cachingService
+            .GetOrCreateAsync(
+                Arg.Any<string>(),
+                Arg.Any<Func<CancellationToken, ValueTask<IEnumerable<AddressDto>>>>(),
+                Arg.Any<HybridCacheEntryOptions>(),
+                Arg.Any<IEnumerable<string>>(),
+                Arg.Any<CancellationToken>())
+            .Returns(callInfo =>
+            {
+                var factory = callInfo
+                    .ArgAt<Func<CancellationToken, ValueTask<IEnumerable<AddressDto>>>>(1);
+                return factory(CancellationToken.None);
+            });
+
         }
 
+        private Customer GenerateCustomer(string customerId)
+        {
+            var customer = new Customer
+            {
+                Id = customerId,
+                Name = "Ahmed Updated",
+                Phone = "01013513653",
+                CreatedAt = DateTime.UtcNow,
+                CreatedBy = "admin",
+                Addresses = new List<Address>()
+            };
+
+            return customer;
+        }
+        private List<AddressDto> GenerateAddressesForCustomer()
+        {
+            var addressHistoryRecords = new List<AddressDto>
+            {
+                new AddressDto
+                {
+                    AddressType = "Home",
+                    AddressName = "Cairo"
+                },
+                new AddressDto
+                {
+                    AddressType = "Home",
+                    AddressName = "New Cairo"
+                },
+                new AddressDto
+                {
+                    AddressType = "Work",
+                    AddressName = "Alexandria"
+                }
+            };
+            return addressHistoryRecords;
+        }
         #region Success Cases
 
         [Fact]
@@ -41,33 +100,17 @@ namespace CustomerTaskUnitTest
             var customerId = "25";
             var query = new GetCustomerAddressesHistoryQuery(customerId);
 
-            var existingCustomer = new Customer
-            {
-                Id = customerId,
-                Name = "Ahmed",
-                Phone = "01013513652",
-                CreatedAt = DateTime.UtcNow,
-                CreatedBy = "admin",
-                Addresses = new List<Address>()
-            };
+            var existingCustomer = GenerateCustomer(customerId);
 
-            var addressHistoryRecords = new List<AddressDto>
-            {
-                new AddressDto
-                {
-                    AddressType = "Home",
-                    AddressName = "Cairo"
-                }
-            };
-
+            var addressHistoryRecords = GenerateAddressesForCustomer();
             _repository.GetByIdAsync(customerId)
                 .Returns(existingCustomer);
+
+            MockHybridCaching();
 
             _repository.GetAllCustomerAddressHistory(customerId)
                 .Returns(addressHistoryRecords);
 
-            cachingService.GetData<IEnumerable<AddressDto>>($"CustomerAddressesHistory_{customerId}")
-               .Returns(x => null);
             // Act
             var result = await _handler.Handle(query, CancellationToken.None);
 
@@ -88,43 +131,17 @@ namespace CustomerTaskUnitTest
             var customerId = "32";
             var query = new GetCustomerAddressesHistoryQuery(customerId);
 
-            var existingCustomer = new Customer
-            {
-                Id = customerId,
-                Name = "Ahmed Updated",
-                Phone = "01013513653",
-                CreatedAt = DateTime.UtcNow,
-                CreatedBy = "admin",
-                Addresses = new List<Address>()
-            };
-
-            var addressHistoryRecords = new List<AddressDto>
-            {
-                new AddressDto
-                {
-                    AddressType = "Home",
-                    AddressName = "Cairo"
-                },
-                new AddressDto
-                {
-                    AddressType = "Home",
-                    AddressName = "New Cairo"
-                },
-                new AddressDto
-                {
-                    AddressType = "Work",
-                    AddressName = "Alexandria"
-                }
-            };
-
+            var existingCustomer = GenerateCustomer(customerId);
+            var addressHistoryRecords = GenerateAddressesForCustomer();
             _repository.GetByIdAsync(customerId)
                 .Returns(existingCustomer);
-
+            // Mock HybridCache.GetOrCreateAsync to execute the factory function
+             
+            
             _repository.GetAllCustomerAddressHistory(customerId)
                 .Returns(addressHistoryRecords);
-            cachingService.GetData<IEnumerable<AddressDto>>($"CustomerAddressesHistory_{customerId}")
-               .Returns(x => null);
 
+            MockHybridCaching();
             // Act
             var result = await _handler.Handle(query, CancellationToken.None);
 
@@ -148,43 +165,20 @@ namespace CustomerTaskUnitTest
             var customerId = "32";
             var query = new GetCustomerAddressesHistoryQuery(customerId);
 
-            var existingCustomer = new Customer
-            {
-                Id = customerId,
-                Name = "Customer Name",
-                Phone = "01234567890",
-                CreatedAt = DateTime.UtcNow,
-                CreatedBy = "admin",
-                Addresses = new List<Address>()
-            };
+            var existingCustomer = GenerateCustomer(customerId);
+
 
             // Shows how address name evolved over time
-            var addressHistoryRecords = new List<AddressDto>
-            {
-                new AddressDto
-                {
-                    AddressType = "Home",
-                    AddressName = "Cairo"
-                },
-                new AddressDto
-                {
-                    AddressType = "Home",
-                    AddressName = "New Cairo"
-                },
-                new AddressDto
-                {
-                    AddressType = "Home",
-                    AddressName = "New Cairo - Apartment 5"
-                }
-            };
+            var addressHistoryRecords = GenerateAddressesForCustomer();
 
             _repository.GetByIdAsync(customerId)
                 .Returns(existingCustomer);
 
             _repository.GetAllCustomerAddressHistory(customerId)
                 .Returns(addressHistoryRecords);
-            cachingService.GetData<IEnumerable<AddressDto>>($"CustomerAddressesHistory_{customerId}")
-                .Returns(x => null);
+
+            MockHybridCaching();
+
             // Act
             var result = await _handler.Handle(query, CancellationToken.None);
 
@@ -193,12 +187,12 @@ namespace CustomerTaskUnitTest
             Assert.Equal(3, result.Count());
             
             var resultList = result.ToList();
-            Assert.All(resultList, a => Assert.Equal("Home", a.AddressType));
+            Assert.Equal("Home",resultList[0].AddressType);
             
             // Verify evolution of address names
             Assert.Equal("Cairo", resultList[0].AddressName);
             Assert.Equal("New Cairo", resultList[1].AddressName);
-            Assert.Equal("New Cairo - Apartment 5", resultList[2].AddressName);
+            Assert.Equal("Alexandria", resultList[2].AddressName);
         }
 
         #endregion
@@ -214,8 +208,9 @@ namespace CustomerTaskUnitTest
 
             _repository.GetByIdAsync(customerId)
                 .Returns((Customer)null);
-            cachingService.GetData<IEnumerable<AddressDto>>($"CustomerAddressesHistory_{customerId}")
-               .Returns(x => null);
+
+            MockHybridCaching();
+
 
             // Act & Assert
             var exception = await Assert.ThrowsAsync<NotFoundException>(

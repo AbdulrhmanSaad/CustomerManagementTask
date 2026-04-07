@@ -9,6 +9,7 @@ using CustomersTask4.Services;
 using CustomersTask4.Services.Caching;
 using Mapster;
 using MapsterMapper;
+using Microsoft.Extensions.Caching.Hybrid;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using System.Linq.Expressions;
@@ -23,20 +24,38 @@ namespace CustomerTaskUnitTest
             private readonly IMapper _mapper;
             private readonly ILocalizationService localization;
             private readonly GetCustomerByIdQueryHandler _handler;
-            private readonly IRedisCachingService cachingService;
+            private readonly HybridCache cachingService;
 
         public GetCustomerByIdCommandHandlerTest()
-            {
+        {
                 _repository = Substitute.For<IGenericRepository<Customer>>();
                 _logger = Substitute.For<ILogger<GetAllCustomerQueryHandler>>();
                 _mapper = Substitute.For<IMapper>();
                 localization = Substitute.For<ILocalizationService>();
-                cachingService = Substitute.For<IRedisCachingService>();
+                cachingService = Substitute.For<HybridCache>();
 
                 _handler = new GetCustomerByIdQueryHandler(_repository, _logger, _mapper,localization,cachingService);
-            }
+        }
 
-            [Fact]
+        private void MockHybridCaching()
+        {
+            cachingService
+            .GetOrCreateAsync(
+                Arg.Any<string>(),
+                Arg.Any<Func<CancellationToken, ValueTask<CustomerDto>>>(),
+                Arg.Any<HybridCacheEntryOptions>(),
+                Arg.Any<IEnumerable<string>>(),
+                Arg.Any<CancellationToken>())
+            .Returns(callInfo =>
+            {
+                var factory = callInfo
+                    .ArgAt<Func<CancellationToken, ValueTask<CustomerDto>>>(1);
+                return factory(CancellationToken.None);
+            });
+
+        }
+
+        [Fact]
             public async Task Handle_WithValidCustomerId_ShouldReturnCustomerDto()
             {
                 // Arrange
@@ -70,16 +89,20 @@ namespace CustomerTaskUnitTest
                     new AddressDto { AddressName = "Cairo", AddressType = AddressType.Home.ToString() },
                     new AddressDto {AddressName = "Alex", AddressType = AddressType.Work.ToString() }
                 }
-            }; 
+            };
 
-                _repository.GetByIdAsync(customerId, Arg.Any<Expression<Func<Customer, object>>>())
+            
+            _repository.GetByIdAsync(customerId, Arg.Any<Expression<Func<Customer, object>>>())
                     .Returns(customer);
 
-                _mapper.Map<CustomerDto>(customer)
+           
+
+            _mapper.Map<CustomerDto>(customer)
                     .Returns(expectedDto);
 
-                // Act
-                var result = await _handler.Handle(query, CancellationToken.None);
+            MockHybridCaching();
+            // Act
+            var result = await _handler.Handle(query, CancellationToken.None);
 
                 // Assert
                 Assert.NotNull(result);
@@ -93,15 +116,18 @@ namespace CustomerTaskUnitTest
                 // Arrange
                 var customerId = "999";
                 var query = new GetCustomerByIdQuery(customerId);
-
-                _repository.GetByIdAsync(customerId, Arg.Any<Expression<Func<Customer, object>>>())
+            _repository.GetByIdAsync(customerId, Arg.Any<Expression<Func<Customer, object>>>())
                     .Returns((Customer)null);
 
-                _mapper.Map<CustomerDto>(Arg.Any<Customer>())
-                    .Returns((CustomerDto)null);
+               
 
-                // Act & Assert
-                var exception = await Assert.ThrowsAsync<NotFoundException>(
+              _mapper.Map<CustomerDto>(Arg.Any<Customer>())
+                     .Returns((CustomerDto)null);
+
+            MockHybridCaching();
+
+            // Act & Assert
+            var exception = await Assert.ThrowsAsync<NotFoundException>(
                     () => _handler.Handle(query, CancellationToken.None));
 
                 Assert.Equal(localization.Localize("Customer with id {0} not found.",customerId), exception.Message);

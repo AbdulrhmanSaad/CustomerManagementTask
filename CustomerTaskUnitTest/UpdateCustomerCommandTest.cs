@@ -10,6 +10,7 @@ using CustomersTask4.Services.Caching;
 using CustomersTask4.Users;
 using MapsterMapper;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Caching.Hybrid;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
@@ -30,7 +31,7 @@ namespace CustomerTaskUnitTest
         private readonly IHubContext<MessageHub> hubContext;
         private readonly IAppMeditor bus;
         private readonly ILocalizationService localize;
-        private readonly IRedisCachingService cachingService;
+        private readonly HybridCache cachingService;
 
 
         private static readonly UpdateCustomerCommand _validCommand = new()
@@ -63,7 +64,7 @@ namespace CustomerTaskUnitTest
             hubContext = Substitute.For<IHubContext<MessageHub>>();
             bus = Substitute.For<IAppMeditor>();
             localize = Substitute.For<ILocalizationService>();
-            cachingService = Substitute.For<IRedisCachingService>();
+            cachingService = Substitute.For<HybridCache>();
             _handler = new UpdateCustomerCommandHandler(_repository, _logger, _mapper,_userContext,
                 configuration,hubContext,bus,localize,cachingService);
         }

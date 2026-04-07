@@ -12,6 +12,7 @@ using MapsterMapper;
 using MassTransit;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Caching.Hybrid;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
@@ -49,7 +50,7 @@ namespace CustomerTaskUnitTest
         private readonly IHubContext<MessageHub> hubContext;
         private readonly IAppMeditor bus;
         private readonly ILocalizationService localization;
-        private readonly IRedisCachingService cachingService;
+        private readonly HybridCache cachingService;
 
 
         public CreateCustomerCommandTest()
@@ -62,9 +63,8 @@ namespace CustomerTaskUnitTest
             hubContext = Substitute.For<IHubContext<MessageHub>>();
             bus = Substitute.For<IAppMeditor>();
             localization = Substitute.For<ILocalizationService>();
-            cachingService = Substitute.For<IRedisCachingService>();
-
-            _handler =new CreateCustomerCommandHandler(repository,
+            cachingService = Substitute.For<HybridCache>();
+            _handler = new CreateCustomerCommandHandler(repository,
                 logger,mapper, userContext,
                 configuration,hubContext,bus,localization,cachingService);
         }
