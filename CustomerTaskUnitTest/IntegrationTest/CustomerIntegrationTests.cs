@@ -1,7 +1,8 @@
 using CustomersTask4;
+using CustomerTaskUnitTest.UnitTesting;
 using Microsoft.AspNetCore.Mvc.Testing;
 
-namespace CustomerTaskUnitTest.UnitTesting
+namespace CustomerTaskUnitTest.IntegrationTest
 {
     public class CustomerIntegrationTests : TestBase
     {

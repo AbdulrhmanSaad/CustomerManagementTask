@@ -13,7 +13,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
-namespace CustomerTaskUnitTest
+namespace CustomerTaskUnitTest.UnitTesting
 {
     public class GetAllCustomerCommandHandlerTest
     {

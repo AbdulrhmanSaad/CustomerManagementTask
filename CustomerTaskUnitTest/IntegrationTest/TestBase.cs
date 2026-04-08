@@ -1,10 +1,11 @@
 ﻿using CustomersTask4;
+using CustomerTaskUnitTest.UnitTesting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Caching.Hybrid;
 using NSubstitute;
 using System.Net.Http.Headers;
 
-namespace CustomerTaskUnitTest.UnitTesting
+namespace CustomerTaskUnitTest.IntegrationTest
 {
     public class TestBase(WebApplicationFactory<IAssmblyMarker> factory) : IClassFixture<WebApplicationFactory<IAssmblyMarker>>
     {

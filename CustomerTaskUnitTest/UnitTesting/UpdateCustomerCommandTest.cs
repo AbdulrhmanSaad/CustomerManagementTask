@@ -18,7 +18,7 @@ using NSubstitute.ExceptionExtensions;
 using System.Linq.Expressions;
 using Xunit;
 
-namespace CustomerTaskUnitTest
+namespace CustomerTaskUnitTest.UnitTesting
 {
     public class UpdateCustomerCommandTest
     {
@@ -134,7 +134,7 @@ namespace CustomerTaskUnitTest
                 Addresses = new List<Address>()
             };
 
-            _repository.GetByIdAsync(command.Id, Arg.Any<System.Linq.Expressions.Expression<System.Func<Customer, object>>>())
+            _repository.GetByIdAsync(command.Id, Arg.Any<Expression<Func<Customer, object>>>())
                 .Returns(existingCustomer);
 
             _repository.PhoneExistsAsync(command.Phone).Returns(false);
@@ -174,7 +174,7 @@ namespace CustomerTaskUnitTest
                 Addresses = addresses
             };
 
-            _repository.GetByIdAsync(command.Id, Arg.Any<System.Linq.Expressions.Expression<System.Func<Customer, object>>>())
+            _repository.GetByIdAsync(command.Id, Arg.Any<Expression<Func<Customer, object>>>())
                 .Returns(existingCustomer);
 
             _repository.PhoneExistsAsync(command.Phone).Returns(false);

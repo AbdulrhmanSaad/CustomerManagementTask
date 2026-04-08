@@ -19,7 +19,7 @@ using NSubstitute;
 using System;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
-namespace CustomerTaskUnitTest
+namespace CustomerTaskUnitTest.UnitTesting
 {
     public class CreateCustomerCommandTest
     {
@@ -58,7 +58,7 @@ namespace CustomerTaskUnitTest
             repository=Substitute.For<IGenericRepository<Customer>>();
             mapper=Substitute.For<IMapper>();
             logger = Substitute.For<ILogger<CreateCustomerCommandHandler>>();
-            userContext = Substitute.For<CustomersTask4.Users.IUserContext>();
+            userContext = Substitute.For<IUserContext>();
             configuration = Substitute.For<IConfiguration>();
             hubContext = Substitute.For<IHubContext<MessageHub>>();
             bus = Substitute.For<IAppMeditor>();

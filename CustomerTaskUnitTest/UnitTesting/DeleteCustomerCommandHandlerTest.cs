@@ -24,7 +24,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CustomerTaskUnitTest
+namespace CustomerTaskUnitTest.UnitTesting
 {
     public class DeleteCustomerCommandHandlerTest
     {

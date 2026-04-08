@@ -14,7 +14,7 @@ using NSubstitute;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace CustomersTask4.Tests.Controllers
+namespace CustomerTaskUnitTest.IntegrationTest
 {
     public class IdentityControllerTests
     {

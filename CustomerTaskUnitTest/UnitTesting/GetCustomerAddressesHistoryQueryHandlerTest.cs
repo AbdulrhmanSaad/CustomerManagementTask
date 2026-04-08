@@ -15,7 +15,7 @@ using NSubstitute;
 using System.Linq.Expressions;
 using Xunit;
 
-namespace CustomerTaskUnitTest
+namespace CustomerTaskUnitTest.UnitTesting
 {
     public class GetCustomerAddressesHistoryQueryHandlerTest
     {

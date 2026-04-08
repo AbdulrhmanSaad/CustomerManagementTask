@@ -15,7 +15,7 @@ using NSubstitute;
 using System.Linq.Expressions;
 
 
-namespace CustomerTaskUnitTest
+namespace CustomerTaskUnitTest.UnitTesting
 {
     public class GetCustomerByIdCommandHandlerTest
     {

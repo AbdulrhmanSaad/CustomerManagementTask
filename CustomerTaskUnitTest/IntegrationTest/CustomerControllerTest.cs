@@ -16,9 +16,9 @@ using Microsoft.Extensions.Logging;
 using NSubstitute;
 using Xunit;
 
-namespace CustomersTaskUnitTest.UnitTesting
+namespace CustomerTaskUnitTest.IntegrationTest
 {
-    public class CustomerControllerUnitTest
+    public class CustomerControllerTest
     {
         private readonly IAppMeditor _mediator;
         private readonly CustomerController _controller;
@@ -26,7 +26,7 @@ namespace CustomersTaskUnitTest.UnitTesting
         private readonly ILogger<CustomerController> logger;
         private readonly ILocalizationService localization;
 
-        public CustomerControllerUnitTest()
+        public CustomerControllerTest()
         {
             _mediator = Substitute.For<IAppMeditor>();
             scopeFactory = Substitute.For<IServiceScopeFactory>();

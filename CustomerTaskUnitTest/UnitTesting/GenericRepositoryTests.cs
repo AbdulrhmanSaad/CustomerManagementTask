@@ -11,7 +11,7 @@ using CustomersTask4.Setting;
 using NSubstitute;
 using Microsoft.Extensions.Options;
 
-namespace CustomersTaskUnitTest.UnitTesting
+namespace CustomerTaskUnitTest.UnitTesting
 {
     public class GenericRepositoryTests
     {
