@@ -2,7 +2,7 @@
 using CustomersTask4.Abstraction;
 using CustomersTask4.CustomerHandler.Command.CreateCustomer;
 using CustomersTask4.CustomerHandler.Command.DeleteCustomerCommand;
-using CustomersTask4.CustomerHandler.Command.MigrateToMongo;
+using CustomersTask4.CustomerHandler.Command.Migration;
 using CustomersTask4.CustomerHandler.Command.UpdateCustomer;
 using CustomersTask4.CustomerHandler.Query.GenerateCustomerPDF;
 using CustomersTask4.CustomerHandler.Query.GetAllCustomers;
@@ -120,7 +120,7 @@ namespace CustomersTask4.Controllers
         [Authorize(Roles = UserRoles.Admin)]
         [ProducesResponseType(StatusCodes.Status202Accepted)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public ActionResult Migrate(MigrateToMongoCommand request)
+        public ActionResult Migrate(MigrationCommand request)
         {
             {
                 _ = Task.Run(async () =>
@@ -131,7 +131,7 @@ namespace CustomersTask4.Controllers
                     try
                     {
                         logger.LogInformation("Background migration started");
-                        var result = await backgroundMediator.Send<MigrateToMongoResult>(request);
+                        var result = await backgroundMediator.Send<MigrationJobResult>(request);
                         logger.LogInformation(
                             "Background migration complete — Migrated: {Migrated}, Skipped: {Skipped}",
                             result.MigratedCount, result.SkippedCount);

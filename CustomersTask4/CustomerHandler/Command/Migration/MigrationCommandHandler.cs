@@ -1,20 +1,20 @@
 using CustomersTask4.Exceptions;
 using CustomersTask4.Services;
 
-namespace CustomersTask4.CustomerHandler.Command.MigrateToMongo
+namespace CustomersTask4.CustomerHandler.Command.Migration
 {
-    public class MigrateToMongoCommandHandler(IMigrateDatabases migratetoMongo)
+    public class MigrationCommandHandler(IMigrateDatabases migrate)
      
     {
-        public async Task<MigrateToMongoResult> Handle(
-            MigrateToMongoCommand request,
+        public async Task<MigrationJobResult> Handle(
+            MigrationCommand request,
             CancellationToken cancellationToken)
         {
             if (request.From.Equals("Sql",StringComparison.OrdinalIgnoreCase))
-                return await migratetoMongo.MigrateFromSqlToMongo();
+                return await migrate.MigrateFromSqlToMongo();
 
             else if (request.From.Equals("Mongo", StringComparison.OrdinalIgnoreCase))
-                return await migratetoMongo.MigrateFromMongoToSql();
+                return await migrate.MigrateFromMongoToSql();
 
             else
                 throw new NotFoundException("Invalid source database specified. Use 'Sql' or 'Mongo'.");

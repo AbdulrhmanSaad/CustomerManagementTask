@@ -1,4 +1,4 @@
-﻿using CustomersTask4.CustomerHandler.Command.MigrateToMongo;
+﻿using CustomersTask4.CustomerHandler.Command.Migration;
 using CustomersTask4.Data;
 using CustomersTask4.Domain;
 using Microsoft.EntityFrameworkCore;
@@ -9,8 +9,8 @@ namespace CustomersTask4.Services
 {
     public interface IMigrateDatabases
     {
-        Task<MigrateToMongoResult> MigrateFromSqlToMongo();
-        Task<MigrateToMongoResult> MigrateFromMongoToSql();
+        Task<MigrationJobResult> MigrateFromSqlToMongo();
+        Task<MigrationJobResult> MigrateFromMongoToSql();
     }
 
     public class MigrateToMongo : IMigrateDatabases
@@ -18,12 +18,12 @@ namespace CustomersTask4.Services
         private readonly ApplicationDbContext sqlDb;
         private readonly IMongoClient mongoClient;
         private readonly IOptions<MongoDbSetting> mongoSettings;
-        private readonly ILogger<MigrateToMongoCommandHandler> logger;
+        private readonly ILogger<MigrationCommandHandler> logger;
 
         public MigrateToMongo(ApplicationDbContext sqlDb,
         IMongoClient MongoClient,
         IOptions<MongoDbSetting> mongoSettings,
-        ILogger<MigrateToMongoCommandHandler> Logger)
+        ILogger<MigrationCommandHandler> Logger)
         {
             this.sqlDb = sqlDb;
             mongoClient = MongoClient;
@@ -31,7 +31,7 @@ namespace CustomersTask4.Services
             logger = Logger;
         }
 
-        public async Task<MigrateToMongoResult> MigrateFromMongoToSql()
+        public async Task<MigrationJobResult> MigrateFromMongoToSql()
         {
             var database = mongoClient.GetDatabase(mongoSettings.Value.DatabaseName);
             var CustomerCollection = database.GetCollection<Customer>("Customers");
@@ -114,7 +114,7 @@ namespace CustomersTask4.Services
                 "Migration complete — Migrated: {Migrated}, Skipped: {Skipped}",
                 migratedCount, skippedCount);
 
-            return new MigrateToMongoResult
+            return new MigrationJobResult
             {
                 MigratedCount = migratedCount,
                 SkippedCount = skippedCount
@@ -122,7 +122,7 @@ namespace CustomersTask4.Services
 
         }
 
-        public async Task<MigrateToMongoResult> MigrateFromSqlToMongo()
+        public async Task<MigrationJobResult> MigrateFromSqlToMongo()
         {
             var database = mongoClient.GetDatabase(mongoSettings.Value.DatabaseName);
             var mongoCollection = database.GetCollection<Customer>("Customers");
@@ -214,7 +214,7 @@ namespace CustomersTask4.Services
                 "Migration complete — Migrated: {Migrated}, Skipped: {Skipped}",
                 migratedCount, skippedCount);
 
-            return new MigrateToMongoResult
+            return new MigrationJobResult
             {
                 MigratedCount = migratedCount,
                 SkippedCount = skippedCount
