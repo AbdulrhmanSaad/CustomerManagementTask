@@ -66,6 +66,7 @@ namespace CustomersTask4.Services
                     CreatedBy = customer.CreatedBy,
                     ChangedAt = customer.ChangedAt,
                     ChangedBy = customer.ChangedBy,
+                    IsDeleted = customer.IsDeleted, 
                     Addresses = customer.Addresses
                         .Select(a => new Address
                         {
@@ -102,9 +103,10 @@ namespace CustomersTask4.Services
                     UserName = user.UserName,
                     RefreshToken = user.RefreshToken,
                     RefreshTokenExpiryTime = user.RefreshTokenExpiryTime,
+                    TenantId = user.TenantId
                 };
                 mongoUsers.Add(mongoUser);
-                logger.LogInformation("Migrated customer {Name}", mongoUser.UserName);
+                logger.LogInformation("Migrated User {Name}", mongoUser.UserName);
                 migratedCount++;
             }
             await sqlDb.Users.AddRangeAsync(Users);
@@ -129,11 +131,14 @@ namespace CustomersTask4.Services
             var mongoUsersCollection = database.GetCollection<MongoUser>("Users");
 
             var sqlCustomers = await sqlDb.Customers
-                .Include(c => c.Addresses)          
+                .Include(c => c.Addresses)
+                .IgnoreQueryFilters()
                 .AsNoTracking()
+                
                 .ToListAsync();
 
             var sqlUsers = await sqlDb.Users
+                .IgnoreQueryFilters()
                 .AsNoTracking()
                 .ToListAsync();
 
@@ -157,13 +162,15 @@ namespace CustomersTask4.Services
 
                 var mongoCustomer = new Customer
                 {
-                    Id = ObjectId.GenerateNewId().ToString(),
+                    Id = sqlCustomer.Id,
                     Name = sqlCustomer.Name,
                     Phone = sqlCustomer.Phone,
                     CreatedAt = sqlCustomer.CreatedAt,
                     CreatedBy = sqlCustomer.CreatedBy,
                     ChangedAt = sqlCustomer.ChangedAt,
                     ChangedBy = sqlCustomer.ChangedBy,
+                    TenantId = sqlCustomer.TenantId,
+                    IsDeleted = sqlCustomer.IsDeleted,
                     Addresses = sqlCustomer.Addresses
                         .Select(a => new Address
                         {
@@ -202,9 +209,10 @@ namespace CustomersTask4.Services
                     UserName = sqlUser.UserName,
                     RefreshToken = sqlUser.RefreshToken,
                     RefreshTokenExpiryTime = sqlUser.RefreshTokenExpiryTime,
+                    TenantId = sqlUser.TenantId
                 };
                 mongoUsers.Add(mongoUser);
-                logger.LogInformation("Migrated customer {Name}", mongoUser.UserName);
+                logger.LogInformation("Migrated User {Name}", mongoUser.UserName);
                 migratedCount++;
             }
             if(mongoUsers.Count > 0)

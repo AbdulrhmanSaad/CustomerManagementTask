@@ -11,10 +11,5 @@ namespace CustomersTask4.CustomerHandler.Command.UpdateCustomer
 
         public List<AddressDtoEnum> Addresses { get; set; } = new List<AddressDtoEnum>();
 
-        //public AddressType AddressType { get; set; }
-        //public string HomeAddressLocation { get; set; }
-        //public AddressType AddressType2 { get; set; }
-        //public string WorkAddressLocation { get; set; }
-
     }
 }
