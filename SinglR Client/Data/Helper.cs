@@ -44,7 +44,7 @@ namespace SinglR_Client.Data
             };
             try
             {
-                var loginResponse = await apiClient.LoginUserAsync(loginRequest);
+                var loginResponse = await apiClient.LoginUserAsync("1", "SharedTenant", loginRequest);
 
                 token = loginResponse.AccessToken;
 
