@@ -33,7 +33,7 @@ namespace CustomerTaskUnitTest.IntegrationTest
         [Fact]
         public async Task Register_ShouldReturnOk_WhenRequestIsValid()
         {
-            var command = new RegisterNewUserCommand();
+            var command = new CustomersTask4.UserHandler.Command.RegisterNewUserCommand();
             _localization.Localize("User registered successfully").Returns("User registered successfully");
 
             var result = await _controller.Register(command);

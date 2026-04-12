@@ -1,4 +1,5 @@
 ﻿using CustomersTask4;
+using CustomerTaskUnitTest.Client;
 using CustomerTaskUnitTest.UnitTesting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Caching.Hybrid;

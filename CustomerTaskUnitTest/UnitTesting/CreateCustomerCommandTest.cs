@@ -90,7 +90,7 @@ namespace CustomerTaskUnitTest.UnitTesting
             var NewCustomer = new CreateCustomerCommand
             {
                 Name = "updated now ",
-                Phone = "01213213665",
+                Phone = "01213213666",
                 Addresses = new List<AddressDtoEnum>()
             {
                 new AddressDtoEnum
@@ -105,7 +105,7 @@ namespace CustomerTaskUnitTest.UnitTesting
                 }
             }
             };
-            repository.PhoneExistsAsync(command.Phone).Returns(true);
+            repository.PhoneExistsAsync(command.Phone).Returns(false);
             mapper.Map<Customer>(NewCustomer).Returns(new Customer());
             repository.Add(Arg.Any<Customer>()).Returns(Task.CompletedTask);
 
