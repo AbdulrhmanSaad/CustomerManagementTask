@@ -11,6 +11,7 @@ using CustomersTask4.Users;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using MapsterMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Hybrid;
@@ -41,25 +42,17 @@ builder.Services.AddScoped<IUserTokenMangerService, UserTokenMangerService>();
 builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly)
     .AddFluentValidationAutoValidation();
 
-builder.Services.AddAuthentication(op =>
-    {
-        op.DefaultAuthenticateScheme = "token";
-        op.DefaultChallengeScheme = "token";
-        op.DefaultScheme = "token";
-    })
-    .AddJwtBearer("token", op =>
-    {
-        var secretKey = new SymmetricSecurityKey(
-            System.Text.Encoding.UTF8.GetBytes(builder.Configuration["ConnectionStrings:key"]!));
 
-        op.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateAudience = false,
-            ValidateIssuer = false,
-            ValidateIssuerSigningKey = true,
-            IssuerSigningKey = secretKey,
-        };
-    });
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+               .AddJwtBearer(options =>
+               {
+                   options.Authority = "https://localhost:7032";
+                   options.Audience = "resource-server"; // The audience you specified in the token
+                   options.TokenValidationParameters = new TokenValidationParameters
+                   {
+                       ValidateAudience = true
+                   };
+               });
 
 builder.Services.AddHybridCache(opt =>
 {

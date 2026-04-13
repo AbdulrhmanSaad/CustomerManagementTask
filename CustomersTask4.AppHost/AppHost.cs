@@ -33,4 +33,6 @@ builder.AddProject<Projects.CustomersTask4>("customerstask4")
     .WaitFor(rabbitMq)
     .WithEnvironment("DatabaseProvidor", "Sql");
 
+builder.AddProject<Projects.AuthServer>("authserver");
+
 builder.Build().Run();

@@ -1,5 +1,4 @@
-﻿
-<Project ToolsVersion="15.0" Sdk="Microsoft.Docker.Sdk">
+﻿<Project ToolsVersion="15.0" Sdk="Microsoft.Docker.Sdk">
   <PropertyGroup Label="Globals">
     <ProjectVersion>2.1</ProjectVersion>
     <DockerTargetOS>Linux</DockerTargetOS>
@@ -8,6 +7,7 @@
     <UserSecretsId>b28f59a5-ced1-4144-8659-7f3c6aa7926b</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
+    <None Include="AuthServer\Program.cs" />
     <None Include="docker-compose.override.yml">
       <DependentUpon>docker-compose.yml</DependentUpon>
     </None>
