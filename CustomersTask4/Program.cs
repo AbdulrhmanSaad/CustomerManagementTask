@@ -44,15 +44,15 @@ builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly)
 
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-               .AddJwtBearer(options =>
-               {
-                   options.Authority = "https://localhost:7032";
-                   options.Audience = "resource-server"; // The audience you specified in the token
-                   options.TokenValidationParameters = new TokenValidationParameters
-                   {
-                       ValidateAudience = true
-                   };
-               });
+    .AddJwtBearer(options =>
+    {
+        options.Authority = builder.Configuration.GetConnectionString("AuthURL");
+        options.Audience = "resource-server";
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateAudience = true
+        };
+        });
 
 builder.Services.AddHybridCache(opt =>
 {
