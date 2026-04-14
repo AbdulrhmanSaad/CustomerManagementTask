@@ -19,16 +19,19 @@ namespace CustomersTask4.Services
         private readonly IMongoClient mongoClient;
         private readonly IOptions<MongoDbSetting> mongoSettings;
         private readonly ILogger<MigrationCommandHandler> logger;
+        private readonly ITenantService tenantService;
 
         public MigrateToMongo(ApplicationDbContext sqlDb,
         IMongoClient MongoClient,
         IOptions<MongoDbSetting> mongoSettings,
-        ILogger<MigrationCommandHandler> Logger)
+        ILogger<MigrationCommandHandler> Logger,
+        ITenantService tenantService)
         {
             this.sqlDb = sqlDb;
             mongoClient = MongoClient;
             this.mongoSettings = mongoSettings;
             logger = Logger;
+            this.tenantService = tenantService;
         }
 
         public async Task<MigrationJobResult> MigrateFromMongoToSql()
@@ -39,10 +42,19 @@ namespace CustomersTask4.Services
             
             var mongoCustomers= CustomerCollection.Find(_ => true).ToList();
             var mongoUsers= UsersCollection.Find(_ => true).ToList();
+            var currentTenant=tenantService.GetCurrentTenant();
 
+            if (currentTenant == null)
+            {
+                logger.LogInformation("Tenant not set, defaulting to SharedTenant");
+                tenantService.SetCurrentTenant("SharedTenant");
+                currentTenant = tenantService.GetCurrentTenant();
+            }
+            var tenantId = currentTenant?.TenantId?? "SharedTenant";
             int migratedCount = 0;
             int skippedCount = 0;
             List<Customer> customers = new List<Customer>();
+
             foreach (var customer in mongoCustomers)
             {
                 var alreadyExists = await sqlDb.Customers
@@ -51,7 +63,7 @@ namespace CustomersTask4.Services
                 if (alreadyExists!=null)
                 {
                     logger.LogInformation(
-                        "Skipping customer {Phone} — already exists in MongoDB",
+                        "Skipping customer {Phone} — already exists in SqlDB",
                         customer.Phone);
                     skippedCount++;
                     continue;
@@ -86,17 +98,17 @@ namespace CustomersTask4.Services
             foreach (var user in mongoUsers)
             {
                 var alreadyExists = await sqlDb.Users
-                    .FirstOrDefaultAsync(m => m.Email == user.Email);
+                    .FirstOrDefaultAsync(m => m.Id == user.Id);
                 if (alreadyExists!=null)
                 {
                     logger.LogInformation(
-                        "Skipping User {Email} — already exists in MongoDB",
+                        "Skipping User {Email} — already exists in SqlDB",
                         user.Email);
                     skippedCount++;
                     continue;
                 }
 
-                var mongoUser = new MongoUser
+                var sqlUser = new User
                 {
                     Id = user.Id,
                     Email = user.Email,
@@ -105,8 +117,8 @@ namespace CustomersTask4.Services
                     RefreshTokenExpiryTime = user.RefreshTokenExpiryTime,
                     TenantId = user.TenantId
                 };
-                mongoUsers.Add(mongoUser);
-                logger.LogInformation("Migrated User {Name}", mongoUser.UserName);
+                Users.Add(sqlUser);
+                logger.LogInformation("Migrated User {Name}", sqlUser.UserName);
                 migratedCount++;
             }
             await sqlDb.Users.AddRangeAsync(Users);
