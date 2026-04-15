@@ -1,6 +1,7 @@
 ﻿using CustomersTask4.Exceptions;
 using CustomersTask4.Services;
 using CustomersTask4.Users;
+using Shared.Services;
 
 namespace CustomersTask4.UserHandler.Command
 {

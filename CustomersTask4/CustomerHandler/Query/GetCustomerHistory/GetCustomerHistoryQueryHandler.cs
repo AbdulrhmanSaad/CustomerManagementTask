@@ -1,10 +1,9 @@
 ﻿using CustomersTask4.DTO;
 using CustomersTask4.Exceptions;
 using CustomersTask4.Repository;
-using CustomersTask4.Services;
-using CustomersTask4.Services.Caching;
 using MapsterMapper;
 using Microsoft.Extensions.Caching.Hybrid;
+using Shared.Services;
 
 namespace CustomersTask4.CustomerHandler.Query.GetCustomerHistory
 {

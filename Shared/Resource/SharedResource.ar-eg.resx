@@ -118,84 +118,126 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Invalid Email Or Password" xml:space="preserve">
-    <value>Invalid Email Or Password</value>
+    <value>الايمل او الباسورد غير صحيح</value>
   </data>
   <data name="User registered successfully" xml:space="preserve">
-    <value>User registered successfully</value>
+    <value>تم تسجيل الدخول بنجاح</value>
+  </data>
+  <data name="User created successfully" xml:space="preserve">
+    <value>تم تسجيل المستخدم بنجاح</value>
   </data>
   <data name="Username Already Exists" xml:space="preserve">
-    <value>Username Already Exists</value>
+    <value>المستخدم موجود بالفعل</value>
   </data>
   <data name="this phone number already exists" xml:space="preserve">
-    <value>this phone number already exists</value>
+    <value>رقم التليفون مسجل من قبل</value>
   </data>
   <data name="CustomerNotFound" xml:space="preserve">
-    <value>Customer with ID {0} not found.</value>
+    <value>العميل ذو المعرف {0} غير موجود</value>
   </data>
   <data name="CustomerPhoneExist" xml:space="preserve">
-    <value>Customer with ID {0} not found.</value>
+    <value>رقم الهاتف :{0} موجود بالفعل</value>
   </data>
   <data name="User Not Found" xml:space="preserve">
-    <value>User Not Found</value>
+    <value>المستخدم غير موجود</value>
   </data>
   <data name="Role Not Found" xml:space="preserve">
-    <value>Role Not Found</value>
+    <value>هذه الصلاحيه غير موجوده</value>
   </data>
   <data name="Invalid access token" xml:space="preserve">
-    <value>Invalid access token</value>
+    <value>هذه التوكن غير صحيحه</value>
   </data>
   <data name="Invalid token claim" xml:space="preserve">
-    <value>Invalid token claim</value>
+    <value>البيانات غير صحيحه</value>
   </data>
   <data name="Invalid refresh token" xml:space="preserve">
-    <value>Invalid refresh token</value>
+    <value>هذه التوكن غير صالحه</value>
   </data>
   <data name="Refresh token has expired" xml:space="preserve">
-    <value>Refresh token has expired</value>
+    <value>هذه التوكن منتهية الصلاحية</value>
   </data>
   <data name="Customer Deleted Successfully" xml:space="preserve">
-    <value>Customer Deleted Successfully</value>
+    <value>تم حذف المستخدم بنجاح</value>
   </data>
   <data name="Customer Added from version 1" xml:space="preserve">
-    <value>Customer Added from version 1</value>
+    <value>تم اضافه المستخدم بنجاح 1</value>
   </data>
   <data name="Customer Updated" xml:space="preserve">
-    <value>Customer Updated</value>
+    <value>تم تعديل بيانات المستخدم</value>
   </data>
   <data name="Failed to generate report" xml:space="preserve">
-    <value>Failed to generate report</value>
+    <value>حدث خطأ اثناء انشاء الريبورت</value>
   </data>
   <data name="Migration started in background. Check logs for progress." xml:space="preserve">
-    <value>Migration started in background. Check logs for progress.</value>
+    <value>عمليه نقل البيانات تتم في الخلفيه </value>
   </data>
   <data name="Refresh token is required" xml:space="preserve">
-    <value>Refresh token is required</value>
+    <value>التوكن المتغيره مطلوبه</value>
   </data>
   <data name="Name must not exceed 100 characters." xml:space="preserve">
-    <value>Name must not exceed 100 characters.</value>
+    <value>اسم المستخدم لا يمكن ان يتعدي 100 حرف</value>
   </data>
   <data name="Invalid Egyptian phone number" xml:space="preserve">
-    <value>Invalid Egyptian phone number</value>
+    <value>رقم الهاتف غير مكتمل الشروط</value>
   </data>
   <data name="Addresses cannot be null." xml:space="preserve">
-    <value>At least one address is required.</value>
+    <value>لا بد من وجود عنوان واحد علي الاقل</value>
   </data>
   <data name="Maximum of 2 addresses allowed." xml:space="preserve">
-    <value>Maximum of 2 addresses allowed.</value>
+    <value>لا يمكن ان يكون هناك اكتر من عنوانين</value>
   </data>
   <data name="Cannot have duplicate address types. Each address must have a unique type." xml:space="preserve">
-    <value>Cannot have duplicate address types. Each address must have a unique type.</value>
+    <value>لا بد من وجود عنوانان واحد للمنزل والاخر للعمل</value>
   </data>
   <data name="Name is required." xml:space="preserve">
-    <value>Name is required.</value>
+    <value>الاسم مطلوب</value>
   </data>
   <data name="Address name/location is required." xml:space="preserve">
-    <value>Address name/location is required.</value>
+    <value>العنوان مطلوب</value>
   </data>
   <data name="Address name must not exceed 500 characters." xml:space="preserve">
-    <value>Address name must not exceed 500 characters.</value>
+    <value>العنوان لا يمكن ان يتعدي ال 500 حرف</value>
   </data>
   <data name="Address name must be at least 3 characters long." xml:space="preserve">
-    <value>Address name must be at least 3 characters long.</value>
+    <value>العنوان يجب ان يكون اكثر من ثلاثه حروف</value>
+  </data>
+  <data name="The OpenIddict request cannot be retrieved." xml:space="preserve">
+    <value>خطأ في معالجة الريكوست </value>
+  </data>
+  <data name="Invalid User Name OR Password" xml:space="preserve">
+    <value>الاسم او الباسورد الذي ادخلته غير صحيح</value>
+  </data>
+  <data name="Invalid tenant for the user:{0}" xml:space="preserve">
+    <value>بيانات هذا الشخص {0}لسيت متاحة</value>
+  </data>
+  <data name="unsupported_grant_type" xml:space="preserve">
+    <value>نوع الداتا الذي طلبته غير متاح</value>
+  </data>
+  <data name="Bad Request: Tenant header is missing" xml:space="preserve">
+    <value>طلب غير صالح: لم يتم إرسال TenantId</value>
+  </data>
+  <data name="Forbidden:Invalid User token or invalid tenant id." xml:space="preserve">
+    <value>ممنوع :التوكن غير متوافق مع الصلاحيات التي تطليها</value>
+  </data>
+  <data name="No Tenant provided in the Request" xml:space="preserve">
+    <value>لم يتم ارسال Tenant في الريكويست</value>
+  </data>
+  <data name="Email is required." xml:space="preserve">
+    <value>الايميل مطلوب</value>
+  </data>
+  <data name="Invalid email format." xml:space="preserve">
+    <value>الايميل غير متوافق</value>
+  </data>
+  <data name="User Name must be at least 3 characters." xml:space="preserve">
+    <value>الاسم يجب الا يقل عن ثلاثه احرف</value>
+  </data>
+  <data name="Password must be at least 8 characters." xml:space="preserve">
+    <value>الباسورد يجب الا يقل عن 8 احرف</value>
+  </data>
+  <data name="Password must contain at least one uppercase letter." xml:space="preserve">
+    <value>الباسورد يجب ان يحتوي علي حرف كبير علي الاقل</value>
+  </data>
+  <data name="Password must contain at least one number." xml:space="preserve">
+    <value>الباسورد يجب ان يحتوي علي رقم واحد علي الاقل</value>
   </data>
 </root>

@@ -53,6 +53,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CustomersTask4.ServiceDefaults\CustomersTask4.ServiceDefaults.csproj" />
+    <ProjectReference Include="..\Shared\Shared.csproj" />
   </ItemGroup>
 
 </Project>

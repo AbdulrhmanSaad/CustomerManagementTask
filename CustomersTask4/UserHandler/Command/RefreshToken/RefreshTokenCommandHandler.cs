@@ -1,6 +1,7 @@
 ﻿using CustomersTask4.DTO;
 using CustomersTask4.Exceptions;
 using CustomersTask4.Services;
+using Shared.Services;
 using System.Security.Claims;
 
 namespace CustomersTask4.UserHandler.Command.RefreshToken

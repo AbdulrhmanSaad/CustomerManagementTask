@@ -1,7 +1,6 @@
-﻿using CustomersTask4.Domain;
-using CustomersTask4.Exceptions;
+﻿using CustomersTask4.Exceptions;
 using CustomersTask4.Services;
-using Microsoft.AspNetCore.Identity;
+using Shared.Services;
 
 namespace CustomersTask4.UserHandler.Command.AssignUserRole
 {

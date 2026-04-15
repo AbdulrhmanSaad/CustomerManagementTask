@@ -10,13 +10,10 @@ using CustomersTask4.CustomerHandler.Query.GetCustomerAddressesHistory;
 using CustomersTask4.CustomerHandler.Query.GetCustomerById;
 using CustomersTask4.CustomerHandler.Query.GetCustomerHistory;
 using CustomersTask4.DTO;
-using CustomersTask4.Services;
 using CustomersTask4.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using NSwag.Annotations;
-using System.Threading.Tasks;
-using Wolverine;
+using Shared.Services;
 
 namespace CustomersTask4.Controllers
 {

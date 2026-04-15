@@ -1,7 +1,6 @@
 ﻿using Asp.Versioning;
 using CustomersTask4.Abstraction;
 using CustomersTask4.DTO;
-using CustomersTask4.Services;
 using CustomersTask4.UserHandler.Command;
 using CustomersTask4.UserHandler.Command.AssignUserRole;
 using CustomersTask4.UserHandler.Command.LoginUser;
@@ -10,6 +9,7 @@ using CustomersTask4.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
+using Shared.Services;
 
 namespace CustomersTask4.Controllers
 {

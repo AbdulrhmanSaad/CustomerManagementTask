@@ -4,12 +4,11 @@ using CustomersTask4.Exceptions;
 using CustomersTask4.Hubs;
 using CustomersTask4.Messages;
 using CustomersTask4.Repository;
-using CustomersTask4.Services;
-using CustomersTask4.Services.Caching;
 using CustomersTask4.Users;
 using MapsterMapper;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Caching.Hybrid;
+using Shared.Services;
 using System.Text.Json;
 using Wolverine;
 

@@ -1,4 +1,4 @@
-﻿namespace CustomersTask4.Resource
+﻿namespace Shared.Resource
 {
     public class SharedResource
     {

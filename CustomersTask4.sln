@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomersTask4.ServiceDefau
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthServer", "AuthServer\AuthServer.csproj", "{8C54B43A-B299-845E-30B8-D1618E507BD4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared", "Shared\Shared.csproj", "{A86AEA4A-1371-4008-8781-ED3015E9981C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{8C54B43A-B299-845E-30B8-D1618E507BD4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8C54B43A-B299-845E-30B8-D1618E507BD4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8C54B43A-B299-845E-30B8-D1618E507BD4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A86AEA4A-1371-4008-8781-ED3015E9981C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A86AEA4A-1371-4008-8781-ED3015E9981C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A86AEA4A-1371-4008-8781-ED3015E9981C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A86AEA4A-1371-4008-8781-ED3015E9981C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

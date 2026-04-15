@@ -123,6 +123,9 @@
   <data name="User registered successfully" xml:space="preserve">
     <value>تم تسجيل دخولكم بنجاح</value>
   </data>
+  <data name="User created successfully" xml:space="preserve">
+    <value>تم تسجيل دخولكم بنجاح</value>
+  </data>
   <data name="Username Already Exists" xml:space="preserve">
     <value>هذا المستخدم موجود بالفعل</value>
   </data>
@@ -197,5 +200,44 @@
   </data>
   <data name="Address name must be at least 3 characters long." xml:space="preserve">
     <value>العنوان يجب ان يكون اكثر من ثلاثه حروف</value>
+  </data>
+  <data name="The OpenIddict request cannot be retrieved." xml:space="preserve">
+    <value>خطأ في معالجة الريكوست </value>
+  </data>
+  <data name="Invalid User Name OR Password" xml:space="preserve">
+    <value>الاسم او الباسورد الذي ادخلته غير صحيح</value>
+  </data>
+  <data name="Invalid tenant for the user:{0}" xml:space="preserve">
+    <value>بيانات هذا الشخص {0}لسيت متاحة</value>
+  </data>
+  <data name="unsupported_grant_type" xml:space="preserve">
+    <value>نوع الداتا الذي طلبته غير متاح</value>
+  </data>
+  <data name="Bad Request: Tenant header is missing" xml:space="preserve">
+    <value>طلب غير صالح: لم يتم إرسال TenantId</value>
+  </data>
+  <data name="Forbidden:Invalid User token or invalid tenant id." xml:space="preserve">
+    <value>ممنوع :التوكن غير متوافق مع الصلاحيات التي تطليها</value>
+  </data>
+  <data name="No Tenant provided in the Request" xml:space="preserve">
+    <value>لم يتم ارسال Tenant في الريكويست</value>
+  </data>
+  <data name="Email is required." xml:space="preserve">
+    <value>الايميل مطلوب</value>
+  </data>
+  <data name="Invalid email format." xml:space="preserve">
+    <value>الايميل غير متوافق</value>
+  </data>
+  <data name="User Name must be at least 3 characters." xml:space="preserve">
+    <value>الاسم يجب الا يقل عن ثلاثه احرف</value>
+  </data>
+  <data name="Password must be at least 8 characters." xml:space="preserve">
+    <value>الباسورد يجب الا يقل عن 8 احرف</value>
+  </data>
+  <data name="Password must contain at least one uppercase letter." xml:space="preserve">
+    <value>الباسورد يجب ان يحتوي علي حرف كبير علي الاقل</value>
+  </data>
+  <data name="Password must contain at least one number." xml:space="preserve">
+    <value>الباسورد يجب ان يحتوي علي رقم واحد علي الاقل</value>
   </data>
 </root>

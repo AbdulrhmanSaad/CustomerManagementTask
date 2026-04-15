@@ -1,7 +1,6 @@
 ﻿using CustomersTask4.CustomerHandler.Command.UpdateCustomer;
-using CustomersTask4.Domain;
-using CustomersTask4.Services;
 using FluentValidation;
+using Shared.Services;
 
 namespace CustomersTask4.Validator
 {

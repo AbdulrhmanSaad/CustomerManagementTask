@@ -1,8 +1,6 @@
 ﻿using CustomersTask4.CustomerHandler.Command.CreateCustomer;
-using CustomersTask4.Domain;
-using CustomersTask4.DTO;
-using CustomersTask4.Services;
 using FluentValidation;
+using Shared.Services;
 
 namespace CustomersTask4.Validator
 {

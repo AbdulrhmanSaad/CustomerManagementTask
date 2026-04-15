@@ -16,11 +16,11 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Hybrid;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Any;
-using Microsoft.OpenApi.Models;
 using MongoDB.Driver;
 using QuestPDF.Infrastructure;
 using Serilog;
+using Shared.Services;
+using Shared.ServiceExtentions;
 using Wolverine;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -118,7 +118,7 @@ builder.Services.AddIdentityCore<User>(options =>
 
 
 builder.Services.AddMultiTenancy(builder.Configuration);
-builder.AddQuartzConfig();
+//builder.AddQuartzConfig();
 builder.AddWolverineConfig();
 builder.AddRateLimiting();
 builder.ApiVersioning();

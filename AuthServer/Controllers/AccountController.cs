@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using OpenIddict.Abstractions;
 using OpenIddict.Server.AspNetCore;
+using Shared.Services;
 using System.Security.Claims;
 using Wolverine;
 
@@ -18,7 +19,8 @@ namespace AuthServer.Controllers
     public class AccountController(UserManager<User> _userManager,
         SignInManager<User> _signInManager,
         ITenantService _tenantService,
-        IMessageBus _meditor) : ControllerBase
+        IMessageBus _meditor,
+        ILocalizationService localization) : ControllerBase
     {
         [HttpPost]
         [Route("register")]
@@ -30,7 +32,7 @@ namespace AuthServer.Controllers
             {
                 return BadRequest(result.Errors);
             }
-            return Ok("User created successfully!");
+            return Ok(localization.Localize("User created successfully"));
         }
 
 
@@ -39,18 +41,18 @@ namespace AuthServer.Controllers
         {
             var request = HttpContext.GetOpenIddictServerRequest();
             if (request == null)
-                throw new InvalidOperationException("The OpenIddict request cannot be retrieved.");
+                throw new InvalidOperationException(localization.Localize("The OpenIddict request cannot be retrieved."));
 
             if (request.IsPasswordGrantType())
             {
                 var user = await _userManager.FindByNameAsync(request.Username);
                 if (user == null || !await _userManager.CheckPasswordAsync(user, request.Password))
                 {
-                    return BadRequest("Invalid User Name OR Password");
+                    return BadRequest(localization.Localize("Invalid User Name OR Password"));
                 }
                 var currentTenant = _tenantService.GetCurrentTenant()!.TenantId;
                 if (currentTenant!=user.TenantId)
-                    return BadRequest($"Invalid tenant for the user:{request.Username}");
+                    return BadRequest(localization.Localize("Invalid tenant for the user:{0}", request.Username));
                 var principal = await CreatePrincipalAsync(user,currentTenant);
                 principal.SetScopes(request.GetScopes());
                 principal.SetResources("resource-server");
@@ -69,11 +71,11 @@ namespace AuthServer.Controllers
                 var user = await _userManager.GetUserAsync(result.Principal);
                 if (user == null || !await _signInManager.CanSignInAsync(user))
                 {
-                    return BadRequest("Invalid User Name OR Password");
+                    return BadRequest(localization.Localize("Invalid User Name OR Password"));
                 }
                 var currentTenant = _tenantService.GetCurrentTenant()!.TenantId;
                 if (currentTenant != user.TenantId)
-                    return BadRequest($"Invalid tenant for the user.");
+                    return BadRequest(localization.Localize($"Invalid tenant for the user:{0}", user.UserName));
                 var principal = await CreatePrincipalAsync(user,currentTenant);
                 principal.SetScopes(request.GetScopes());
                 principal.SetResources("resource-server");
@@ -85,7 +87,7 @@ namespace AuthServer.Controllers
                 return SignIn(principal, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
             }
 
-            return BadRequest(new { error = "unsupported_grant_type" });
+            return BadRequest(new { error = localization.Localize("unsupported_grant_type") });
         }
 
         private async Task<ClaimsPrincipal> CreatePrincipalAsync(User user,string tenantId)

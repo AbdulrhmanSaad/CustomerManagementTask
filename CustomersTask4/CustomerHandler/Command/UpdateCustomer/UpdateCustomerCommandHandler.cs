@@ -10,6 +10,7 @@ using CustomersTask4.Users;
 using MapsterMapper;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Caching.Hybrid;
+using Shared.Services;
 using System.Text.Json;
 using Wolverine;
 

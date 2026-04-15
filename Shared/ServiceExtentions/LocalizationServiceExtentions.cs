@@ -1,14 +1,17 @@
-﻿using Microsoft.AspNetCore.Localization;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Localization;
 
-namespace CustomersTask4.IServiceExtentions
+namespace Shared.ServiceExtentions
 {
-    public static class LocalizationExtestion
+    public static class LocalizationServiceExtentions
     {
         public static void AddLocalization(this IApplicationBuilder app)
         {
             var supportedCultures = new[] { "en", "ar", "ar-eg", "ar-sa" };
+            var defaultCulture = supportedCultures.FirstOrDefault() ?? "en";
+
             var localizationOptions = new RequestLocalizationOptions()
-                .SetDefaultCulture(supportedCultures[0])
+                .SetDefaultCulture(defaultCulture)
                 .AddSupportedCultures(supportedCultures)
                 .AddSupportedUICultures(supportedCultures);
             localizationOptions.RequestCultureProviders.Insert(0, new AcceptLanguageHeaderRequestCultureProvider());
