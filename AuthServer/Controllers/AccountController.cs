@@ -1,29 +1,28 @@
-﻿using AuthServer.Domain;
+﻿using AuthServer.DTO;
+using AuthServer.Handlers.PasswordGrand;
+using AuthServer.Handlers.RefreshTokenGrand;
 using AuthServer.Handlers.RegisterHandler;
 using AuthServer.ResultModle;
-using AuthServer.Services;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using OpenIddict.Abstractions;
 using OpenIddict.Server.AspNetCore;
 using Shared.Services;
-using System.Security.Claims;
 using Wolverine;
 
 namespace AuthServer.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AccountController(UserManager<User> _userManager,
-        SignInManager<User> _signInManager,
-        ITenantService _tenantService,
+    public class AccountController(
         IMessageBus _meditor,
         ILocalizationService localization) : ControllerBase
     {
         [HttpPost]
         [Route("register")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Register(RegisterUserCommand command)
         {
 
@@ -37,6 +36,8 @@ namespace AuthServer.Controllers
 
 
         [HttpPost("token"), IgnoreAntiforgeryToken]
+        [ProducesResponseType(typeof(TokenResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Exchange()
         {
             var request = HttpContext.GetOpenIddictServerRequest();
@@ -45,61 +46,39 @@ namespace AuthServer.Controllers
 
             if (request.IsPasswordGrantType())
             {
-                var user = await _userManager.FindByNameAsync(request.Username);
-                if (user == null || !await _userManager.CheckPasswordAsync(user, request.Password))
-                {
-                    return BadRequest(localization.Localize("Invalid User Name OR Password"));
-                }
-                var currentTenant = _tenantService.GetCurrentTenant()!.TenantId;
-                if (currentTenant!=user.TenantId)
-                    return BadRequest(localization.Localize("Invalid tenant for the user:{0}", request.Username));
-                var principal = await CreatePrincipalAsync(user,currentTenant);
-                principal.SetScopes(request.GetScopes());
-                principal.SetResources("resource-server");
-                principal.SetDestinations(claim => new[]
-                {
-                   OpenIddictConstants.Destinations.AccessToken,
-                   OpenIddictConstants.Destinations.IdentityToken
-                });
-                return SignIn(principal, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
+                var command = new PasswordGrantCommand {
+                 UserName = request.Username!,
+                 Password = request.Password!,
+                 Scopes = request.GetScopes()
+             };
+
+                var result = await _meditor.InvokeAsync<AuthResult>(command);
+
+                if (!result.IsSuccess)
+                    return BadRequest(result.ErrorMessage);
+
+                return SignIn(result.Principal!, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
             }
 
             if (request.IsRefreshTokenGrantType())
             {
-                var result = await HttpContext.AuthenticateAsync(OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
+                var authResult = await HttpContext.AuthenticateAsync(OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
 
-                var user = await _userManager.GetUserAsync(result.Principal);
-                if (user == null || !await _signInManager.CanSignInAsync(user))
+                var command = new RefreshTokenGrantCommand
                 {
-                    return BadRequest(localization.Localize("Invalid User Name OR Password"));
-                }
-                var currentTenant = _tenantService.GetCurrentTenant()!.TenantId;
-                if (currentTenant != user.TenantId)
-                    return BadRequest(localization.Localize($"Invalid tenant for the user:{0}", user.UserName));
-                var principal = await CreatePrincipalAsync(user,currentTenant);
-                principal.SetScopes(request.GetScopes());
-                principal.SetResources("resource-server");
-                principal.SetDestinations(claim => new[]
-                {
-                   OpenIddictConstants.Destinations.AccessToken,
-                   OpenIddictConstants.Destinations.IdentityToken
-                });
-                return SignIn(principal, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
+                    Principal = authResult.Principal!,
+                    Scopes = request.GetScopes()
+                };
+
+                var result = await _meditor.InvokeAsync<AuthResult>(command);
+
+                if (!result.IsSuccess)
+                    return BadRequest(result.ErrorMessage);
+
+                return SignIn(result.Principal!, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
             }
 
             return BadRequest(new { error = localization.Localize("unsupported_grant_type") });
         }
-
-        private async Task<ClaimsPrincipal> CreatePrincipalAsync(User user,string tenantId)
-        {
-            var principal = await _signInManager.CreateUserPrincipalAsync(user);
-
-            // Set user claims
-            var identity = (ClaimsIdentity)principal.Identity!;
-            identity.AddClaim(new Claim(OpenIddictConstants.Claims.Subject, user.Id));
-            identity.AddClaim(new Claim("tenant", tenantId));
-            return principal;
-        }
-
     }
 }
