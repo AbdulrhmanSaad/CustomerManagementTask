@@ -10,7 +10,7 @@ namespace AuthServer.Extentions
             {
                 options.AddFixedWindowLimiter("fixed", limiterOptions =>
                 {
-                    limiterOptions.PermitLimit = 1;
+                    limiterOptions.PermitLimit = 5;
                     limiterOptions.Window = TimeSpan.FromSeconds(60);
                     limiterOptions.QueueLimit = 0;
                 });

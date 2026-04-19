@@ -35,11 +35,10 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
-//if (!app.Environment.IsEnvironment("Testing"))
-//{
-//    app.UseHttpsRedirection();
-//}
-app.UseRateLimiter();
+if (!app.Environment.IsEnvironment("Testing"))
+{
+    app.UseRateLimiter();
+}
 app.AddLocalization();
 app.UseHttpsRedirection();
 app.UseCors("AllowSpecificOrigin");
