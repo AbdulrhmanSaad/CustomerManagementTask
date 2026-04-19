@@ -1,5 +1,9 @@
-﻿using CustomersTask4.NswagClient;
+﻿using AuthServer.DTO;
+using Azure.Core;
+using CustomersTask4.NswagClient;
+using JasperFx.MultiTenancy;
 using Microsoft.AspNetCore.DataProtection;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,54 +28,37 @@ namespace SinglR_Client.Data
 
 
             var json = File.ReadAllText("credentials.json");
-            var credsFromFile = JsonSerializer.Deserialize<Credentials>(json);
+            var credsFromFile = System.Text.Json.JsonSerializer.Deserialize<Credentials>(json);
 
             return new Credentials
             {
-                Email = protector.Unprotect(credsFromFile!.Email),
+                UserName = protector.Unprotect(credsFromFile!.UserName),
                 Password = protector.Unprotect(credsFromFile!.Password)
             };
 
         }
 
-        public static async Task<string?> Authenticate(string email, string pass, Client apiClient)
+        public static async Task<string?> Authenticate(string username, string password,string tenantId)
         {
-            string token = null;
-            var loginRequest = new LoginUserCommand
+            var client = new HttpClient { BaseAddress = new Uri("https://localhost:7032/") };
+            client.DefaultRequestHeaders.Add("tenant", tenantId);
+            var form = new FormUrlEncodedContent(new Dictionary<string, string>
             {
-                Email = email,
-                Password = pass
-            };
-            try
-            {
-                var loginResponse = await apiClient.LoginUserAsync("1", "SharedTenant", loginRequest);
+                ["grant_type"] = "password",
+                ["username"] = username,
+                ["password"] = password,
+                ["scope"] = "openid offline_access"
+            });
 
-                token = loginResponse.AccessToken;
+            var response = await client.PostAsync("api/Account/token", form);
+            var jsonContent = await response.Content.ReadAsStringAsync();
 
-                if (!string.IsNullOrEmpty(token))
-                {
-                    Console.WriteLine("Login successful.");
-                    return token;
-                }
-            }
-            catch (ApiException ex)
-            {
-                if (ex.StatusCode == 404)
-                {
-                    Console.WriteLine("Invalid Email Or Password");
-                }
-                else
-                {
-                    Console.WriteLine($"API Error: {ex.StatusCode}");
-                    Console.WriteLine(ex.Response);
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Unexpected error: {ex.Message}");
-            }
-            return null;
+            var tokenResponse = JsonConvert.DeserializeObject<TokenResponse>(jsonContent);
+
+            if (tokenResponse == null)
+                return null;
+
+            return tokenResponse?.access_token;
         }
-
     }
 }

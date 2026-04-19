@@ -14,15 +14,15 @@ using System.Text.Json;
 //var provider = DataProtectionProvider.Create(new DirectoryInfo(keyFolder));
 //var protector = provider.CreateProtector("credentials");
 
-//string emailPlain = "abdo@gmail.com";
-//string passwordPlain = "Test@12";
+//string userNamePlain = "abdo";
+//string passwordPlain = "Test@123";
 
-//string emailEncrypted = protector.Protect(emailPlain);
+//string UserNameEncrypted = protector.Protect(userNamePlain);
 //string passwordEncrypted = protector.Protect(passwordPlain);
 
 //var credentials = new Credentials
 //{
-//    Email = emailEncrypted,
+//    UserName = UserNameEncrypted,
 //    Password = passwordEncrypted
 //};
 
@@ -31,16 +31,14 @@ using System.Text.Json;
 var credentials = Helper.GetLoginDataFromDataProtection();
 
 
-if (string.IsNullOrEmpty(credentials.Email) || string.IsNullOrEmpty(credentials.Password))
+if (string.IsNullOrEmpty(credentials.UserName) || string.IsNullOrEmpty(credentials.Password))
 {
     Console.WriteLine("Error in Reading Email and Password.");
     return;
 }
 
-var httpClient = new HttpClient();
-var apiClient = new Client(httpClient);
-
-var token = await Helper.Authenticate(credentials.Email, credentials.Password, apiClient);
+var tenantId= "SharedTenant";
+var token = await Helper.Authenticate(credentials.UserName, credentials.Password,tenantId);
 
 if (string.IsNullOrEmpty(token))
 {
