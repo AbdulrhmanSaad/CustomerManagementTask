@@ -59,30 +59,7 @@ builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly)
             }
         });
 
-builder.Services.AddHybridCache(opt =>
-{
-    opt.DefaultEntryOptions = new HybridCacheEntryOptions
-    {
-        Expiration = TimeSpan.FromMinutes(10),
-        LocalCacheExpiration = TimeSpan.FromSeconds(30)
-    };
-});
 
-builder.Services.AddCustomOpenApi();
-builder.Services.AddStackExchangeRedisCache(options =>
-{
-    options.Configuration = builder.Configuration["ConnectionString:redis"];
-});
-builder.Services.AddScoped<IRedisCachingService, RedisCachingService>();
-
-builder.Services.AddDistributedSqlServerCache(option =>
-{
-    option.ConnectionString = builder.Configuration["ConnectionString:sqlCach"];
-    option.SchemaName = "dbo";
-    option.TableName = "CachEntries";
-});
-
-builder.AddRedisClient("redis");
 //builder.AddMongoDBClient("mongo-db");
 
 builder.Services.Configure<MongoDbSetting>(
@@ -94,10 +71,11 @@ builder.Services.AddSingleton<IMongoClient>(sp =>
         .Get<MongoDbSetting>();
     return new MongoClient(s?.ConnectionString);
 });
-
-
-
-
+if (!builder.Environment.Equals("Testing"))
+{
+    builder.AddCaching();
+}
+builder.Services.AddCustomOpenApi();
 builder.Services.AddLocalization(opt => { opt.ResourcesPath = "Resource"; });
 builder.Services.AddScoped<IAppMeditor, AppMediator>();
 builder.Services.AddScoped<RequestLoggingMiddleware>();
@@ -190,15 +168,11 @@ app.UseSwaggerUI(options =>
 
 app.UseSerilogRequestLogging();
 
-// Skip HTTPS redirection in testing
 if (!app.Environment.IsEnvironment("Testing"))
 {
     app.UseHttpsRedirection();
-}
-
-if (!app.Environment.IsEnvironment("Testing"))
-{
     app.UseRateLimiter();
+
 }
 app.UseAuthentication();
 app.UseAuthorization();
