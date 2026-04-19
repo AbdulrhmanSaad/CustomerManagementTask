@@ -14,6 +14,7 @@ namespace CustomersTask4.IServiceExtentions
         {
             builder.Host.UseWolverine(opts =>
             {
+                opts.Discovery.IncludeAssembly(typeof(Program).Assembly);
                 //opts.UseRabbitMq("amqp://localhost")
                 //    .AutoProvision()
                 //    .UseConventionalRouting();

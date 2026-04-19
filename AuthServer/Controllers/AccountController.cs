@@ -6,6 +6,7 @@ using AuthServer.ResultModle;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using OpenIddict.Abstractions;
 using OpenIddict.Server.AspNetCore;
 using Shared.Services;
@@ -15,6 +16,7 @@ namespace AuthServer.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [EnableRateLimiting("fixed")]
     public class AccountController(
         IMessageBus _meditor,
         ILocalizationService localization) : ControllerBase
@@ -22,7 +24,6 @@ namespace AuthServer.Controllers
         [HttpPost]
         [Route("register")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Register(RegisterUserCommand command)
         {
 

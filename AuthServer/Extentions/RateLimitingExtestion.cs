@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.RateLimiting;
 
-namespace CustomersTask4.IServiceExtentions
+namespace AuthServer.Extentions
 {
     public static class RateLimitingExtestion
     {
@@ -10,8 +10,8 @@ namespace CustomersTask4.IServiceExtentions
             {
                 options.AddFixedWindowLimiter("fixed", limiterOptions =>
                 {
-                    limiterOptions.PermitLimit = 5;
-                    limiterOptions.Window = TimeSpan.FromSeconds(5);
+                    limiterOptions.PermitLimit = 1;
+                    limiterOptions.Window = TimeSpan.FromSeconds(60);
                     limiterOptions.QueueLimit = 0;
                 });
                 options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
