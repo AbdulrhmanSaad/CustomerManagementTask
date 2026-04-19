@@ -1,4 +1,4 @@
-using CustomersTask4.Abstraction;
+﻿using CustomersTask4.Abstraction;
 using CustomersTask4.Data;
 using CustomersTask4.Domain;
 using CustomersTask4.Hubs;
@@ -42,16 +42,21 @@ builder.Services.AddScoped<IUserTokenMangerService, UserTokenMangerService>();
 builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly)
     .AddFluentValidationAutoValidation();
 
-
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
-    {
-        options.Authority = builder.Configuration.GetConnectionString("AuthURL");
-        options.Audience = "resource-server";
-        options.TokenValidationParameters = new TokenValidationParameters
+    builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+        .AddJwtBearer(options =>
         {
-            ValidateAudience = true
-        };
+            var authUrl = builder.Configuration.GetConnectionString("AuthURL");
+            if (!string.IsNullOrWhiteSpace(authUrl))
+            {
+                options.Authority = authUrl;
+                options.Audience = "resource-server";
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateAudience = true,
+                    ValidateIssuer = true,
+                    ValidateIssuerSigningKey = true
+                };
+            }
         });
 
 builder.Services.AddHybridCache(opt =>
@@ -66,14 +71,14 @@ builder.Services.AddHybridCache(opt =>
 builder.Services.AddCustomOpenApi();
 builder.Services.AddStackExchangeRedisCache(options =>
 {
-    options.Configuration = builder.Configuration.GetConnectionString("redis");
+    options.Configuration = builder.Configuration["ConnectionString:redis"];
 });
 builder.Services.AddScoped<IRedisCachingService, RedisCachingService>();
 
 builder.Services.AddDistributedSqlServerCache(option =>
 {
-    option.ConnectionString = builder.Configuration.GetConnectionString("sqlCach");
-    option.SchemaName="dbo";
+    option.ConnectionString = builder.Configuration["ConnectionString:sqlCach"];
+    option.SchemaName = "dbo";
     option.TableName = "CachEntries";
 });
 
@@ -184,7 +189,13 @@ app.UseSwaggerUI(options =>
 });
 
 app.UseSerilogRequestLogging();
-app.UseHttpsRedirection();
+
+// Skip HTTPS redirection in testing
+if (!app.Environment.IsEnvironment("Testing"))
+{
+    app.UseHttpsRedirection();
+}
+
 if (!app.Environment.IsEnvironment("Testing"))
 {
     app.UseRateLimiter();

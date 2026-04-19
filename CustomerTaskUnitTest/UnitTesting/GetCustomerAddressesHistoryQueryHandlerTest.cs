@@ -1,19 +1,13 @@
-using Amazon.Runtime.Internal.Util;
-using Azure.Core;
-using Castle.Core.Resource;
 using CustomersTask4.CustomerHandler.Query.GetCustomerAddressesHistory;
 using CustomersTask4.Domain;
 using CustomersTask4.DTO;
 using CustomersTask4.Exceptions;
 using CustomersTask4.Repository;
-using CustomersTask4.Services;
-using CustomersTask4.Services.Caching;
 using MapsterMapper;
 using Microsoft.Extensions.Caching.Hybrid;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
-using System.Linq.Expressions;
-using Xunit;
+using Shared.Services;
 
 namespace CustomerTaskUnitTest.UnitTesting
 {

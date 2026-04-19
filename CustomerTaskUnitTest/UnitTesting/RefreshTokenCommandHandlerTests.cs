@@ -4,6 +4,7 @@ using CustomersTask4.Services;
 using CustomersTask4.Setting;
 using CustomersTask4.UserHandler.Command.RefreshToken;
 using NSubstitute;
+using Shared.Services;
 using System.Security.Claims;
 
 namespace CustomersTaskUnitTest.UnitTesting;

@@ -7,14 +7,12 @@ using CustomersTask4.CustomerHandler.Query.GetAllCustomers;
 using CustomersTask4.CustomerHandler.Query.GetCustomerAddressesHistory;
 using CustomersTask4.CustomerHandler.Query.GetCustomerById;
 using CustomersTask4.CustomerHandler.Query.GetCustomerHistory;
-using CustomersTask4.Domain;
 using CustomersTask4.DTO;
-using CustomersTask4.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
-using Xunit;
+using Shared.Services;
 
 namespace CustomerTaskUnitTest.IntegrationTest
 {

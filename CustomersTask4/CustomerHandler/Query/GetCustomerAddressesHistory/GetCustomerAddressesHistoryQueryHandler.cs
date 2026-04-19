@@ -26,7 +26,7 @@ namespace CustomersTask4.CustomerHandler.Query.GetCustomerAddressesHistory
                 var CustomerUpdates = await repository.GetAllCustomerAddressHistory(request.CustomerId);
                 logger.LogInformation("Fetch customer Addresses History from Database");
                 return CustomerUpdates;
-            }, tags: ["GetCustomerTag"], cancellationToken: cancellationToken);
+            }, tags: ["CustomerTag"], cancellationToken: cancellationToken);
 
             logger.LogInformation("Fetch customer Addresses History from caching");
             return cachedCustomerAddress;

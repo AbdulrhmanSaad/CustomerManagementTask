@@ -30,7 +30,7 @@ namespace CustomersTask4.CustomerHandler.Query
                 var customerDto = mapper.Map<CustomerDto>(customer);
                 return customerDto;
 
-            }, tags: ["GetCustomerTag"],cancellationToken: cancellationToken);
+            }, tags: ["CustomerTag"],cancellationToken: cancellationToken);
             logger.LogInformation($"Getting customer{request.id} from cache");
             return caching;
         }

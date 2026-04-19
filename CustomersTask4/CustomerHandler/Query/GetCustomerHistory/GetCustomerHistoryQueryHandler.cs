@@ -30,7 +30,7 @@ namespace CustomersTask4.CustomerHandler.Query.GetCustomerHistory
                 var res = mapper.Map<IEnumerable<CustomerHistoryResponse>>(CustomerUpdates);
                 logger.LogInformation("Getting Customer History for customer with id {CustomerId} from Database", request.CustomerId);
                 return res;
-            }, tags: ["GetCustomerTag"], cancellationToken: cancellationToken);
+            }, tags: ["CustomerTag"], cancellationToken: cancellationToken);
             logger.LogInformation("Getting Customer History for customer with id {CustomerId} from caching", request.CustomerId);
             return caching;
         }

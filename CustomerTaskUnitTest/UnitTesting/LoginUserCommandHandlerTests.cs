@@ -1,14 +1,10 @@
 ﻿using CustomersTask4.Domain;
-using CustomersTask4.DTO;
 using CustomersTask4.Exceptions;
 using CustomersTask4.Services;
 using CustomersTask4.Setting;
 using CustomersTask4.UserHandler.Command.LoginUser;
-using Microsoft.AspNetCore.Identity;
 using NSubstitute;
-using System.Threading;
-using System.Threading.Tasks;
-using Xunit;
+using Shared.Services;
 
 namespace CustomersTaskUnitTest.UnitTesting;
 

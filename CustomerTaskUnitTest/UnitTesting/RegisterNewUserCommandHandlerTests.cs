@@ -4,10 +4,8 @@ using CustomersTask4.Users;
 using CustomersTask4.UserHandler.Command;
 using Microsoft.AspNetCore.Identity;
 using NSubstitute;
-using System.Threading;
-using System.Threading.Tasks;
-using Xunit;
 using CustomersTask4.Services;
+using Shared.Services;
 
 namespace CustomersTaskUnitTest.UnitTesting;
 public class RegisterNewUserCommandHandlerTests

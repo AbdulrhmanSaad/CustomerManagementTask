@@ -5,13 +5,11 @@ using CustomersTask4.Domain;
 using CustomersTask4.DTO;
 using CustomersTask4.Exceptions;
 using CustomersTask4.Repository;
-using CustomersTask4.Services;
-using CustomersTask4.Services.Caching;
-using Mapster;
 using MapsterMapper;
 using Microsoft.Extensions.Caching.Hybrid;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
+using Shared.Services;
 using System.Linq.Expressions;
 
 

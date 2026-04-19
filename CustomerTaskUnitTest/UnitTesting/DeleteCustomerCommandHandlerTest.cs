@@ -1,15 +1,11 @@
-﻿using Azure.Core;
-using Castle.Core.Logging;
-using CustomersTask4.Abstraction;
+﻿using CustomersTask4.Abstraction;
 using CustomersTask4.CustomerHandler.Command.DeleteCustomerCommand;
-using CustomersTask4.CustomerHandler.Command.UpdateCustomer;
 using CustomersTask4.Data;
 using CustomersTask4.Domain;
 using CustomersTask4.Exceptions;
 using CustomersTask4.Hubs;
 using CustomersTask4.Repository;
 using CustomersTask4.Services;
-using CustomersTask4.Services.Caching;
 using CustomersTask4.Setting;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
@@ -17,12 +13,8 @@ using Microsoft.Extensions.Caching.Hybrid;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using Shared.Services;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CustomerTaskUnitTest.UnitTesting
 {

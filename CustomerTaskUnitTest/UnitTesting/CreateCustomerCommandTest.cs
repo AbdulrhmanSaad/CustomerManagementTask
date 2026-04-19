@@ -5,19 +5,14 @@ using CustomersTask4.DTO;
 using CustomersTask4.Exceptions;
 using CustomersTask4.Hubs;
 using CustomersTask4.Repository;
-using CustomersTask4.Services;
-using CustomersTask4.Services.Caching;
 using CustomersTask4.Users;
 using MapsterMapper;
-using MassTransit;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Caching.Hybrid;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
-using System;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+using Shared.Services;
 
 namespace CustomerTaskUnitTest.UnitTesting
 {

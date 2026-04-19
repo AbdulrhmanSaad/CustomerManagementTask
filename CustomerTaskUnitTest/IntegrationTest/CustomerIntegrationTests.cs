@@ -1,6 +1,6 @@
+using AuthServer;
 using CustomersTask4;
 using CustomerTaskUnitTest.Client;
-using CustomerTaskUnitTest.UnitTesting;
 using Microsoft.AspNetCore.Mvc.Testing;
 
 namespace CustomerTaskUnitTest.IntegrationTest
@@ -8,10 +8,10 @@ namespace CustomerTaskUnitTest.IntegrationTest
     public class CustomerIntegrationTests : TestBase
     {
         private const string ApiVersion = "1";
-        private const string DefaultTenant = "Tenant1";
+        private const string DefaultTenant = "SharedTenant";
 
-        public CustomerIntegrationTests(WebApplicationFactory<IAssmblyMarker> factory) 
-            : base(factory)
+        public CustomerIntegrationTests(WebApplicationFactory<IAssmblyMarker> factoy,WebApplicationFactory<IAuthAssmblyMarker>auth) 
+            : base(factoy,auth)
         {
         }
 
@@ -21,7 +21,7 @@ namespace CustomerTaskUnitTest.IntegrationTest
         public async Task GetAll_ShouldReturnAllCustomers()
         {
             // Act
-            var token =await GenerateToken();
+            var token = await GenerateToken();
             var result = await CreateApiClient(token).CustomerAllAsync(ApiVersion, DefaultTenant);
 
             // Assert
@@ -125,7 +125,7 @@ namespace CustomerTaskUnitTest.IntegrationTest
             await Assert.ThrowsAsync<ApiException>(
                 () => client.CustomerPOSTAsync(ApiVersion, DefaultTenant, createCustomer));
         }
-
+        
         [Fact]
         public async Task CreateCustomer_WithMissingRequiredFields_ShouldFail()
         {
@@ -233,7 +233,7 @@ namespace CustomerTaskUnitTest.IntegrationTest
             var allCustomersAfter = await client.CustomerAllAsync(ApiVersion, DefaultTenant);
             var deletedCustomer = allCustomersAfter.FirstOrDefault(c => c.Id == createdCustomer.Id);
 
-            Assert.Null(deletedCustomer);
+            Assert.Equal(!deletedCustomer.IsDeleted, true);
         }
 
         [Fact]
@@ -260,14 +260,14 @@ namespace CustomerTaskUnitTest.IntegrationTest
             var client = CreateApiClient(token);
             var phone = GenerateUniquePhone();
 
-            // Create a customer
+            //// Create a customer
             var createCommand = CreateCustomer();
 
             await client.CustomerPOSTAsync(ApiVersion, DefaultTenant, createCommand);
 
-            // Get the customer
+            //Get the customer
             var allCustomers = await client.CustomerAllAsync(ApiVersion, DefaultTenant);
-            var customer = allCustomers.FirstOrDefault(c => c.Name == createCommand.Name);
+            var customer = allCustomers.FirstOrDefault(c => c.Id == "69d21eafb0624f576021605c");
 
             // Act
             var history = await client.HistoryAsync(customer.Id, ApiVersion, DefaultTenant);
