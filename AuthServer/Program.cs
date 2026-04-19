@@ -5,6 +5,7 @@ using FluentValidation.AspNetCore;
 using Wolverine;
 using Shared.ServiceExtentions;
 using Shared.Services;
+using AuthServer.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
@@ -18,8 +19,10 @@ builder.Services.AddLocalization(opt => { opt.ResourcesPath = "Resource"; });
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddScoped<ILocalizationService, LocalizationService>();
+builder.Services.AddScoped<IPrincipalFactory, PrincipalFactory>();
 builder.Services.AddMultiTenancy(builder.Configuration);
 builder.Services.AddOpenIdDict(builder.Configuration);
+builder.AddRateLimiting();
 builder.Host.UseWolverine();
 builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly)
     .AddFluentValidationAutoValidation();
@@ -32,6 +35,11 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
+//if (!app.Environment.IsEnvironment("Testing"))
+//{
+//    app.UseHttpsRedirection();
+//}
+app.UseRateLimiter();
 app.AddLocalization();
 app.UseHttpsRedirection();
 app.UseCors("AllowSpecificOrigin");
