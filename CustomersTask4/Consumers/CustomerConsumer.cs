@@ -34,7 +34,7 @@ namespace CustomersTask4.Consumers
             if (msg.Id is null) return;
 
             var collection = GetCollection();
-            Customer? result =(Customer?)collection.Find(c => c.Id == msg.Id);
+            var result = await collection.Find(c => c.Id == msg.Id).FirstOrDefaultAsync();
             if (result is null)
             {
                 logger.LogWarning("CustomerDeletedMessage — customer id={Id} not found in MongoDB", msg.Id);
@@ -42,6 +42,7 @@ namespace CustomersTask4.Consumers
             else
             {
                 result.IsDeleted = true;
+                await collection.ReplaceOneAsync(c => c.Id == msg.Id, result);
                 logger.LogInformation("Customer {Id} deleted from MongoDB", msg.Id);
             }
         }

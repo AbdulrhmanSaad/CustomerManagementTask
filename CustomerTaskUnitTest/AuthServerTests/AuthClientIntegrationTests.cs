@@ -10,29 +10,11 @@ using System.Text;
 
 namespace CustomerTaskUnitTest.AuthServerTests
 {
-    public class AuthClientIntegrationTests : IClassFixture<WebApplicationFactory<IAuthAssmblyMarker>>
+    public class AuthClientIntegrationTests : AuthTestBase
     {
-        private readonly WebApplicationFactory<IAuthAssmblyMarker> _factory;
-        private readonly string _defaultTenant = "Tenant1";
-
-        public AuthClientIntegrationTests(WebApplicationFactory<IAuthAssmblyMarker> factory)
-        {
-            _factory = factory;
+        public AuthClientIntegrationTests(WebApplicationFactory<IAuthAssmblyMarker> factory):base(factory)
+        { 
         }
-
-        private AuthClient CreateAuthClient()
-        {
-            var httpClient = _factory.CreateClient(new WebApplicationFactoryClientOptions
-            {
-                BaseAddress = new Uri("https://localhost")
-            });
-            httpClient.DefaultRequestHeaders.Add("tenant", _defaultTenant);
-            return new AuthClient(httpClient)
-            {
-                BaseUrl = httpClient.BaseAddress?.ToString() ?? "https://localhost:7032/"
-            };
-        }
-
         #region Registration Tests
 
         [Fact]
@@ -46,7 +28,6 @@ namespace CustomerTaskUnitTest.AuthServerTests
                 Email = $"test_{Guid.NewGuid():N}@example.com",
                 Password = "P@ssw0rd!123"
             };
-
             // Act & Assert — no exception means HTTP 200
             await client.RegisterAsync(command);
         }
@@ -218,36 +199,6 @@ namespace CustomerTaskUnitTest.AuthServerTests
 
         #endregion
 
-        #region Helper Methods
-        private async Task<TokenResponse> GetTokenAsync(string username, string password)
-        {
-            var httpClient = _factory.CreateClient(new WebApplicationFactoryClientOptions
-            {
-                BaseAddress = new Uri("https://localhost")
-            });
-            httpClient.DefaultRequestHeaders.Add("tenant", _defaultTenant);
-
-            var requestContent = new FormUrlEncodedContent(new Dictionary<string, string>
-            {
-                  { "grant_type", "password" },
-                  { "username", username },
-                  { "password", password },
-                  { "scope", "openid offline_access" }
-            });
-
-            var response = await httpClient.PostAsync("api/Account/token", requestContent);
-            var jsonContent = await response.Content.ReadAsStringAsync();
-
-           
-
-            var tokenResponse = JsonConvert.DeserializeObject<TokenResponse>(jsonContent);
-
-            if (tokenResponse == null)
-                throw new InvalidOperationException("Failed to deserialize token response");
-
-            return tokenResponse;
-        }
-
-        #endregion
+       
     }
 }

@@ -267,7 +267,7 @@ namespace CustomerTaskUnitTest.IntegrationTest
 
             //Get the customer
             var allCustomers = await client.CustomerAllAsync(ApiVersion, DefaultTenant);
-            var customer = allCustomers.FirstOrDefault(c => c.Id == "69d21eafb0624f576021605c");
+            var customer = allCustomers.FirstOrDefault(c => c.Phone==createCommand.Phone);
 
             // Act
             var history = await client.HistoryAsync(customer.Id, ApiVersion, DefaultTenant);
