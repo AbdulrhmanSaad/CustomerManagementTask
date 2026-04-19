@@ -7,9 +7,8 @@ using Shared.Services;
 
 namespace AuthServer.Handlers.RefreshTokenGrand
 {
-    public class RefreshTokenGrantHandler(
+    public class RefreshTokenGrantCommandHandler(
         UserManager<User> _userManager,
-        SignInManager<User> _signInManager,
         ITenantService _tenantService,
         ILocalizationService _localization,
         IPrincipalFactory _principalFactory)
@@ -18,7 +17,7 @@ namespace AuthServer.Handlers.RefreshTokenGrand
         {
             var user = await _userManager.GetUserAsync(command.Principal);
 
-            if (user == null || !await _signInManager.CanSignInAsync(user))
+            if (user == null)
                 return AuthResult.Failure(_localization.Localize("Invalid User Name OR Password"));
 
             var currentTenant = _tenantService.GetCurrentTenant()!.TenantId;

@@ -40,6 +40,8 @@ namespace AuthServer.Extentions
                     options.AllowPasswordFlow()
                            .AllowRefreshTokenFlow();
 
+                    options.AddDevelopmentSigningCertificate();
+
                     options.AcceptAnonymousClients();
 
                     options.AddDevelopmentEncryptionCertificate()
