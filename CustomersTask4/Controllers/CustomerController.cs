@@ -9,10 +9,12 @@ using CustomersTask4.CustomerHandler.Query.GetAllCustomers;
 using CustomersTask4.CustomerHandler.Query.GetCustomerAddressesHistory;
 using CustomersTask4.CustomerHandler.Query.GetCustomerById;
 using CustomersTask4.CustomerHandler.Query.GetCustomerHistory;
+using CustomersTask4.Data;
 using CustomersTask4.DTO;
 using CustomersTask4.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.OpenApi.Extensions;
 using Shared.Services;
 
 namespace CustomersTask4.Controllers
@@ -48,7 +50,7 @@ namespace CustomersTask4.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles = UserRoles.Admin)]
+        [AuthorizeRoles(UserRoles.Admin)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
@@ -114,7 +116,7 @@ namespace CustomersTask4.Controllers
 
 
         [HttpPost("migrate")]
-        [Authorize(Roles = UserRoles.Admin)]
+       // [Authorize(Roles = UserRoles.Admin)]
         [ProducesResponseType(StatusCodes.Status202Accepted)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public ActionResult Migrate(MigrationCommand request)

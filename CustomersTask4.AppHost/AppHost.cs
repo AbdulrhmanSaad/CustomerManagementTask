@@ -35,4 +35,6 @@ builder.AddProject<Projects.CustomersTask4>("customerstask4")
 
 builder.AddProject<Projects.AuthServer>("authserver");
 
+builder.AddProject<Projects.ApiGateway>("apigateway");
+
 builder.Build().Run();

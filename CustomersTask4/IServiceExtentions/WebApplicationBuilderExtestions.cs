@@ -67,7 +67,7 @@ namespace CustomersTask4.IServiceExtentions
             using var scope = app.ApplicationServices.CreateScope();
             var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<MongoRole>>();
 
-            string[] roles = [UserRoles.Admin, UserRoles.User];
+            string[] roles = [UserRoles.Admin.ToString(), UserRoles.User.ToString()];
 
             foreach (var role in roles)
             {
@@ -81,7 +81,7 @@ namespace CustomersTask4.IServiceExtentions
             using var scope = app.ApplicationServices.CreateScope();
             var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
-            string[] roles = [UserRoles.Admin, UserRoles.User];
+            string[] roles = [UserRoles.Admin.ToString(), UserRoles.User.ToString()];
 
             foreach (var role in roles)
             {

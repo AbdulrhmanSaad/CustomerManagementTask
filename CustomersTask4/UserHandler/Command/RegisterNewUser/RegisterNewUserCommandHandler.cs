@@ -17,7 +17,7 @@ namespace CustomersTask4.UserHandler.Command
             if (!succeeded)
                 throw new NotFoundException(localization.Localize("Username Already Exists"));
 
-            await userManager.AddToRoleAsync(user, UserRoles.User);
+            await userManager.AddToRoleAsync(user, UserRoles.User.ToString());
 
         }
     }

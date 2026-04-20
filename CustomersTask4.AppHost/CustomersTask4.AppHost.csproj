@@ -19,6 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ApiGateway\ApiGateway.csproj" />
     <ProjectReference Include="..\AuthServer\AuthServer.csproj" />
     <ProjectReference Include="..\CustomersTask4\CustomersTask4.csproj" />
   </ItemGroup>

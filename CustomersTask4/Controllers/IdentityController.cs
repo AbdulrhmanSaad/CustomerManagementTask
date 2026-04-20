@@ -1,5 +1,6 @@
 ﻿using Asp.Versioning;
 using CustomersTask4.Abstraction;
+using CustomersTask4.Data;
 using CustomersTask4.DTO;
 using CustomersTask4.UserHandler.Command;
 using CustomersTask4.UserHandler.Command.AssignUserRole;
@@ -21,7 +22,7 @@ namespace CustomersTask4.Controllers
     public class IdentityController(IAppMeditor mediator, ILocalizationService locaizer) : ControllerBase
     {
         [HttpPost("AssignRoleTo")]
-        [Authorize(Roles = UserRoles.Admin)]
+        [AuthorizeRoles(UserRoles.Admin)]
         public async Task<ActionResult> AddRoleToUser(AssignUserRoleCommand command)
         {
             await mediator.Send(command);
