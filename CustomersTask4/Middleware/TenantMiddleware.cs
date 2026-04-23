@@ -19,13 +19,20 @@ namespace CustomersTask4.Middleware
                 await next(context);
                 return;
             }
+            
             var tokenTenant = context.User.FindFirst("tenant")?.Value;
+            if (context.Request.Path.StartsWithSegments("/graphql", StringComparison.OrdinalIgnoreCase) && tokenTenant == null)
+            {
+                await next(context);
+                return;
+            }
 
             if (context.Request.Headers.TryGetValue("tenant", out var tenantId))
                 _tenantService.SetCurrentTenant(tenantId!);
             else  
                 throw new Exception("No Tenant provided in the Request");
 
+           
             if (tokenTenant == null) {
                 await next(context);
                 return;

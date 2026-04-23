@@ -1,6 +1,8 @@
 ﻿using CustomersTask4.Abstraction;
 using CustomersTask4.Data;
 using CustomersTask4.Domain;
+using CustomersTask4.GraphQL.Mutaion;
+using CustomersTask4.GraphQL.Query;
 using CustomersTask4.Hubs;
 using CustomersTask4.IServiceExtentions;
 using CustomersTask4.Mapping;
@@ -10,8 +12,10 @@ using CustomersTask4.Services.Caching;
 using CustomersTask4.Users;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using HotChocolate.Authorization;
 using MapsterMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Hybrid;
@@ -19,18 +23,17 @@ using Microsoft.IdentityModel.Tokens;
 using MongoDB.Driver;
 using QuestPDF.Infrastructure;
 using Serilog;
-using Shared.Services;
 using Shared.ServiceExtentions;
+using Shared.Services;
 using Wolverine;
 
 var builder = WebApplication.CreateBuilder(args);
-
-
 
 builder.AddServiceDefaults();
 builder.Services.AddControllers();
 builder.Services.AddSignalR();
 builder.Services.AddMemoryCache();
+builder.Services.AddHttpContextAccessor();
 
 QuestPDF.Settings.License = LicenseType.Community;
 
@@ -42,22 +45,32 @@ builder.Services.AddScoped<IUserTokenMangerService, UserTokenMangerService>();
 builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly)
     .AddFluentValidationAutoValidation();
 
-    builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-        .AddJwtBearer(options =>
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        var authUrl = builder.Configuration.GetConnectionString("AuthURL");
+        if (!string.IsNullOrWhiteSpace(authUrl))
         {
-            var authUrl = builder.Configuration.GetConnectionString("AuthURL");
-            if (!string.IsNullOrWhiteSpace(authUrl))
+            options.Authority = authUrl;
+            options.Audience = "resource-server";
+            options.TokenValidationParameters = new TokenValidationParameters
             {
-                options.Authority = authUrl;
-                options.Audience = "resource-server";
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateAudience = true,
-                    ValidateIssuer = true,
-                    ValidateIssuerSigningKey = true
-                };
-            }
-        });
+                ValidateAudience = true,
+                ValidateIssuer = true,
+                ValidateIssuerSigningKey = true
+            };
+        }
+    });
+
+builder.Services.AddAuthorizationBuilder();
+builder.Services.AddGraphQLServer()
+    .RegisterDbContextFactory<ApplicationDbContext>()
+    .AddProjections()
+    .AddFiltering()
+    .AddSorting()
+    .AddAuthorization()
+    .AddQueryType<CustomerManagemantQuery>()
+    .AddMutationType<CustomerManagementMutaion>();
 
 
 //builder.AddMongoDBClient("mongo-db");
@@ -71,10 +84,12 @@ builder.Services.AddSingleton<IMongoClient>(sp =>
         .Get<MongoDbSetting>();
     return new MongoClient(s?.ConnectionString);
 });
+
 if (!builder.Environment.Equals("Testing"))
 {
     builder.AddCaching();
 }
+
 builder.Services.AddCustomOpenApi();
 builder.Services.AddLocalization(opt => { opt.ResourcesPath = "Resource"; });
 builder.Services.AddScoped<IAppMeditor, AppMediator>();
@@ -106,8 +121,6 @@ builder.AddWolverineConfig();
 builder.AddRateLimiting();
 builder.ApiVersioning();
 
-
-
 string provider = builder.Configuration["DatabaseProvidor"] ?? "Sql";
 
 switch (provider)
@@ -129,8 +142,6 @@ builder.Host.UseSerilog((context, config) =>
 var app = builder.Build();
 
 app.MapDefaultEndpoints();
-
-
 app.AddLocalization();
 
 try
@@ -161,9 +172,7 @@ app.MapOpenApi();
 app.UseSwaggerUI(options =>
 {
     options.SwaggerEndpoint("/openapi/v2.json", "My API v2");
-
     options.SwaggerEndpoint("/openapi/v1.json", "My API v1");
-
 });
 
 app.UseSerilogRequestLogging();
@@ -172,8 +181,8 @@ if (!app.Environment.IsEnvironment("Testing"))
 {
     app.UseHttpsRedirection();
     app.UseRateLimiter();
-
 }
+
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseMiddleware<RequestLoggingMiddleware>();
@@ -181,5 +190,5 @@ app.UseMiddleware<ErrorHandelingMiddleware>();
 app.UseMiddleware<TenantMiddleware>();
 app.MapControllers();
 app.MapHub<MessageHub>("/messagehub");
-
+app.MapGraphQL("/graphql");
 app.Run();
