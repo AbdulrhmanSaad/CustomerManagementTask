@@ -3,7 +3,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace CustomersTask4.Domain
 {
-    public class Customer : IMustHaveTenant
+    public class Customer : IMustHaveTenant,ISoftDelete
     {
         [BsonId]
         [BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)]

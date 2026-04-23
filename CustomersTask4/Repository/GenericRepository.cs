@@ -21,7 +21,15 @@ namespace CustomersTask4.Repository
 
         public async Task Delete(T entity)
         {
-            db.Set<T>().Remove(entity);
+            if (entity is ISoftDelete softDeleteEntity)
+            {
+                softDeleteEntity.IsDeleted = true;
+                db.Set<T>().Update(entity);
+            }
+            else
+            {
+                db.Set<T>().Remove(entity);
+            }
             await db.SaveChangesAsync();
         }
 
@@ -51,7 +59,8 @@ namespace CustomersTask4.Repository
         }
         public bool PhoneExistsAsync(string phoneNumber)
         {
-            return db.Set<T>().Any(c => EF.Property<string>(c,"Phone") == phoneNumber);
+            return db.Set<T>().IgnoreQueryFilters().Any(c => EF.Property<string>(c,"Phone") == phoneNumber&&
+             EF.Property<bool>(c, "IsDeleted") == false);
         }
 
        

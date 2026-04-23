@@ -56,8 +56,11 @@ namespace CustomersTask4.Data
             modelBuilder.Entity<Address>()
               .HasQueryFilter(a => a.TenantId == TenantId);
 
- 
 
+            modelBuilder.Entity<Customer>()
+                .HasIndex(c => c.Phone)
+                .IsUnique()
+                .HasFilter("[IsDeleted] = 0");
         }
         
         public DbSet<Customer> Customers { get; set; }
