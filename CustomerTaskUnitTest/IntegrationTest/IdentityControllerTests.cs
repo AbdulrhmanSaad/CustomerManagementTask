@@ -1,13 +1,13 @@
 ﻿using CustomersTask4.Abstraction;
 using CustomersTask4.Controllers;
 using CustomersTask4.DTO;
-using CustomersTask4.UserHandler.Command;
-using CustomersTask4.UserHandler.Command.AssignUserRole;
-using CustomersTask4.UserHandler.Command.LoginUser;
-using CustomersTask4.UserHandler.Command.RefreshToken;
+using CustomersTask4.CQRS.UserHandler.Command.AssignUserRole;
+using CustomersTask4.CQRS.UserHandler.Command.LoginUser;
+using CustomersTask4.CQRS.UserHandler.Command.RefreshToken;
 using Microsoft.AspNetCore.Mvc;
 using NSubstitute;
 using Shared.Services;
+using CustomersTask4.CQRS.UserHandler.Command.RegisterNewUser;
 
 namespace CustomerTaskUnitTest.IntegrationTest
 {
@@ -28,7 +28,7 @@ namespace CustomerTaskUnitTest.IntegrationTest
         [Fact]
         public async Task Register_ShouldReturnOk_WhenRequestIsValid()
         {
-            var command = new CustomersTask4.UserHandler.Command.RegisterNewUserCommand();
+            var command = new RegisterNewUserCommand();
             _localization.Localize("User registered successfully").Returns("User registered successfully");
 
             var result = await _controller.Register(command);

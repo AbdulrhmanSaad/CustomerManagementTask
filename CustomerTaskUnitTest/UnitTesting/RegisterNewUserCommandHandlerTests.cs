@@ -1,11 +1,11 @@
 ﻿using CustomersTask4.Domain;
 using CustomersTask4.Exceptions;
 using CustomersTask4.Users;
-using CustomersTask4.UserHandler.Command;
 using Microsoft.AspNetCore.Identity;
 using NSubstitute;
 using CustomersTask4.Services;
 using Shared.Services;
+using CustomersTask4.CQRS.UserHandler.Command.RegisterNewUser;
 
 namespace CustomersTaskUnitTest.UnitTesting;
 public class RegisterNewUserCommandHandlerTests
@@ -37,7 +37,7 @@ public class RegisterNewUserCommandHandlerTests
         _userManager.CreateAsync(Arg.Any<IAppUser>(), command.Password)
             .Returns(true);
 
-        _userManager.AddToRoleAsync(Arg.Any<IAppUser>(), UserRoles.User)
+        _userManager.AddToRoleAsync(Arg.Any<IAppUser>(), UserRoles.User.ToString())
             .Returns(Task.CompletedTask);
 
         // Act
@@ -45,7 +45,7 @@ public class RegisterNewUserCommandHandlerTests
 
         // Assert
         await _userManager.Received(1).CreateAsync(Arg.Any<IAppUser>(), command.Password);
-        await _userManager.Received(1).AddToRoleAsync(Arg.Any<IAppUser>(), UserRoles.User);
+        await _userManager.Received(1).AddToRoleAsync(Arg.Any<IAppUser>(), UserRoles.User.ToString());
     }
 
     [Fact]

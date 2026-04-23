@@ -1,8 +1,8 @@
-﻿using CustomersTask4.Domain;
+﻿using CustomersTask4.CQRS.UserHandler.Command.RefreshToken;
+using CustomersTask4.Domain;
 using CustomersTask4.Exceptions;
 using CustomersTask4.Services;
 using CustomersTask4.Setting;
-using CustomersTask4.UserHandler.Command.RefreshToken;
 using NSubstitute;
 using Shared.Services;
 using System.Security.Claims;

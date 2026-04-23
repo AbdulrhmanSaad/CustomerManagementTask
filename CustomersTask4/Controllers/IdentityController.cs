@@ -1,11 +1,11 @@
 ﻿using Asp.Versioning;
 using CustomersTask4.Abstraction;
+using CustomersTask4.CQRS.UserHandler.Command.AssignUserRole;
+using CustomersTask4.CQRS.UserHandler.Command.LoginUser;
+using CustomersTask4.CQRS.UserHandler.Command.RefreshToken;
+using CustomersTask4.CQRS.UserHandler.Command.RegisterNewUser;
 using CustomersTask4.Data;
 using CustomersTask4.DTO;
-using CustomersTask4.UserHandler.Command;
-using CustomersTask4.UserHandler.Command.AssignUserRole;
-using CustomersTask4.UserHandler.Command.LoginUser;
-using CustomersTask4.UserHandler.Command.RefreshToken;
 using CustomersTask4.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

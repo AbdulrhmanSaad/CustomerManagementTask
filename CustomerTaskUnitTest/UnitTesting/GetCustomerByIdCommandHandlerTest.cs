@@ -1,6 +1,5 @@
-﻿using CustomersTask4.CustomerHandler.Query;
-using CustomersTask4.CustomerHandler.Query.GetAllCustomers;
-using CustomersTask4.CustomerHandler.Query.GetCustomerById;
+﻿using CustomersTask4.CQRS.CustomerHandler.Query.GetAllCustomers;
+using CustomersTask4.CQRS.CustomerHandler.Query.GetCustomerById;
 using CustomersTask4.Domain;
 using CustomersTask4.DTO;
 using CustomersTask4.Exceptions;

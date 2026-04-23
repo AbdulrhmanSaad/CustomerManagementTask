@@ -1,5 +1,5 @@
 ﻿using CustomersTask4.Abstraction;
-using CustomersTask4.CustomerHandler.Command.DeleteCustomerCommand;
+using CustomersTask4.CQRS.CustomerHandler.Command.DeleteCustomer;
 using CustomersTask4.Data;
 using CustomersTask4.Domain;
 using CustomersTask4.Exceptions;
@@ -23,7 +23,6 @@ namespace CustomerTaskUnitTest.UnitTesting
         private readonly IGenericRepository<Customer> repository; 
         private readonly ILogger<DeleteCustomerCommandHandler> logger;
         private readonly DeleteCustomerCommandHandler _handler;
-        private readonly ApplicationDbContext db;
         private readonly IConfiguration configuration;
         private readonly IHubContext<MessageHub> hubContext;
         private readonly IAppMeditor bus;
@@ -42,10 +41,6 @@ namespace CustomerTaskUnitTest.UnitTesting
             cachingService = Substitute.For<HybridCache>();
             logger = Substitute.For<ILogger<DeleteCustomerCommandHandler>>();
 
-            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-               .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
-               .Options;
-
             var tenantService = Substitute.For<ITenantService>();
             tenantService.GetCurrentTenant().Returns(new Tenant
             {
@@ -53,10 +48,7 @@ namespace CustomerTaskUnitTest.UnitTesting
                 Name = "Tenant",
                 ConnectionString = ""
             });
-
-            db = new ApplicationDbContext(options, tenantService);
-
-            _handler = new DeleteCustomerCommandHandler(repository,db, logger,configuration,hubContext,
+            _handler = new DeleteCustomerCommandHandler(repository, logger,configuration,hubContext,
                  bus,localization,cachingService);
         }
         [Fact]
@@ -73,8 +65,7 @@ namespace CustomerTaskUnitTest.UnitTesting
                 CreatedBy = "admin"
             };
             repository.GetByIdAsync(command.Id).Returns(existingCustomer);
-            existingCustomer.IsDeleted = true;
-            db.SaveChanges();
+            await repository.Delete(existingCustomer);
 
             //Act
              await _handler.Handle(command,CancellationToken.None);

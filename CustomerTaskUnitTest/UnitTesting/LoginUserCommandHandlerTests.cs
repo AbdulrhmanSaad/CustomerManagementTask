@@ -1,8 +1,8 @@
-﻿using CustomersTask4.Domain;
+﻿using CustomersTask4.CQRS.UserHandler.Command.LoginUser;
+using CustomersTask4.Domain;
 using CustomersTask4.Exceptions;
 using CustomersTask4.Services;
 using CustomersTask4.Setting;
-using CustomersTask4.UserHandler.Command.LoginUser;
 using NSubstitute;
 using Shared.Services;
 

@@ -1,5 +1,5 @@
 using CustomersTask4.Abstraction;
-using CustomersTask4.CustomerHandler.Command.UpdateCustomer;
+using CustomersTask4.CQRS.CustomerHandler.Command.UpdateCustomer;
 using CustomersTask4.Domain;
 using CustomersTask4.DTO;
 using CustomersTask4.Exceptions;

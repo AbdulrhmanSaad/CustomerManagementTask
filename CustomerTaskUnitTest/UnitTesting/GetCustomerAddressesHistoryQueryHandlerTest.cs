@@ -1,4 +1,4 @@
-using CustomersTask4.CustomerHandler.Query.GetCustomerAddressesHistory;
+using CustomersTask4.CQRS.CustomerHandler.Query.GetCustomerAddressesHistory;
 using CustomersTask4.Domain;
 using CustomersTask4.DTO;
 using CustomersTask4.Exceptions;

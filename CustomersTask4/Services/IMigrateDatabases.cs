@@ -1,4 +1,4 @@
-﻿using CustomersTask4.CustomerHandler.Command.Migration;
+﻿using CustomersTask4.CQRS.CustomerHandler.Command.Migration;
 using CustomersTask4.Data;
 using CustomersTask4.Domain;
 using Microsoft.EntityFrameworkCore;
