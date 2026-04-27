@@ -9,7 +9,7 @@ namespace CustomersTask4.DTO
         public string Phone { get; set; }
         public DateTime CreatedAt { get; set; }
         public string CreatedBy { get; set; }
-        public DateTime ChangedAt { get; set; }
+        public DateTime? ChangedAt { get; set; }
         public string? ChangedBy { get; set; }
         public bool IsDeleted { get; set; }
         public List<AddressDto> Addresses { get; set; } = new();

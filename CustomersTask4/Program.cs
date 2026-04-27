@@ -7,6 +7,8 @@ using CustomersTask4.Hubs;
 using CustomersTask4.IServiceExtentions;
 using CustomersTask4.Mapping;
 using CustomersTask4.Middleware;
+using CustomersTask4.OData.Configration;
+using CustomersTask4.OData.CustomerHandlers.GetAll;
 using CustomersTask4.Services;
 using CustomersTask4.Services.Caching;
 using CustomersTask4.Users;
@@ -17,6 +19,7 @@ using MapsterMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.OData;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Hybrid;
 using Microsoft.IdentityModel.Tokens;
@@ -30,7 +33,11 @@ using Wolverine;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddOData(opt =>
+        opt.Select().Filter().OrderBy().Expand().Count()
+        .SetMaxTop(100)
+        .AddRouteComponents("odata", ODataConfig.GetEdmModel()));
+
 builder.Services.AddSignalR();
 builder.Services.AddMemoryCache();
 builder.Services.AddHttpContextAccessor();
@@ -72,6 +79,7 @@ builder.Services.AddGraphQLServer()
     .AddQueryType<CustomerManagemantQuery>()
     .AddMutationType<CustomerManagementMutaion>();
 
+builder.Services.AddDbContextFactory<ApplicationDbContext>(lifetime: ServiceLifetime.Scoped);
 
 //builder.AddMongoDBClient("mongo-db");
 
