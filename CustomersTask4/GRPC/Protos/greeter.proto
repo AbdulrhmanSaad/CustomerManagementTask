@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+option csharp_namespace = "CustomersTask4";
+
+package UserGRPC;
+
+service GetUserGRPC {
+  rpc GettUserData (GetUserByIdRequest) returns (UserResponse);
+}
+
+message GetUserByIdRequest {
+}
+
+message UserResponse {
+  string user_id = 1;
+  string user_name=2;
+  repeated string roles = 3;
+}

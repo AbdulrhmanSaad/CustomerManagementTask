@@ -18,7 +18,7 @@ namespace CustomersTask4.OData.CustomerHandlers.GetById
             var db=_dbFactory.CreateDbContext();
             logger.LogInformation($"Getting customer by id {request.id}");
 
-            var customer =await db.Customers.FindAsync(request.id);
+            var customer =await db.Customers.Where(c=>c.Id==request.id).FirstOrDefaultAsync(cancellationToken);
 
 
             if (customer == null)

@@ -32,7 +32,7 @@ namespace CustomersTask4.OData.CustomerHandlers.GetAll
                            AddressName = a.AddressName,
                            AddressType = a.AddressType.ToString()
                        }).ToList()
-                   });
+                   }).AsQueryable();
 
 
 

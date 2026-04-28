@@ -3,6 +3,7 @@ using CustomersTask4.Data;
 using CustomersTask4.Domain;
 using CustomersTask4.GraphQL.Mutaion;
 using CustomersTask4.GraphQL.Query;
+using CustomersTask4.GRPC.Services;
 using CustomersTask4.Hubs;
 using CustomersTask4.IServiceExtentions;
 using CustomersTask4.Mapping;
@@ -41,6 +42,9 @@ builder.Services.AddControllers().AddOData(opt =>
 builder.Services.AddSignalR();
 builder.Services.AddMemoryCache();
 builder.Services.AddHttpContextAccessor();
+
+// Add gRPC
+builder.Services.AddGrpc();
 
 QuestPDF.Settings.License = LicenseType.Community;
 
@@ -199,4 +203,7 @@ app.UseMiddleware<TenantMiddleware>();
 app.MapControllers();
 app.MapHub<MessageHub>("/messagehub");
 app.MapGraphQL("/graphql");
+
+app.MapGrpcService<UserService>();
+
 app.Run();
