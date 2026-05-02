@@ -1,14 +1,12 @@
 syntax = "proto3";
+import "google/protobuf/empty.proto";
 
 option csharp_namespace = "CustomersTask4";
 
 package UserGRPC;
 
 service GetUserGRPC {
-  rpc GettUserData (GetUserByIdRequest) returns (UserResponse);
-}
-
-message GetUserByIdRequest {
+  rpc GettUserData (google.protobuf.Empty) returns (UserResponse);
 }
 
 message UserResponse {

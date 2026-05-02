@@ -2,13 +2,14 @@
 using FluentValidation.Validators;
 using Grpc.Core;
 using Microsoft.CodeAnalysis.VisualBasic.Syntax;
+using Google.Protobuf.WellKnownTypes;
 
 namespace CustomersTask4.GRPC.Services
 {
     public class UserService(IUserContext userContext): GetUserGRPC.GetUserGRPCBase
     {
         public override async Task<UserResponse> GettUserData(
-       GetUserByIdRequest request,
+       Empty request,
        ServerCallContext context)
         {
             var current=userContext.GetCurrentUser();
