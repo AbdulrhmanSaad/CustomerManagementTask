@@ -1,11 +1,13 @@
-﻿using CustomersTask4;
+﻿using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using Grpc.Net.Client;
-using Google.Protobuf.WellKnownTypes;
+using ProtoBuf.Grpc;
+using ProtoBuf.Grpc.Client;
+using Shared.gRPC.Contract.Contract;
 
 using var channel = GrpcChannel.ForAddress("https://localhost:7120");
 
-var client = new GetUserGRPC.GetUserGRPCClient(channel);
+var client = channel.CreateGrpcService<IUserDataService>();
 
 Console.WriteLine("Enter a valid token");
 var token=Console.ReadLine();
@@ -13,19 +15,21 @@ var token=Console.ReadLine();
 var headers = new Metadata
 {
     { "tenant", "SharedTenant" },
-    {"Authorization","Bearer " + token}
+    {"Authorization", "Bearer "+token }
 };
+var callOptions = new CallOptions(headers: headers);
 
-var reply = await client.GettUserDataAsync(
+var reply = client.GetUserDataAsync(
     new Empty(),
-    headers);
+    new CallContext(callOptions)
+    );
 if(reply == null)
 {
     Console.WriteLine("No user data received.");
     return;
 }
 Console.WriteLine();
-Console.WriteLine("--------------------------Getting the user Data From token ---------------------------------");
+Console.WriteLine("--------------------------Getting the user Data From Token ---------------------------------");
 Console.WriteLine();
 Console.WriteLine("UserId: " + reply.UserId);
 Console.WriteLine("UserEmail: " + reply.UserName);

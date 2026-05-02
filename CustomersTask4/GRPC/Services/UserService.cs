@@ -1,31 +1,29 @@
 ﻿using CustomersTask4.Users;
-using FluentValidation.Validators;
-using Grpc.Core;
-using Microsoft.CodeAnalysis.VisualBasic.Syntax;
 using Google.Protobuf.WellKnownTypes;
+using Grpc.Core;
+using ProtoBuf.Grpc;
+using Shared.gRPC.Contract.Contract;
 
 namespace CustomersTask4.GRPC.Services
 {
-    public class UserService(IUserContext userContext): GetUserGRPC.GetUserGRPCBase
+    public class UserService(IUserContext userContext):IUserDataService
     {
-        public override async Task<UserResponse> GettUserData(
-       Empty request,
-       ServerCallContext context)
+        public UserDataReply GetUserDataAsync(Empty request, CallContext context = default)
         {
-            var current=userContext.GetCurrentUser();
-            if(current ==null)
+            var current = userContext.GetCurrentUser();
+            if (current == null)
             {
                 throw new RpcException(new Status(StatusCode.Unauthenticated, "User is not authenticated"));
             }
-            var user = new UserResponse
+            var user = new UserDataReply
             {
-                UserId = current?.Id,
-                UserName = current?.Name
+                UserId = current!.Id,
+                UserName = current!.Name
             };
-            foreach(var role in current!.Roles)
-            user.Roles.Add(role);
+            foreach (var role in current!.Roles)
+                user.Roles.Add(role);
 
-            return await Task.FromResult(user);
+            return user;
         }
     }
 }

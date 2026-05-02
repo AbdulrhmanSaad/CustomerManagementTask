@@ -25,6 +25,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Hybrid;
 using Microsoft.IdentityModel.Tokens;
 using MongoDB.Driver;
+using ProtoBuf.Grpc.Server;
 using QuestPDF.Infrastructure;
 using Serilog;
 using Shared.ServiceExtentions;
@@ -32,6 +33,9 @@ using Shared.Services;
 using Wolverine;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddCodeFirstGrpc();
+
 
 builder.AddServiceDefaults();
 builder.Services.AddControllers().AddOData(opt =>
