@@ -10,6 +10,7 @@ using CustomersTask4.CQRS.CustomerHandler.Query.GetCustomerById;
 using CustomersTask4.CQRS.CustomerHandler.Query.GetCustomerHistory;
 using CustomersTask4.DTO;
 using CustomersTask4.Users;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Shared.Services;
 namespace CustomersTask4.MinimalApi
 {
@@ -63,7 +64,7 @@ namespace CustomersTask4.MinimalApi
         }
 
 
-        public static async Task<IResult> GetAll(
+        public static async Task<Results<Ok<IEnumerable<CustomerDto>>,BadRequest<string>>> GetAll(
            IAppMeditor mediator,
            ILocalizationService localization)
         {
@@ -71,7 +72,7 @@ namespace CustomersTask4.MinimalApi
             return TypedResults.Ok(customers);
         }
 
-        public static async Task<IResult> GetCustomerById(
+        public static async Task<Results<Ok<CustomerDto>, NotFound<string>>> GetCustomerById(
            IAppMeditor mediator,
            ILocalizationService localization,
            string id)
@@ -81,14 +82,14 @@ namespace CustomersTask4.MinimalApi
         }
 
 
-        public static async Task<IResult> DeleteCustomer(string id, IAppMeditor mediator,
+        public static async Task<Results<Ok<string>, NotFound<string>>> DeleteCustomer(string id, IAppMeditor mediator,
            ILocalizationService localization)
         {
             await mediator.Send(new DeleteCustomerCommand(id));
             return TypedResults.Ok(localization.Localize("Customer Deleted Successfully"));
         }
 
-        public static async Task<IResult> AddCustomer(
+        public static async Task<Results<Ok<string>, NotFound<string>>> AddCustomer(
         IAppMeditor mediator,
         ILocalizationService localization,
         CreateCustomerCommand command)
@@ -99,7 +100,7 @@ namespace CustomersTask4.MinimalApi
                 localization.Localize("Customer Added"));
         }
 
-        public static async Task<IResult> UpdateCustomer(
+        public static async Task<Results<Ok<string>, NotFound<string>>> UpdateCustomer(
             IAppMeditor mediator,
             ILocalizationService localization,
             string id,
@@ -113,16 +114,16 @@ namespace CustomersTask4.MinimalApi
                 localization.Localize("Customer Updated"));
         }
 
-        public static async Task<IResult> GetCustomerHistory(
+        public static async Task<Results<Ok<IEnumerable<CustomerHistoryResponse>>, NotFound<string>>> GetCustomerHistory(
             IAppMeditor mediator,
             string id)
         {
-            var result = await mediator.Send<CustomerHistoryResponse>(
+            var result = await mediator.Send<IEnumerable<CustomerHistoryResponse>>(
                 new GetCustomerHistoryQuery(id));
 
             return TypedResults.Ok(result);
         }
-        public static async Task<IResult> GetCustomerAddressHistory(
+        public static async Task<Results<Ok<IEnumerable<AddressDto>>, NotFound<string>>> GetCustomerAddressHistory(
                 IAppMeditor mediator,
                 string id)
         {
@@ -175,7 +176,9 @@ namespace CustomersTask4.MinimalApi
                     }
                 });
 
-            return TypedResults.Ok(localization.Localize("Migration started in background. Check logs for progress."));
+            return TypedResults.Accepted(
+                "/customer/migrate",
+                localization.Localize("Migration started in background. Check logs for progress."));
         }
     }
 }
