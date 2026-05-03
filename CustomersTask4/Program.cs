@@ -8,6 +8,7 @@ using CustomersTask4.Hubs;
 using CustomersTask4.IServiceExtentions;
 using CustomersTask4.Mapping;
 using CustomersTask4.Middleware;
+using CustomersTask4.MinimalApi;
 using CustomersTask4.OData.Configration;
 using CustomersTask4.OData.CustomerHandlers.GetAll;
 using CustomersTask4.Services;
@@ -205,6 +206,7 @@ app.UseMiddleware<RequestLoggingMiddleware>();
 app.UseMiddleware<ErrorHandelingMiddleware>();
 app.UseMiddleware<TenantMiddleware>();
 app.MapControllers();
+app.MapCustomerEndpoints();
 app.MapHub<MessageHub>("/messagehub");
 app.MapGraphQL("/graphql");
 
