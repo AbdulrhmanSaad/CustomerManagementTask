@@ -5,6 +5,7 @@ using CustomersTask4.DTO;
 using CustomersTask4.Exceptions;
 using CustomersTask4.Hubs;
 using CustomersTask4.Repository;
+using CustomersTask4.Services;
 using CustomersTask4.Users;
 using MapsterMapper;
 using Microsoft.AspNetCore.SignalR;
@@ -46,6 +47,7 @@ namespace CustomerTaskUnitTest.UnitTesting
         private readonly IAppMeditor bus;
         private readonly ILocalizationService localization;
         private readonly HybridCache cachingService;
+        private readonly IWebhookService webhookService;
 
 
         public CreateCustomerCommandTest()
@@ -59,9 +61,10 @@ namespace CustomerTaskUnitTest.UnitTesting
             bus = Substitute.For<IAppMeditor>();
             localization = Substitute.For<ILocalizationService>();
             cachingService = Substitute.For<HybridCache>();
+            webhookService = Substitute.For<IWebhookService>();
             _handler = new CreateCustomerCommandHandler(repository,
                 logger,mapper, userContext,
-                configuration,hubContext,bus,localization,cachingService);
+                configuration,hubContext,bus,localization,cachingService,webhookService);
         }
         [Fact]
         public async Task Handle_WithDuplicatePhone_ShouldThrowNotFoundException()

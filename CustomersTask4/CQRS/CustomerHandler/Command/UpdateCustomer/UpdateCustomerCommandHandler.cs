@@ -25,7 +25,8 @@ namespace CustomersTask4.CQRS.CustomerHandler.Command.UpdateCustomer
         IHubContext<MessageHub> hubContext,
         IAppMeditor bus,
         ILocalizationService localization,
-        HybridCache cachingService)
+        HybridCache cachingService,
+        IWebhookService webhookService)
     {
         public async Task Handle(UpdateCustomerCommand request, CancellationToken cancellationToken)
         {
@@ -47,10 +48,10 @@ namespace CustomersTask4.CQRS.CustomerHandler.Command.UpdateCustomer
 
             await db.Update(customer);
             await cachingService.RemoveByTagAsync("CustomerTag");
+            var updatedCustomer = mapper.Map<CustomerUpdatedMessage>(customer);
 
             if (!configuration["DatabaseProvidor"]!.Equals("Mongo"))
             {
-                var updatedCustomer = mapper.Map<CustomerUpdatedMessage>(customer);
                 var obj = JsonSerializer.Serialize(updatedCustomer);
                 await hubContext.Clients.All.SendAsync("ReceiveMessage", obj, "Update Customer", cancellationToken);
 
@@ -58,6 +59,9 @@ namespace CustomersTask4.CQRS.CustomerHandler.Command.UpdateCustomer
 
                 logger.LogInformation("CustomerUpdatedMessage published for {Id}", customer.Id);
             }
+
+            // Trigger webhook
+          await webhookService.TriggerCustomerUpdatedWebhookAsync(updatedCustomer, cancellationToken);
         }
     }
 }

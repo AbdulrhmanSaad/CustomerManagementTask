@@ -67,5 +67,8 @@
     <ProjectReference Include="..\Shared.gRPC.Contract\Shared.gRPC.Contract.csproj" />
     <ProjectReference Include="..\Shared\Shared.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Webhock\" />
+  </ItemGroup>
 
 </Project>

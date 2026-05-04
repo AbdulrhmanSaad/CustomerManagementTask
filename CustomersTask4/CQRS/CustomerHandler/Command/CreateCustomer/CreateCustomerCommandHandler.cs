@@ -4,6 +4,7 @@ using CustomersTask4.Exceptions;
 using CustomersTask4.Hubs;
 using CustomersTask4.Messages;
 using CustomersTask4.Repository;
+using CustomersTask4.Services;
 using CustomersTask4.Users;
 using MapsterMapper;
 using Microsoft.AspNetCore.SignalR;
@@ -23,7 +24,8 @@ namespace CustomersTask4.CQRS.CustomerHandler.Command.CreateCustomer
         IHubContext<MessageHub> hubContext,
         IAppMeditor bus,
         ILocalizationService localization,
-        HybridCache cachingService)
+        HybridCache cachingService,
+        IWebhookService webhookService)
     {
         public async Task Handle(CreateCustomerCommand request, CancellationToken cancellationToken)
         {
@@ -42,10 +44,11 @@ namespace CustomersTask4.CQRS.CustomerHandler.Command.CreateCustomer
             await db.Add(customer);
 
             await cachingService.RemoveByTagAsync("CustomerTag");
+            var createdCustomer = mapper.Map<CustomerCreatedMessage>(customer);
+
 
             if (!configuration["DatabaseProvidor"]!.Equals("Mongo"))
             {
-                var createdCustomer = mapper.Map<CustomerCreatedMessage>(customer);
                 var obj = JsonSerializer.Serialize(createdCustomer);
                 await hubContext.Clients.All.SendAsync("ReceiveMessage", obj, "Create Customer", cancellationToken);
 
@@ -53,6 +56,9 @@ namespace CustomersTask4.CQRS.CustomerHandler.Command.CreateCustomer
 
                 logger.LogInformation("CustomerCreatedMessage published for {Name}", customer.Name);
             }
+
+            // Trigger webhook
+            await webhookService.TriggerCustomerCreatedWebhookAsync(createdCustomer, cancellationToken);
         }
     }
 }

@@ -5,6 +5,7 @@ using CustomersTask4.DTO;
 using CustomersTask4.Exceptions;
 using CustomersTask4.Hubs;
 using CustomersTask4.Repository;
+using CustomersTask4.Services;
 using CustomersTask4.Users;
 using MapsterMapper;
 using Microsoft.AspNetCore.SignalR;
@@ -29,6 +30,7 @@ namespace CustomerTaskUnitTest.UnitTesting
         private readonly IAppMeditor bus;
         private readonly ILocalizationService localize;
         private readonly HybridCache cachingService;
+        private readonly IWebhookService webhookService;
 
 
         private static readonly UpdateCustomerCommand _validCommand = new()
@@ -62,8 +64,9 @@ namespace CustomerTaskUnitTest.UnitTesting
             bus = Substitute.For<IAppMeditor>();
             localize = Substitute.For<ILocalizationService>();
             cachingService = Substitute.For<HybridCache>();
+            webhookService = Substitute.For<IWebhookService>();
             _handler = new UpdateCustomerCommandHandler(_repository, _logger, _mapper,_userContext,
-                configuration,hubContext,bus,localize,cachingService);
+                configuration,hubContext,bus,localize,cachingService,webhookService);
         }
 
         #region Success Cases

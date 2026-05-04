@@ -10,20 +10,16 @@ using CustomersTask4.Mapping;
 using CustomersTask4.Middleware;
 using CustomersTask4.MinimalApi;
 using CustomersTask4.OData.Configration;
-using CustomersTask4.OData.CustomerHandlers.GetAll;
+using CustomersTask4.Repository;
 using CustomersTask4.Services;
-using CustomersTask4.Services.Caching;
 using CustomersTask4.Users;
 using FluentValidation;
 using FluentValidation.AspNetCore;
-using HotChocolate.Authorization;
 using MapsterMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.OData;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Hybrid;
 using Microsoft.IdentityModel.Tokens;
 using MongoDB.Driver;
 using ProtoBuf.Grpc.Server;
@@ -116,6 +112,10 @@ builder.Services.AddScoped<TenantMiddleware>();
 builder.Services.AddScoped<IUserContext, UserContext>();
 builder.Services.AddScoped<IMigrateDatabases, MigrateToMongo>();
 builder.Services.AddScoped<ILocalizationService, LocalizationService>();
+
+builder.Services.AddScoped<IWebhookRepository, WebhookRepository>();
+builder.Services.AddScoped<IWebhookService, WebhookService>();
+builder.Services.AddHttpClient<IWebhookService, WebhookService>();
 
 builder.Services.AddIdentityCore<User>(options =>
     {

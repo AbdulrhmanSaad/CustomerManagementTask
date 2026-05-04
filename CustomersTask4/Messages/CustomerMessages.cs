@@ -1,5 +1,3 @@
-using CustomersTask4.Domain;
-
 namespace CustomersTask4.Messages
 {
     public class AddressMessage
@@ -7,25 +5,23 @@ namespace CustomersTask4.Messages
         public string AddressName { get; init; } = default!;
         public string AddressType { get; init; } = default!;
     }
-
-    public class CustomerCreatedMessage
+    public abstract class BaseCustomerMessage
     {
         public string Id { get; init; } = default!;
         public string Name { get; init; } = default!;
         public string Phone { get; init; } = default!;
-        public DateTime CreatedAt { get; init; }
-        public string CreatedBy { get; init; } = default!;
         public List<AddressMessage> Addresses { get; init; } = [];
     }
+    public class CustomerCreatedMessage : BaseCustomerMessage
+    { 
+        public DateTime CreatedAt { get; init; }
+        public string CreatedBy { get; init; } = default!;
+    }
 
-    public class CustomerUpdatedMessage
+    public class CustomerUpdatedMessage: BaseCustomerMessage
     {
-        public string Id { get; init; } = default!;
-        public string Name { get; init; } = default!;
-        public string Phone { get; init; } = default!;
         public DateTime? ChangedAt { get; init; }
         public string? ChangedBy { get; init; }
-        public List<AddressMessage> Addresses { get; init; } = [];
     }
 
     public class CustomerDeletedMessage
